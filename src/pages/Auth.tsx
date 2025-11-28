@@ -124,45 +124,38 @@ const Auth = () => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-background via-muted/30 to-primary/5 p-4">
-      <Card className="w-full max-w-md shadow-2xl border-2 rounded-3xl overflow-hidden">
-        <CardHeader className="space-y-6 text-center bg-gradient-to-b from-background to-muted/30 pb-8">
-          <div className="flex justify-center">
-            <img 
-              src={gooseMascot} 
-              alt="GaggleGO mascot" 
-              className="w-24 h-24 hover-scale drop-shadow-lg"
-            />
-          </div>
-          <div className="flex items-center justify-center gap-3">
-            <Bird className="w-7 h-7 text-primary" />
-            <CardTitle className="text-4xl font-display font-bold">
-              <span className="text-primary">Gaggle</span>
-              <span className="text-accent">GO</span>
-            </CardTitle>
-            <Bird className="w-7 h-7 text-primary" />
-          </div>
-          <CardDescription className="text-base font-medium">
-            {isLogin ? 'Welcome back to your gaggle' : 'Join the flock and start planning'}
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-background via-primary/5 to-accent/5 p-4">
+      <Card className="w-full max-w-md shadow-2xl border-2 backdrop-blur-sm bg-background/95">
+        <CardHeader className="space-y-4 text-center pt-8 pb-6">
+          <img 
+            src={gooseMascot} 
+            alt="GaggleGO" 
+            className="w-20 h-20 mx-auto"
+          />
+          <CardTitle className="text-3xl font-display font-bold">
+            {isLogin ? 'Welcome Back' : 'Join the Flock'}
+          </CardTitle>
+          <CardDescription>
+            {isLogin ? 'Sign in to your account' : 'Create your account'}
           </CardDescription>
         </CardHeader>
         <form onSubmit={handleSubmit}>
-          <CardContent className="space-y-5 pt-6">
+          <CardContent className="space-y-4 px-8">
             {!isLogin && (
               <div className="space-y-2">
-                <Label htmlFor="displayName" className="font-semibold">Display Name</Label>
+                <Label htmlFor="displayName">Name</Label>
                 <Input
                   id="displayName"
                   placeholder="Your name"
                   value={displayName}
                   onChange={(e) => setDisplayName(e.target.value)}
                   required={!isLogin}
-                  className="rounded-xl h-12"
+                  className="h-12"
                 />
               </div>
             )}
             <div className="space-y-2">
-              <Label htmlFor="email" className="font-semibold">Email</Label>
+              <Label htmlFor="email">Email</Label>
               <Input
                 id="email"
                 type="email"
@@ -170,11 +163,11 @@ const Auth = () => {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 required
-                className="rounded-xl h-12"
+                className="h-12"
               />
             </div>
             <div className="space-y-2">
-              <Label htmlFor="password" className="font-semibold">Password</Label>
+              <Label htmlFor="password">Password</Label>
               <Input
                 id="password"
                 type="password"
@@ -182,28 +175,26 @@ const Auth = () => {
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 required
-                className="rounded-xl h-12"
+                className="h-12"
               />
             </div>
           </CardContent>
-          <CardFooter className="flex flex-col space-y-4 pb-8">
+          <CardFooter className="flex flex-col space-y-4 px-8 pb-8">
             <Button 
               type="submit" 
-              className="w-full" 
+              className="w-full h-12" 
               disabled={loading}
-              variant={isLogin ? "default" : "accent"}
-              size="lg"
+              variant="hero"
             >
-              {loading ? 'Loading...' : isLogin ? 'Login' : 'Join GaggleGO'}
+              {loading ? 'Loading...' : isLogin ? 'Sign In' : 'Sign Up'}
             </Button>
-            <Button
+            <button
               type="button"
-              variant="ghost"
-              className="w-full"
               onClick={() => setIsLogin(!isLogin)}
+              className="text-sm text-muted-foreground hover:text-primary transition-colors"
             >
-              {isLogin ? "Don't have an account? Sign up" : 'Already have an account? Login'}
-            </Button>
+              {isLogin ? "Need an account? Sign up" : 'Have an account? Sign in'}
+            </button>
           </CardFooter>
         </form>
       </Card>

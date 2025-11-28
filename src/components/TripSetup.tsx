@@ -4,8 +4,15 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card } from "@/components/ui/card";
 import { Switch } from "@/components/ui/switch";
-import { MapPin, Plus, X, Clock, UtensilsCrossed } from "lucide-react";
+import { MapPin, Plus, X, Clock, UtensilsCrossed, Pencil } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogFooter,
+} from "@/components/ui/dialog";
 
 interface Family {
   id: string;
@@ -31,6 +38,8 @@ export const TripSetup = ({ onComplete }: TripSetupProps) => {
   const [families, setFamilies] = useState<Family[]>(DEFAULT_FAMILIES);
   const [noGiftShop, setNoGiftShop] = useState(false);
   const [newFamilyName, setNewFamilyName] = useState("");
+  const [editingFamily, setEditingFamily] = useState<Family | null>(null);
+  const [editForm, setEditForm] = useState<Family | null>(null);
 
   const addFamily = () => {
     if (!newFamilyName.trim()) return;
@@ -49,6 +58,23 @@ export const TripSetup = ({ onComplete }: TripSetupProps) => {
 
   const removeFamily = (id: string) => {
     setFamilies(families.filter(f => f.id !== id));
+  };
+
+  const openEditDialog = (family: Family) => {
+    setEditingFamily(family);
+    setEditForm({ ...family });
+  };
+
+  const saveEditedFamily = () => {
+    if (!editForm) return;
+    setFamilies(families.map(f => f.id === editForm.id ? editForm : f));
+    setEditingFamily(null);
+    setEditForm(null);
+  };
+
+  const updateEditForm = (field: keyof Family, value: any) => {
+    if (!editForm) return;
+    setEditForm({ ...editForm, [field]: value });
   };
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -135,15 +161,26 @@ export const TripSetup = ({ onComplete }: TripSetupProps) => {
                           </div>
                         </div>
                       </div>
-                      <Button
-                        type="button"
-                        variant="ghost"
-                        size="icon"
-                        onClick={() => removeFamily(family.id)}
-                        className="hover:bg-destructive/10 hover:text-destructive"
-                      >
-                        <X className="w-4 h-4" />
-                      </Button>
+                      <div className="flex gap-2">
+                        <Button
+                          type="button"
+                          variant="ghost"
+                          size="icon"
+                          onClick={() => openEditDialog(family)}
+                          className="hover:bg-accent/10"
+                        >
+                          <Pencil className="w-4 h-4" />
+                        </Button>
+                        <Button
+                          type="button"
+                          variant="ghost"
+                          size="icon"
+                          onClick={() => removeFamily(family.id)}
+                          className="hover:bg-destructive/10 hover:text-destructive"
+                        >
+                          <X className="w-4 h-4" />
+                        </Button>
+                      </div>
                     </div>
                   ))}
                 </div>
@@ -199,6 +236,76 @@ export const TripSetup = ({ onComplete }: TripSetupProps) => {
           </form>
         </div>
       </div>
+
+      {/* Edit Family Dialog */}
+      <Dialog open={!!editingFamily} onOpenChange={(open) => !open && setEditingFamily(null)}>
+        <DialogContent className="sm:max-w-[500px]">
+          <DialogHeader>
+            <DialogTitle>Edit Family Details</DialogTitle>
+          </DialogHeader>
+          {editForm && (
+            <div className="space-y-4 py-4">
+              <div className="space-y-2">
+                <Label htmlFor="edit-name">Family Name</Label>
+                <Input
+                  id="edit-name"
+                  value={editForm.name}
+                  onChange={(e) => updateEditForm("name", e.target.value)}
+                />
+              </div>
+              
+              <div className="space-y-2">
+                <Label htmlFor="edit-members">Number of Members</Label>
+                <Input
+                  id="edit-members"
+                  type="number"
+                  min="1"
+                  value={editForm.members}
+                  onChange={(e) => updateEditForm("members", parseInt(e.target.value))}
+                />
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="edit-naptime">Nap Time</Label>
+                <Input
+                  id="edit-naptime"
+                  type="time"
+                  value={editForm.napTime}
+                  onChange={(e) => {
+                    const time = e.target.value;
+                    const [hours, minutes] = time.split(":");
+                    const hour = parseInt(hours);
+                    const ampm = hour >= 12 ? "PM" : "AM";
+                    const displayHour = hour > 12 ? hour - 12 : hour === 0 ? 12 : hour;
+                    updateEditForm("napTime", `${displayHour}:${minutes} ${ampm}`);
+                  }}
+                />
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="edit-dietary">Dietary Restrictions</Label>
+                <Input
+                  id="edit-dietary"
+                  placeholder="Separate with commas"
+                  value={editForm.dietary.join(", ")}
+                  onChange={(e) => updateEditForm("dietary", e.target.value.split(",").map(s => s.trim()).filter(Boolean))}
+                />
+                <p className="text-xs text-muted-foreground">
+                  Examples: None, Halal, Kosher, Gluten-Free, Vegan, Plain/Simple
+                </p>
+              </div>
+            </div>
+          )}
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setEditingFamily(null)}>
+              Cancel
+            </Button>
+            <Button onClick={saveEditedFamily}>
+              Save Changes
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </section>
   );
 };

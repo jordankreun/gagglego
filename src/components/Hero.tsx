@@ -1,5 +1,5 @@
 import { Button } from "@/components/ui/button";
-import { MapPin, Users, Clock } from "lucide-react";
+import { MapPin, Users, Clock, Bird } from "lucide-react";
 import heroImage from "@/assets/hero-families.jpg";
 
 export const Hero = ({ onGetStarted }: { onGetStarted: () => void }) => {
@@ -21,14 +21,17 @@ export const Hero = ({ onGetStarted }: { onGetStarted: () => void }) => {
         <div className="max-w-4xl mx-auto text-center space-y-8 animate-in fade-in duration-1000">
           {/* Main heading */}
           <div className="space-y-4">
-            <h1 className="text-5xl md:text-7xl font-bold tracking-tight text-foreground">
-              Welcome to{" "}
-              <span className="bg-gradient-to-r from-primary to-primary-light bg-clip-text text-transparent">
-                The Village
-              </span>
-            </h1>
+            <div className="flex items-center justify-center gap-3 mb-4">
+              <Bird className="w-10 h-10 md:w-12 md:h-12 text-primary animate-pulse" />
+              <h1 className="text-5xl md:text-7xl font-bold tracking-tight text-foreground">
+                <span className="bg-gradient-to-r from-primary to-primary-light bg-clip-text text-transparent">
+                  GaggleGO
+                </span>
+              </h1>
+              <Bird className="w-10 h-10 md:w-12 md:h-12 text-primary animate-pulse" style={{ animationDelay: '0.5s' }} />
+            </div>
             <p className="text-xl md:text-2xl text-muted-foreground max-w-2xl mx-auto">
-              Travel planning that actually works for multi-family groups
+              Flock together, travel smarter - for multi-family groups
             </p>
           </div>
 
@@ -56,10 +59,10 @@ export const Hero = ({ onGetStarted }: { onGetStarted: () => void }) => {
               onClick={onGetStarted}
               className="text-lg px-8 py-6 h-auto rounded-2xl"
             >
-              Plan Your Village Trip
+              Get Your Gaggle Going
             </Button>
             <p className="text-sm text-muted-foreground">
-              No more juggling schedules, dietary needs, and gift shop meltdowns
+              Keep your flock together - no more juggling schedules, dietary needs, and gift shop meltdowns
             </p>
           </div>
 
@@ -79,7 +82,7 @@ export const Hero = ({ onGetStarted }: { onGetStarted: () => void }) => {
               <div className="w-12 h-12 rounded-full bg-secondary/10 flex items-center justify-center">
                 <Users className="w-6 h-6 text-secondary" />
               </div>
-              <h3 className="font-semibold text-lg">2. Sync Your Village</h3>
+              <h3 className="font-semibold text-lg">2. Gather Your Gaggle</h3>
               <p className="text-muted-foreground">
                 Add families with their nap times, dietary needs, and preferences
               </p>

@@ -5,12 +5,9 @@ import gooseMascot from "@/assets/goose-mascot.png";
 
 export const Hero = ({ onGetStarted }: { onGetStarted: () => void }) => {
   return (
-    <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
-      {/* Background gradient */}
-      <div className="absolute inset-0 bg-gradient-to-b from-background via-background to-muted -z-10" />
-      
+    <section className="relative min-h-screen flex items-center justify-center overflow-hidden bg-gradient-to-b from-background via-background to-muted">
       {/* Hero image with overlay */}
-      <div className="absolute inset-0 opacity-10">
+      <div className="absolute inset-0 opacity-5">
         <img 
           src={heroImage} 
           alt="Families traveling together" 
@@ -19,90 +16,92 @@ export const Hero = ({ onGetStarted }: { onGetStarted: () => void }) => {
       </div>
 
       <div className="container mx-auto px-4 py-20 relative z-10">
-        <div className="max-w-4xl mx-auto text-center space-y-8 animate-in fade-in duration-1000">
-          {/* Main heading */}
-          <div className="space-y-4">
-            <div className="flex flex-col items-center justify-center mb-4">
+        <div className="max-w-5xl mx-auto text-center space-y-12 animate-in fade-in duration-1000">
+          {/* Main heading with mascot */}
+          <div className="space-y-6">
+            <div className="flex flex-col items-center justify-center">
               <img 
                 src={gooseMascot} 
                 alt="GaggleGO goose mascot" 
-                className="w-24 h-24 md:w-32 md:h-32 mb-4 hover-scale"
+                className="w-32 h-32 md:w-40 md:h-40 mb-6 hover-scale drop-shadow-lg"
               />
-              <div className="flex items-center gap-3">
-                <Bird className="w-10 h-10 md:w-12 md:h-12 text-primary animate-pulse" />
-                <h1 className="text-5xl md:text-7xl font-bold tracking-tight text-foreground">
-                  <span className="bg-gradient-to-r from-primary to-primary-light bg-clip-text text-transparent">
-                    GaggleGO
-                  </span>
+              <div className="flex items-center justify-center gap-3 mb-4">
+                <Bird className="w-8 h-8 md:w-10 md:h-10 text-primary animate-pulse" />
+                <h1 className="text-6xl md:text-8xl font-display font-bold tracking-tight">
+                  <span className="text-primary">Gaggle</span>
+                  <span className="text-accent">GO</span>
                 </h1>
-                <Bird className="w-10 h-10 md:w-12 md:h-12 text-primary animate-pulse" style={{ animationDelay: '0.5s' }} />
+                <Bird className="w-8 h-8 md:w-10 md:h-10 text-primary animate-pulse" style={{ animationDelay: '0.5s' }} />
               </div>
             </div>
-            <p className="text-xl md:text-2xl text-muted-foreground max-w-2xl mx-auto">
-              Flock together, travel smarter - for multi-family groups
+            <p className="text-2xl md:text-3xl font-display font-semibold text-muted-foreground max-w-3xl mx-auto">
+              Flock together, travel smarter
+            </p>
+            <p className="text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto">
+              Multi-family trip planning made simple
             </p>
           </div>
 
           {/* Feature pills */}
           <div className="flex flex-wrap justify-center gap-4 pt-4">
-            <div className="flex items-center gap-2 bg-card px-6 py-3 rounded-full shadow-sm border border-border">
-              <MapPin className="w-5 h-5 text-primary" />
-              <span className="font-medium">Location-First Planning</span>
+            <div className="flex items-center gap-3 bg-primary/10 px-8 py-4 rounded-full shadow-sm border-2 border-primary/20 backdrop-blur-sm">
+              <MapPin className="w-6 h-6 text-primary" />
+              <span className="font-semibold text-primary">Location-First</span>
             </div>
-            <div className="flex items-center gap-2 bg-card px-6 py-3 rounded-full shadow-sm border border-border">
-              <Clock className="w-5 h-5 text-secondary" />
-              <span className="font-medium">Nap-Time Anchored</span>
+            <div className="flex items-center gap-3 bg-secondary/10 px-8 py-4 rounded-full shadow-sm border-2 border-secondary/20 backdrop-blur-sm">
+              <Clock className="w-6 h-6 text-secondary" />
+              <span className="font-semibold text-secondary">Nap-Anchored</span>
             </div>
-            <div className="flex items-center gap-2 bg-card px-6 py-3 rounded-full shadow-sm border border-border">
-              <Users className="w-5 h-5 text-accent" />
-              <span className="font-medium">Constraint-Aware</span>
+            <div className="flex items-center gap-3 bg-accent/10 px-8 py-4 rounded-full shadow-sm border-2 border-accent/20 backdrop-blur-sm">
+              <Users className="w-6 h-6 text-accent-foreground" />
+              <span className="font-semibold text-accent-foreground">Smart Groups</span>
             </div>
           </div>
 
           {/* CTA */}
-          <div className="pt-8 space-y-4">
+          <div className="pt-8 space-y-6">
             <Button 
-              variant="hero" 
+              variant="accent" 
               size="lg" 
               onClick={onGetStarted}
-              className="text-lg px-8 py-6 h-auto rounded-2xl"
+              className="text-xl px-12 py-8 h-auto shadow-xl hover:shadow-2xl"
             >
-              Get Your Gaggle Going
+              Join GaggleGO
             </Button>
-            <p className="text-sm text-muted-foreground">
-              Keep your flock together - no more juggling schedules, dietary needs, and gift shop meltdowns
+            <p className="text-base text-muted-foreground font-medium">
+              Keep your flock together - coordinate schedules, diets, and logistics
             </p>
           </div>
 
           {/* How it works */}
-          <div className="pt-16 grid md:grid-cols-3 gap-8 text-left">
-            <div className="space-y-3 p-6 bg-card rounded-2xl border border-border shadow-sm hover:shadow-md transition-all">
-              <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center">
-                <MapPin className="w-6 h-6 text-primary" />
+          <div className="pt-20 grid md:grid-cols-3 gap-8">
+            <div className="space-y-4 p-8 bg-card rounded-3xl border-2 border-primary/10 shadow-lg hover:shadow-xl transition-all hover:-translate-y-1">
+              <div className="w-16 h-16 rounded-full bg-primary/15 flex items-center justify-center mx-auto">
+                <MapPin className="w-8 h-8 text-primary" />
               </div>
-              <h3 className="font-semibold text-lg">1. Set Your Destination</h3>
-              <p className="text-muted-foreground">
-                Tell us where you're going - theme park, city, or resort
+              <h3 className="font-display font-bold text-xl">Plan Trip</h3>
+              <p className="text-muted-foreground leading-relaxed">
+                Set your destination - theme park, city, or resort
               </p>
             </div>
             
-            <div className="space-y-3 p-6 bg-card rounded-2xl border border-border shadow-sm hover:shadow-md transition-all">
-              <div className="w-12 h-12 rounded-full bg-secondary/10 flex items-center justify-center">
-                <Users className="w-6 h-6 text-secondary" />
+            <div className="space-y-4 p-8 bg-card rounded-3xl border-2 border-accent/10 shadow-lg hover:shadow-xl transition-all hover:-translate-y-1">
+              <div className="w-16 h-16 rounded-full bg-accent/15 flex items-center justify-center mx-auto">
+                <Users className="w-8 h-8 text-accent-foreground" />
               </div>
-              <h3 className="font-semibold text-lg">2. Gather Your Gaggle</h3>
-              <p className="text-muted-foreground">
-                Add families with their nap times, dietary needs, and preferences
+              <h3 className="font-display font-bold text-xl">View Map</h3>
+              <p className="text-muted-foreground leading-relaxed">
+                Add families with nap times, dietary needs, and preferences
               </p>
             </div>
             
-            <div className="space-y-3 p-6 bg-card rounded-2xl border border-border shadow-sm hover:shadow-md transition-all">
-              <div className="w-12 h-12 rounded-full bg-accent/10 flex items-center justify-center">
-                <Clock className="w-6 h-6 text-accent" />
+            <div className="space-y-4 p-8 bg-card rounded-3xl border-2 border-secondary/10 shadow-lg hover:shadow-xl transition-all hover:-translate-y-1">
+              <div className="w-16 h-16 rounded-full bg-secondary/15 flex items-center justify-center mx-auto">
+                <Clock className="w-8 h-8 text-secondary" />
               </div>
-              <h3 className="font-semibold text-lg">3. Get Your Timeline</h3>
-              <p className="text-muted-foreground">
-                Receive a constraint-aware itinerary with direct links to everything
+              <h3 className="font-display font-bold text-xl">Life View</h3>
+              <p className="text-muted-foreground leading-relaxed">
+                Get a timeline with smart scheduling and direct links
               </p>
             </div>
           </div>

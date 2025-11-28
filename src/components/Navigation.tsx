@@ -17,32 +17,32 @@ export const Navigation = () => {
   const { user, signOut } = useAuth();
 
   return (
-    <nav className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+    <nav className="sticky top-0 z-50 w-full border-b-2 border-border bg-background/95 backdrop-blur-md supports-[backdrop-filter]:bg-background/80">
       <div className="container mx-auto px-4">
-        <div className="flex h-16 items-center justify-between">
+        <div className="flex h-20 items-center justify-between">
           {/* Logo */}
-          <Link to="/" className="flex items-center gap-3 hover-scale">
+          <Link to="/" className="flex items-center gap-4 hover-scale group">
             <img 
               src={gooseMascot} 
               alt="GaggleGO mascot" 
-              className="w-10 h-10"
+              className="w-12 h-12 transition-transform group-hover:rotate-12"
             />
             <div className="flex items-center gap-2">
-              <Bird className="w-5 h-5 text-primary" />
-              <span className="text-xl font-bold bg-gradient-to-r from-primary to-primary-light bg-clip-text text-transparent">
-                GaggleGO
+              <span className="text-2xl md:text-3xl font-display font-bold">
+                <span className="text-primary">Gaggle</span>
+                <span className="text-accent">GO</span>
               </span>
             </div>
           </Link>
 
           {/* User Menu */}
-          {user && (
+          {user ? (
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <Button variant="ghost" className="relative h-10 w-10 rounded-full">
-                  <Avatar className="h-10 w-10">
+                <Button variant="ghost" className="relative h-12 w-12 rounded-full">
+                  <Avatar className="h-12 w-12 border-2 border-primary">
                     <AvatarImage src={user.user_metadata?.avatar_url} alt={user.email} />
-                    <AvatarFallback className="bg-primary text-primary-foreground">
+                    <AvatarFallback className="bg-primary text-primary-foreground font-bold text-lg">
                       {user.email?.charAt(0).toUpperCase()}
                     </AvatarFallback>
                   </Avatar>
@@ -51,7 +51,7 @@ export const Navigation = () => {
               <DropdownMenuContent className="w-56" align="end" forceMount>
                 <DropdownMenuLabel className="font-normal">
                   <div className="flex flex-col space-y-1">
-                    <p className="text-sm font-medium leading-none">
+                    <p className="text-sm font-semibold leading-none">
                       {user.user_metadata?.display_name || 'User'}
                     </p>
                     <p className="text-xs leading-none text-muted-foreground">
@@ -73,6 +73,12 @@ export const Navigation = () => {
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
+          ) : (
+            <Link to="/auth">
+              <Button variant="accent" size="default">
+                Join GaggleGO
+              </Button>
+            </Link>
           )}
         </div>
       </div>

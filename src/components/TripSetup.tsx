@@ -15,6 +15,7 @@ import {
   DialogDescription,
 } from "@/components/ui/dialog";
 import { useToast } from "@/hooks/use-toast";
+import { LocationSuggestions } from "@/components/LocationSuggestions";
 
 interface Family {
   id: string;
@@ -189,6 +190,11 @@ export const TripSetup = ({ onComplete }: TripSetupProps) => {
                   className="h-12"
                   required
                 />
+                
+                {/* AI-powered location suggestions */}
+                <div className="pt-4 border-t">
+                  <LocationSuggestions onSelectLocation={setLocation} />
+                </div>
               </div>
             </Card>
 

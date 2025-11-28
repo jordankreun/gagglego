@@ -1,10 +1,10 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card } from "@/components/ui/card";
 import { Switch } from "@/components/ui/switch";
-import { MapPin, Plus, X, Clock, UtensilsCrossed, Pencil } from "lucide-react";
+import { MapPin, Plus, X, Clock, UtensilsCrossed, Pencil, Save, FolderOpen, Trash2 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import {
   Dialog,
@@ -12,7 +12,9 @@ import {
   DialogHeader,
   DialogTitle,
   DialogFooter,
+  DialogDescription,
 } from "@/components/ui/dialog";
+import { useToast } from "@/hooks/use-toast";
 
 interface Family {
   id: string;
@@ -26,6 +28,13 @@ interface TripSetupProps {
   onComplete: (data: { location: string; families: Family[]; noGiftShop: boolean }) => void;
 }
 
+interface FamilyPreset {
+  id: string;
+  name: string;
+  families: Family[];
+  createdAt: string;
+}
+
 const DEFAULT_FAMILIES: Family[] = [
   { id: "1", name: "Kreuns", napTime: "1:00 PM", dietary: ["None"], members: 4 },
   { id: "2", name: "Wafais", napTime: "1:00 PM", dietary: ["Halal"], members: 5 },
@@ -33,13 +42,32 @@ const DEFAULT_FAMILIES: Family[] = [
   { id: "4", name: "Rappaports", napTime: "1:00 PM", dietary: ["Gluten-Free", "Kosher"], members: 4 },
 ];
 
+const PRESETS_STORAGE_KEY = "village-family-presets";
+
 export const TripSetup = ({ onComplete }: TripSetupProps) => {
+  const { toast } = useToast();
   const [location, setLocation] = useState("");
   const [families, setFamilies] = useState<Family[]>(DEFAULT_FAMILIES);
   const [noGiftShop, setNoGiftShop] = useState(false);
   const [newFamilyName, setNewFamilyName] = useState("");
   const [editingFamily, setEditingFamily] = useState<Family | null>(null);
   const [editForm, setEditForm] = useState<Family | null>(null);
+  
+  const [presets, setPresets] = useState<FamilyPreset[]>([]);
+  const [showSavePreset, setShowSavePreset] = useState(false);
+  const [showLoadPreset, setShowLoadPreset] = useState(false);
+  const [presetName, setPresetName] = useState("");
+
+  useEffect(() => {
+    const stored = localStorage.getItem(PRESETS_STORAGE_KEY);
+    if (stored) {
+      try {
+        setPresets(JSON.parse(stored));
+      } catch (e) {
+        console.error("Failed to load presets", e);
+      }
+    }
+  }, []);
 
   const addFamily = () => {
     if (!newFamilyName.trim()) return;
@@ -75,6 +103,55 @@ export const TripSetup = ({ onComplete }: TripSetupProps) => {
   const updateEditForm = (field: keyof Family, value: any) => {
     if (!editForm) return;
     setEditForm({ ...editForm, [field]: value });
+  };
+
+  const savePreset = () => {
+    if (!presetName.trim()) {
+      toast({
+        title: "Preset name required",
+        description: "Please enter a name for your preset.",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    const newPreset: FamilyPreset = {
+      id: Date.now().toString(),
+      name: presetName.trim(),
+      families: [...families],
+      createdAt: new Date().toISOString(),
+    };
+
+    const updatedPresets = [...presets, newPreset];
+    setPresets(updatedPresets);
+    localStorage.setItem(PRESETS_STORAGE_KEY, JSON.stringify(updatedPresets));
+    
+    toast({
+      title: "Preset saved!",
+      description: `"${presetName}" has been saved successfully.`,
+    });
+
+    setShowSavePreset(false);
+    setPresetName("");
+  };
+
+  const loadPreset = (preset: FamilyPreset) => {
+    setFamilies([...preset.families]);
+    setShowLoadPreset(false);
+    toast({
+      title: "Preset loaded!",
+      description: `"${preset.name}" configuration has been loaded.`,
+    });
+  };
+
+  const deletePreset = (presetId: string) => {
+    const updatedPresets = presets.filter(p => p.id !== presetId);
+    setPresets(updatedPresets);
+    localStorage.setItem(PRESETS_STORAGE_KEY, JSON.stringify(updatedPresets));
+    toast({
+      title: "Preset deleted",
+      description: "The preset has been removed.",
+    });
   };
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -133,6 +210,29 @@ export const TripSetup = ({ onComplete }: TripSetupProps) => {
                     <p className="text-sm text-muted-foreground">
                       Manage who's joining this trip
                     </p>
+                  </div>
+                  <div className="flex gap-2">
+                    <Button
+                      type="button"
+                      variant="outline"
+                      size="sm"
+                      onClick={() => setShowLoadPreset(true)}
+                      className="gap-2"
+                    >
+                      <FolderOpen className="w-4 h-4" />
+                      Load Preset
+                    </Button>
+                    <Button
+                      type="button"
+                      variant="outline"
+                      size="sm"
+                      onClick={() => setShowSavePreset(true)}
+                      className="gap-2"
+                      disabled={families.length === 0}
+                    >
+                      <Save className="w-4 h-4" />
+                      Save Preset
+                    </Button>
                   </div>
                 </div>
 
@@ -302,6 +402,109 @@ export const TripSetup = ({ onComplete }: TripSetupProps) => {
             </Button>
             <Button onClick={saveEditedFamily}>
               Save Changes
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      {/* Save Preset Dialog */}
+      <Dialog open={showSavePreset} onOpenChange={setShowSavePreset}>
+        <DialogContent className="sm:max-w-[400px]">
+          <DialogHeader>
+            <DialogTitle>Save Family Configuration</DialogTitle>
+            <DialogDescription>
+              Save your current family setup as a preset for future trips.
+            </DialogDescription>
+          </DialogHeader>
+          <div className="space-y-4 py-4">
+            <div className="space-y-2">
+              <Label htmlFor="preset-name">Preset Name</Label>
+              <Input
+                id="preset-name"
+                placeholder="e.g., Summer 2024, Weekend Trip..."
+                value={presetName}
+                onChange={(e) => setPresetName(e.target.value)}
+                onKeyDown={(e) => e.key === "Enter" && savePreset()}
+              />
+            </div>
+            <div className="text-sm text-muted-foreground">
+              Currently saving {families.length} {families.length === 1 ? "family" : "families"}
+            </div>
+          </div>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setShowSavePreset(false)}>
+              Cancel
+            </Button>
+            <Button onClick={savePreset}>
+              Save Preset
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      {/* Load Preset Dialog */}
+      <Dialog open={showLoadPreset} onOpenChange={setShowLoadPreset}>
+        <DialogContent className="sm:max-w-[500px]">
+          <DialogHeader>
+            <DialogTitle>Load Family Configuration</DialogTitle>
+            <DialogDescription>
+              Select a saved preset to quickly set up your families.
+            </DialogDescription>
+          </DialogHeader>
+          <div className="space-y-3 py-4 max-h-[400px] overflow-y-auto">
+            {presets.length === 0 ? (
+              <div className="text-center py-8 text-muted-foreground">
+                <FolderOpen className="w-12 h-12 mx-auto mb-3 opacity-50" />
+                <p>No saved presets yet.</p>
+                <p className="text-sm">Save your first configuration to get started!</p>
+              </div>
+            ) : (
+              presets.map((preset) => (
+                <div
+                  key={preset.id}
+                  className="flex items-center justify-between p-4 bg-muted rounded-xl border border-border hover:border-secondary transition-all"
+                >
+                  <div className="flex-1 space-y-1">
+                    <h4 className="font-semibold">{preset.name}</h4>
+                    <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                      <span>{preset.families.length} {preset.families.length === 1 ? "family" : "families"}</span>
+                      <span>•</span>
+                      <span>{new Date(preset.createdAt).toLocaleDateString()}</span>
+                    </div>
+                    <div className="flex flex-wrap gap-1 mt-2">
+                      {preset.families.map((f) => (
+                        <Badge key={f.id} variant="secondary" className="text-xs">
+                          {f.name}
+                        </Badge>
+                      ))}
+                    </div>
+                  </div>
+                  <div className="flex gap-2">
+                    <Button
+                      type="button"
+                      variant="outline"
+                      size="sm"
+                      onClick={() => loadPreset(preset)}
+                    >
+                      Load
+                    </Button>
+                    <Button
+                      type="button"
+                      variant="ghost"
+                      size="icon"
+                      onClick={() => deletePreset(preset.id)}
+                      className="hover:bg-destructive/10 hover:text-destructive"
+                    >
+                      <Trash2 className="w-4 h-4" />
+                    </Button>
+                  </div>
+                </div>
+              ))
+            )}
+          </div>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setShowLoadPreset(false)}>
+              Close
             </Button>
           </DialogFooter>
         </DialogContent>

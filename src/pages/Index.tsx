@@ -1,13 +1,59 @@
-// Update this page (the content is just a fallback if you fail to update the page)
+import { useState } from "react";
+import { Hero } from "@/components/Hero";
+import { TripSetup } from "@/components/TripSetup";
+import { ItineraryView } from "@/components/ItineraryView";
+
+type ViewState = "hero" | "setup" | "itinerary";
+
+interface TripData {
+  location: string;
+  families: Array<{
+    id: string;
+    name: string;
+    napTime: string;
+    dietary: string[];
+    members: number;
+  }>;
+  noGiftShop: boolean;
+}
 
 const Index = () => {
+  const [view, setView] = useState<ViewState>("hero");
+  const [tripData, setTripData] = useState<TripData | null>(null);
+
+  const handleGetStarted = () => {
+    setView("setup");
+  };
+
+  const handleSetupComplete = (data: TripData) => {
+    setTripData(data);
+    setView("itinerary");
+  };
+
+  const handleBack = () => {
+    setView("setup");
+  };
+
   return (
-    <div className="flex min-h-screen items-center justify-center bg-background">
-      <div className="text-center">
-        <h1 className="mb-4 text-4xl font-bold">Welcome to Your Blank App</h1>
-        <p className="text-xl text-muted-foreground">Start building your amazing project here!</p>
-      </div>
-    </div>
+    <main className="min-h-screen bg-background">
+      {view === "hero" && <Hero onGetStarted={handleGetStarted} />}
+      
+      {view === "setup" && <TripSetup onComplete={handleSetupComplete} />}
+      
+      {view === "itinerary" && tripData && (
+        <ItineraryView
+          location={tripData.location}
+          date={new Date().toLocaleDateString("en-US", {
+            weekday: "long",
+            year: "numeric",
+            month: "long",
+            day: "numeric",
+          })}
+          items={[]} // Will use mock data from component
+          onBack={handleBack}
+        />
+      )}
+    </main>
   );
 };
 

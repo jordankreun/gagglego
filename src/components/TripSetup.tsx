@@ -162,112 +162,95 @@ export const TripSetup = ({ onComplete }: TripSetupProps) => {
   };
 
   return (
-    <section className="min-h-screen py-12 px-4">
-      <div className="container max-w-4xl mx-auto">
+    <section className="min-h-screen py-16 px-4">
+      <div className="container max-w-3xl mx-auto">
         <div className="space-y-8">
           {/* Header */}
-          <div className="text-center space-y-3">
-            <h2 className="text-4xl font-bold">Set Up Your Trip</h2>
-            <p className="text-muted-foreground text-lg">
-              Tell us where you're going and who's coming along
+          <div className="text-center space-y-2">
+            <h2 className="text-4xl font-display font-bold">Plan Your Trip</h2>
+            <p className="text-muted-foreground">
+              Location and families
             </p>
           </div>
 
-          <form onSubmit={handleSubmit} className="space-y-8">
+          <form onSubmit={handleSubmit} className="space-y-6">
             {/* Location Input */}
-            <Card className="p-6 shadow-lg border-2 border-border hover:border-primary transition-all">
+            <Card className="p-6 border-2 hover:border-primary/30 transition-colors">
               <div className="space-y-4">
-                <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center">
-                    <MapPin className="w-5 h-5 text-primary" />
-                  </div>
-                  <div>
-                    <Label htmlFor="location" className="text-lg font-semibold">
-                      Destination
-                    </Label>
-                    <p className="text-sm text-muted-foreground">
-                      City, theme park, resort, or any location
-                    </p>
-                  </div>
-                </div>
+                <Label htmlFor="location" className="text-base font-semibold flex items-center gap-2">
+                  <MapPin className="w-5 h-5 text-primary" />
+                  Destination
+                </Label>
                 <Input
                   id="location"
-                  placeholder="e.g., Disneyland, San Diego Zoo, Paris..."
+                  placeholder="Disneyland, Paris, San Diego Zoo..."
                   value={location}
                   onChange={(e) => setLocation(e.target.value)}
-                  className="text-lg h-12"
+                  className="h-12"
                   required
                 />
               </div>
             </Card>
 
             {/* Families */}
-            <Card className="p-6 shadow-lg border-2 border-border">
-              <div className="space-y-6">
+            <Card className="p-6 border-2 hover:border-primary/30 transition-colors">
+              <div className="space-y-4">
                 <div className="flex items-center justify-between">
-                  <div>
-                    <h3 className="text-lg font-semibold">The Village Families</h3>
-                    <p className="text-sm text-muted-foreground">
-                      Manage who's joining this trip
-                    </p>
-                  </div>
+                  <Label className="text-base font-semibold">Families</Label>
                   <div className="flex gap-2">
                     <Button
                       type="button"
-                      variant="outline"
+                      variant="ghost"
                       size="sm"
                       onClick={() => setShowLoadPreset(true)}
-                      className="gap-2"
                     >
-                      <FolderOpen className="w-4 h-4" />
-                      Load Preset
+                      <FolderOpen className="w-4 h-4 mr-2" />
+                      Load
                     </Button>
                     <Button
                       type="button"
-                      variant="outline"
+                      variant="ghost"
                       size="sm"
                       onClick={() => setShowSavePreset(true)}
-                      className="gap-2"
                       disabled={families.length === 0}
                     >
-                      <Save className="w-4 h-4" />
-                      Save Preset
+                      <Save className="w-4 h-4 mr-2" />
+                      Save
                     </Button>
                   </div>
                 </div>
 
                 {/* Family Cards */}
-                <div className="grid gap-4">
+                <div className="space-y-3">
                   {families.map((family) => (
                     <div
                       key={family.id}
-                      className="flex items-center justify-between p-4 bg-muted rounded-xl border border-border hover:border-secondary transition-all"
+                      className="flex items-center justify-between p-4 bg-muted/50 rounded-xl border hover:border-primary/30 transition-colors"
                     >
-                      <div className="flex-1 space-y-2">
-                        <div className="flex items-center gap-3">
-                          <h4 className="font-semibold text-lg">{family.name}</h4>
+                      <div className="flex-1 space-y-1">
+                        <div className="flex items-center gap-2">
+                          <h4 className="font-semibold">{family.name}</h4>
                           <Badge variant="secondary" className="text-xs">
-                            {family.members} members
+                            {family.members}
                           </Badge>
                         </div>
-                        <div className="flex flex-wrap gap-2">
-                          <div className="flex items-center gap-1.5 text-sm text-muted-foreground">
-                            <Clock className="w-4 h-4 text-accent" />
-                            <span>Nap: {family.napTime}</span>
-                          </div>
-                          <div className="flex items-center gap-1.5 text-sm text-muted-foreground">
-                            <UtensilsCrossed className="w-4 h-4 text-secondary" />
-                            <span>{family.dietary.join(", ")}</span>
-                          </div>
+                        <div className="flex flex-wrap gap-3 text-sm text-muted-foreground">
+                          <span className="flex items-center gap-1">
+                            <Clock className="w-3.5 h-3.5" />
+                            {family.napTime}
+                          </span>
+                          <span className="flex items-center gap-1">
+                            <UtensilsCrossed className="w-3.5 h-3.5" />
+                            {family.dietary.join(", ")}
+                          </span>
                         </div>
                       </div>
-                      <div className="flex gap-2">
+                      <div className="flex gap-1">
                         <Button
                           type="button"
                           variant="ghost"
                           size="icon"
                           onClick={() => openEditDialog(family)}
-                          className="hover:bg-accent/10"
                         >
                           <Pencil className="w-4 h-4" />
                         </Button>
@@ -276,7 +259,6 @@ export const TripSetup = ({ onComplete }: TripSetupProps) => {
                           variant="ghost"
                           size="icon"
                           onClick={() => removeFamily(family.id)}
-                          className="hover:bg-destructive/10 hover:text-destructive"
                         >
                           <X className="w-4 h-4" />
                         </Button>
@@ -301,25 +283,21 @@ export const TripSetup = ({ onComplete }: TripSetupProps) => {
             </Card>
 
             {/* Settings */}
-            <Card className="p-6 shadow-lg border-2 border-border">
-              <div className="space-y-4">
-                <h3 className="text-lg font-semibold">Trip Settings</h3>
-                
-                <div className="flex items-center justify-between p-4 bg-muted rounded-xl">
-                  <div className="space-y-1">
-                    <Label htmlFor="gift-shop" className="font-semibold">
-                      No Gift Shop Mode
-                    </Label>
-                    <p className="text-sm text-muted-foreground">
-                      Avoid high commercial exposure zones
-                    </p>
-                  </div>
-                  <Switch
-                    id="gift-shop"
-                    checked={noGiftShop}
-                    onCheckedChange={setNoGiftShop}
-                  />
+            <Card className="p-6 border-2 hover:border-primary/30 transition-colors">
+              <div className="flex items-center justify-between">
+                <div className="space-y-1">
+                  <Label htmlFor="gift-shop" className="text-base font-semibold">
+                    No Gift Shop Mode
+                  </Label>
+                  <p className="text-sm text-muted-foreground">
+                    Avoid commercial zones
+                  </p>
                 </div>
+                <Switch
+                  id="gift-shop"
+                  checked={noGiftShop}
+                  onCheckedChange={setNoGiftShop}
+                />
               </div>
             </Card>
 
@@ -328,7 +306,7 @@ export const TripSetup = ({ onComplete }: TripSetupProps) => {
               type="submit"
               variant="hero"
               size="lg"
-              className="w-full text-lg py-6 h-auto rounded-2xl"
+              className="w-full h-12"
               disabled={!location || families.length === 0}
             >
               Generate Itinerary

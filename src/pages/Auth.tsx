@@ -124,43 +124,45 @@ const Auth = () => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-b from-background via-background to-muted p-4">
-      <Card className="w-full max-w-md shadow-lg border-2">
-        <CardHeader className="space-y-4 text-center">
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-background via-muted/30 to-primary/5 p-4">
+      <Card className="w-full max-w-md shadow-2xl border-2 rounded-3xl overflow-hidden">
+        <CardHeader className="space-y-6 text-center bg-gradient-to-b from-background to-muted/30 pb-8">
           <div className="flex justify-center">
             <img 
               src={gooseMascot} 
               alt="GaggleGO mascot" 
-              className="w-20 h-20 hover-scale"
+              className="w-24 h-24 hover-scale drop-shadow-lg"
             />
           </div>
-          <div className="flex items-center justify-center gap-2">
-            <Bird className="w-6 h-6 text-primary" />
-            <CardTitle className="text-3xl font-bold bg-gradient-to-r from-primary to-primary-light bg-clip-text text-transparent">
-              GaggleGO
+          <div className="flex items-center justify-center gap-3">
+            <Bird className="w-7 h-7 text-primary" />
+            <CardTitle className="text-4xl font-display font-bold">
+              <span className="text-primary">Gaggle</span>
+              <span className="text-accent">GO</span>
             </CardTitle>
-            <Bird className="w-6 h-6 text-primary" />
+            <Bird className="w-7 h-7 text-primary" />
           </div>
-          <CardDescription>
+          <CardDescription className="text-base font-medium">
             {isLogin ? 'Welcome back to your gaggle' : 'Join the flock and start planning'}
           </CardDescription>
         </CardHeader>
         <form onSubmit={handleSubmit}>
-          <CardContent className="space-y-4">
+          <CardContent className="space-y-5 pt-6">
             {!isLogin && (
               <div className="space-y-2">
-                <Label htmlFor="displayName">Display Name</Label>
+                <Label htmlFor="displayName" className="font-semibold">Display Name</Label>
                 <Input
                   id="displayName"
                   placeholder="Your name"
                   value={displayName}
                   onChange={(e) => setDisplayName(e.target.value)}
                   required={!isLogin}
+                  className="rounded-xl h-12"
                 />
               </div>
             )}
             <div className="space-y-2">
-              <Label htmlFor="email">Email</Label>
+              <Label htmlFor="email" className="font-semibold">Email</Label>
               <Input
                 id="email"
                 type="email"
@@ -168,10 +170,11 @@ const Auth = () => {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 required
+                className="rounded-xl h-12"
               />
             </div>
             <div className="space-y-2">
-              <Label htmlFor="password">Password</Label>
+              <Label htmlFor="password" className="font-semibold">Password</Label>
               <Input
                 id="password"
                 type="password"
@@ -179,17 +182,19 @@ const Auth = () => {
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 required
+                className="rounded-xl h-12"
               />
             </div>
           </CardContent>
-          <CardFooter className="flex flex-col space-y-4">
+          <CardFooter className="flex flex-col space-y-4 pb-8">
             <Button 
               type="submit" 
               className="w-full" 
               disabled={loading}
-              variant="default"
+              variant={isLogin ? "default" : "accent"}
+              size="lg"
             >
-              {loading ? 'Loading...' : isLogin ? 'Login' : 'Sign Up'}
+              {loading ? 'Loading...' : isLogin ? 'Login' : 'Join GaggleGO'}
             </Button>
             <Button
               type="button"

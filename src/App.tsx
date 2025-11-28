@@ -8,6 +8,7 @@ import { ProtectedRoute } from "@/components/ProtectedRoute";
 import { Navigation } from "@/components/Navigation";
 import Index from "./pages/Index";
 import Auth from "./pages/Auth";
+import IconShowcase from "./pages/IconShowcase";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -23,6 +24,7 @@ const App = () => (
             <Navigation />
             <Routes>
               <Route path="/auth" element={<Auth />} />
+              <Route path="/icons" element={<IconShowcase />} />
               <Route 
                 path="/" 
                 element={

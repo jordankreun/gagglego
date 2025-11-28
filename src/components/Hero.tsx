@@ -2,6 +2,7 @@ import { Button } from "@/components/ui/button";
 import { MapPin, Users, Clock, Bird } from "lucide-react";
 import heroImage from "@/assets/hero-families.jpg";
 import gooseMascot from "@/assets/goose-mascot.png";
+import { MapPinIcon, GroupIcon, ClockIcon } from "@/components/icons/BrandIcons";
 
 export const Hero = ({ onGetStarted }: { onGetStarted: () => void }) => {
   return (
@@ -45,15 +46,15 @@ export const Hero = ({ onGetStarted }: { onGetStarted: () => void }) => {
           {/* Feature pills */}
           <div className="flex flex-wrap justify-center gap-4 pt-4">
             <div className="flex items-center gap-3 bg-primary/10 px-8 py-4 rounded-full shadow-sm border-2 border-primary/20 backdrop-blur-sm">
-              <MapPin className="w-6 h-6 text-primary" />
+              <MapPinIcon size={24} className="flex-shrink-0" />
               <span className="font-semibold text-primary">Location-First</span>
             </div>
             <div className="flex items-center gap-3 bg-secondary/10 px-8 py-4 rounded-full shadow-sm border-2 border-secondary/20 backdrop-blur-sm">
-              <Clock className="w-6 h-6 text-secondary" />
+              <ClockIcon size={24} className="flex-shrink-0" />
               <span className="font-semibold text-secondary">Nap-Anchored</span>
             </div>
             <div className="flex items-center gap-3 bg-accent/10 px-8 py-4 rounded-full shadow-sm border-2 border-accent/20 backdrop-blur-sm">
-              <Users className="w-6 h-6 text-accent-foreground" />
+              <GroupIcon size={24} className="flex-shrink-0" />
               <span className="font-semibold text-accent-foreground">Smart Groups</span>
             </div>
           </div>
@@ -77,7 +78,7 @@ export const Hero = ({ onGetStarted }: { onGetStarted: () => void }) => {
           <div className="pt-20 grid md:grid-cols-3 gap-8">
             <div className="space-y-4 p-8 bg-card rounded-3xl border-2 border-primary/10 shadow-lg hover:shadow-xl transition-all hover:-translate-y-1">
               <div className="w-16 h-16 rounded-full bg-primary/15 flex items-center justify-center mx-auto">
-                <MapPin className="w-8 h-8 text-primary" />
+                <MapPinIcon size={32} />
               </div>
               <h3 className="font-display font-bold text-xl">Plan Trip</h3>
               <p className="text-muted-foreground leading-relaxed">
@@ -87,9 +88,9 @@ export const Hero = ({ onGetStarted }: { onGetStarted: () => void }) => {
             
             <div className="space-y-4 p-8 bg-card rounded-3xl border-2 border-accent/10 shadow-lg hover:shadow-xl transition-all hover:-translate-y-1">
               <div className="w-16 h-16 rounded-full bg-accent/15 flex items-center justify-center mx-auto">
-                <Users className="w-8 h-8 text-accent-foreground" />
+                <GroupIcon size={32} />
               </div>
-              <h3 className="font-display font-bold text-xl">View Map</h3>
+              <h3 className="font-display font-bold text-xl">Gather Gaggle</h3>
               <p className="text-muted-foreground leading-relaxed">
                 Add families with nap times, dietary needs, and preferences
               </p>
@@ -97,7 +98,7 @@ export const Hero = ({ onGetStarted }: { onGetStarted: () => void }) => {
             
             <div className="space-y-4 p-8 bg-card rounded-3xl border-2 border-secondary/10 shadow-lg hover:shadow-xl transition-all hover:-translate-y-1">
               <div className="w-16 h-16 rounded-full bg-secondary/15 flex items-center justify-center mx-auto">
-                <Clock className="w-8 h-8 text-secondary" />
+                <ClockIcon size={32} />
               </div>
               <h3 className="font-display font-bold text-xl">Life View</h3>
               <p className="text-muted-foreground leading-relaxed">

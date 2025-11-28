@@ -1,6 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { MapPin, Users, Clock, Bird } from "lucide-react";
 import heroImage from "@/assets/hero-families.jpg";
+import gooseMascot from "@/assets/goose-mascot.png";
 
 export const Hero = ({ onGetStarted }: { onGetStarted: () => void }) => {
   return (
@@ -21,14 +22,21 @@ export const Hero = ({ onGetStarted }: { onGetStarted: () => void }) => {
         <div className="max-w-4xl mx-auto text-center space-y-8 animate-in fade-in duration-1000">
           {/* Main heading */}
           <div className="space-y-4">
-            <div className="flex items-center justify-center gap-3 mb-4">
-              <Bird className="w-10 h-10 md:w-12 md:h-12 text-primary animate-pulse" />
-              <h1 className="text-5xl md:text-7xl font-bold tracking-tight text-foreground">
-                <span className="bg-gradient-to-r from-primary to-primary-light bg-clip-text text-transparent">
-                  GaggleGO
-                </span>
-              </h1>
-              <Bird className="w-10 h-10 md:w-12 md:h-12 text-primary animate-pulse" style={{ animationDelay: '0.5s' }} />
+            <div className="flex flex-col items-center justify-center mb-4">
+              <img 
+                src={gooseMascot} 
+                alt="GaggleGO goose mascot" 
+                className="w-24 h-24 md:w-32 md:h-32 mb-4 hover-scale"
+              />
+              <div className="flex items-center gap-3">
+                <Bird className="w-10 h-10 md:w-12 md:h-12 text-primary animate-pulse" />
+                <h1 className="text-5xl md:text-7xl font-bold tracking-tight text-foreground">
+                  <span className="bg-gradient-to-r from-primary to-primary-light bg-clip-text text-transparent">
+                    GaggleGO
+                  </span>
+                </h1>
+                <Bird className="w-10 h-10 md:w-12 md:h-12 text-primary animate-pulse" style={{ animationDelay: '0.5s' }} />
+              </div>
             </div>
             <p className="text-xl md:text-2xl text-muted-foreground max-w-2xl mx-auto">
               Flock together, travel smarter - for multi-family groups

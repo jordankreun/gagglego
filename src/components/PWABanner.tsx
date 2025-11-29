@@ -1,8 +1,9 @@
 import { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
-import { Download, X, Smartphone } from 'lucide-react';
+import { Download, X } from 'lucide-react';
 import { usePWA } from '@/hooks/usePWA';
 import { Link } from 'react-router-dom';
+import { FlyingGooseIcon } from '@/components/icons/BrandIcons';
 
 export const PWABanner = () => {
   const { isInstallable, isInstalled, promptInstall } = usePWA();
@@ -41,17 +42,17 @@ export const PWABanner = () => {
   }
 
   return (
-    <div className="sticky top-0 z-50 bg-gradient-to-r from-primary via-accent to-primary animate-gradient-x">
+    <div className="sticky top-0 z-50 bg-accent shadow-md animate-fade-in">
       <div className="container mx-auto px-4 py-3">
         <div className="flex items-center justify-between gap-3">
           <div className="flex items-center gap-3 flex-1 min-w-0">
-            <Smartphone className="w-5 h-5 text-primary-foreground shrink-0" />
+            <FlyingGooseIcon className="w-6 h-6 text-white shrink-0" />
             <div className="min-w-0">
-              <p className="text-sm font-medium text-primary-foreground truncate">
-                Install GaggleGO for the best experience
+              <p className="text-sm font-semibold text-white truncate">
+                Take your flock on the go! Install GaggleGO
               </p>
-              <p className="text-xs text-primary-foreground/80 hidden sm:block">
-                Works offline • Faster loading • Home screen access
+              <p className="text-xs text-white/90 hidden sm:block">
+                Works offline • Lightning fast • Always ready to fly
               </p>
             </div>
           </div>
@@ -61,8 +62,8 @@ export const PWABanner = () => {
               <Button 
                 onClick={handleInstall} 
                 size="sm" 
-                variant="secondary"
-                className="text-xs font-semibold"
+                variant="outline"
+                className="text-xs font-semibold bg-white text-accent border-white hover:bg-white/90 hover:text-accent"
               >
                 <Download className="w-3 h-3 mr-1" />
                 Install
@@ -71,15 +72,15 @@ export const PWABanner = () => {
               <Button 
                 asChild
                 size="sm" 
-                variant="secondary"
-                className="text-xs font-semibold"
+                variant="outline"
+                className="text-xs font-semibold bg-white text-accent border-white hover:bg-white/90 hover:text-accent"
               >
                 <Link to="/install">Learn How</Link>
               </Button>
             )}
             <button
               onClick={handleDismiss}
-              className="text-primary-foreground hover:text-primary-foreground/80 transition-colors"
+              className="text-white hover:text-white/80 transition-colors"
               aria-label="Dismiss"
             >
               <X className="w-4 h-4" />

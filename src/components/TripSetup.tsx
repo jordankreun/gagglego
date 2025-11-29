@@ -4,7 +4,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card } from "@/components/ui/card";
 import { Switch } from "@/components/ui/switch";
-import { MapPin, Plus, X, Clock, UtensilsCrossed, Pencil, Save, FolderOpen, Trash2 } from "lucide-react";
+import { MapPin, Plus, X, Clock, UtensilsCrossed, Pencil, Save, FolderOpen, Trash2, Loader2 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import {
   Dialog,
@@ -17,6 +17,7 @@ import {
 import { useToast } from "@/hooks/use-toast";
 import { LocationSuggestions } from "@/components/LocationSuggestions";
 import { FamilyMemberEditor } from "@/components/FamilyMemberEditor";
+import { supabase } from "@/integrations/supabase/client";
 
 interface Member {
   id: string;
@@ -34,7 +35,7 @@ interface Family {
 }
 
 interface TripSetupProps {
-  onComplete: (data: { location: string; families: Family[]; noGiftShop: boolean }) => void;
+  onComplete: (data: { location: string; families: Family[]; noGiftShop: boolean }, items: any[]) => void;
 }
 
 interface FamilyPreset {
@@ -106,6 +107,7 @@ export const TripSetup = ({ onComplete }: TripSetupProps) => {
   const [showSavePreset, setShowSavePreset] = useState(false);
   const [showLoadPreset, setShowLoadPreset] = useState(false);
   const [presetName, setPresetName] = useState("");
+  const [isGenerating, setIsGenerating] = useState(false);
 
   useEffect(() => {
     const stored = localStorage.getItem(PRESETS_STORAGE_KEY);
@@ -202,10 +204,45 @@ export const TripSetup = ({ onComplete }: TripSetupProps) => {
     });
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (location && families.length > 0) {
-      onComplete({ location, families, noGiftShop });
+    if (!location || families.length === 0) return;
+
+    setIsGenerating(true);
+
+    try {
+      const { data, error } = await supabase.functions.invoke('generate-itinerary', {
+        body: {
+          location,
+          families,
+          noGiftShop,
+          date: new Date().toLocaleDateString("en-US", {
+            weekday: "long",
+            year: "numeric",
+            month: "long",
+            day: "numeric",
+          }),
+        },
+      });
+
+      if (error) throw error;
+      if (!data?.items) throw new Error('No itinerary items returned');
+
+      toast({
+        title: "Itinerary generated!",
+        description: `Created ${data.items.length} activities for your trip`,
+      });
+
+      onComplete({ location, families, noGiftShop }, data.items);
+    } catch (error) {
+      console.error('Error generating itinerary:', error);
+      toast({
+        title: "Generation failed",
+        description: error instanceof Error ? error.message : "Failed to generate itinerary. Please try again.",
+        variant: "destructive",
+      });
+    } finally {
+      setIsGenerating(false);
     }
   };
 
@@ -379,9 +416,16 @@ export const TripSetup = ({ onComplete }: TripSetupProps) => {
               variant="hero"
               size="lg"
               className="w-full h-12"
-              disabled={!location || families.length === 0}
+              disabled={!location || families.length === 0 || isGenerating}
             >
-              Generate Itinerary
+              {isGenerating ? (
+                <>
+                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                  Generating Your Itinerary...
+                </>
+              ) : (
+                "Generate Itinerary"
+              )}
             </Button>
           </form>
         </div>

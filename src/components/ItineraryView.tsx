@@ -115,7 +115,8 @@ const getTypeColor = (type: string) => {
   }
 };
 
-export const ItineraryView = ({ location, date, items = MOCK_ITEMS, onBack }: ItineraryViewProps) => {
+export const ItineraryView = ({ location, date, items, onBack }: ItineraryViewProps) => {
+  const displayItems = items.length > 0 ? items : MOCK_ITEMS;
   return (
     <section className="min-h-screen py-12 px-4">
       <div className="container max-w-4xl mx-auto space-y-8">
@@ -143,7 +144,7 @@ export const ItineraryView = ({ location, date, items = MOCK_ITEMS, onBack }: It
         <div className="relative space-y-3">
           <div className="absolute left-[39px] top-6 bottom-6 w-px bg-border" />
 
-          {items.map((item, index) => (
+          {displayItems.map((item, index) => (
             <div key={index} className="relative">
               <Card className="p-5 ml-16 border-l-2 border-l-primary/30 hover:border-l-primary transition-colors">
                 {/* Time badge */}

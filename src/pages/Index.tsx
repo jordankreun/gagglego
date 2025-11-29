@@ -27,13 +27,15 @@ interface TripData {
 const Index = () => {
   const [view, setView] = useState<ViewState>("hero");
   const [tripData, setTripData] = useState<TripData | null>(null);
+  const [itineraryItems, setItineraryItems] = useState<any[]>([]);
 
   const handleGetStarted = () => {
     setView("setup");
   };
 
-  const handleSetupComplete = (data: TripData) => {
+  const handleSetupComplete = (data: TripData, items: any[]) => {
     setTripData(data);
+    setItineraryItems(items);
     setView("itinerary");
   };
 
@@ -56,7 +58,7 @@ const Index = () => {
             month: "long",
             day: "numeric",
           })}
-          items={[]} // Will use mock data from component
+          items={itineraryItems}
           onBack={handleBack}
         />
       )}

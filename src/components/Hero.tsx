@@ -27,15 +27,15 @@ export const Hero = ({ onGetStarted }: { onGetStarted: () => void }) => {
 
           {/* Features */}
           <div className="flex flex-wrap justify-center gap-4">
-            <div className="flex items-center gap-3 bg-card px-6 py-3 rounded-full border-2 border-accent/20 shadow-lg backdrop-blur-sm">
+            <div className="flex items-center gap-3 bg-card px-6 py-3 rounded-2xl border-2 border-accent/20 shadow-lg backdrop-blur-sm">
               <MapPinIcon size={20} className="text-accent" />
               <span className="font-semibold text-sm">Location-First</span>
             </div>
-            <div className="flex items-center gap-3 bg-card px-6 py-3 rounded-full border-2 border-accent/20 shadow-lg backdrop-blur-sm">
+            <div className="flex items-center gap-3 bg-card px-6 py-3 rounded-2xl border-2 border-accent/20 shadow-lg backdrop-blur-sm">
               <ClockIcon size={20} className="text-accent" />
               <span className="font-semibold text-sm">Nap-Anchored</span>
             </div>
-            <div className="flex items-center gap-3 bg-card px-6 py-3 rounded-full border-2 border-accent/20 shadow-lg backdrop-blur-sm">
+            <div className="flex items-center gap-3 bg-card px-6 py-3 rounded-2xl border-2 border-accent/20 shadow-lg backdrop-blur-sm">
               <GroupIcon size={20} className="text-accent" />
               <span className="font-semibold text-sm">Smart Groups</span>
             </div>

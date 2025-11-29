@@ -1,4 +1,5 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useLocation } from "react-router-dom";
 import { Hero } from "@/components/Hero";
 import { TripSetup } from "@/components/TripSetup";
 import { ItineraryView } from "@/components/ItineraryView";
@@ -34,6 +35,22 @@ const Index = () => {
   const [tripId, setTripId] = useState<string | null>(null);
   const { user } = useAuth();
   const { toast } = useToast();
+  const location = useLocation();
+
+  // Load trip from navigation state (when opening from My Trips)
+  useEffect(() => {
+    const loadTrip = location.state?.loadTrip;
+    if (loadTrip) {
+      setTripId(loadTrip.id);
+      setTripData({
+        location: loadTrip.location,
+        families: loadTrip.families,
+        noGiftShop: loadTrip.settings?.noGiftShop || false
+      });
+      setItineraryItems(loadTrip.itinerary || []);
+      setView("itinerary");
+    }
+  }, [location.state]);
 
   const handleGetStarted = () => {
     setView("setup");

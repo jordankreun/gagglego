@@ -3,7 +3,8 @@ import { useNavigate } from "react-router-dom";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { MapPin, Calendar, Users, Trash2, ExternalLink } from "lucide-react";
+import { Input } from "@/components/ui/input";
+import { MapPin, Calendar, Users, Trash2, ExternalLink, Edit2, Check, X } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
@@ -16,6 +17,8 @@ interface Trip {
   families: any;
   itinerary: any;
   progress: any;
+  settings: any;
+  share_code?: string;
   created_at: string;
 }
 
@@ -25,6 +28,8 @@ export default function MyTrips() {
   const { user } = useAuth();
   const [trips, setTrips] = useState<Trip[]>([]);
   const [loading, setLoading] = useState(true);
+  const [editingId, setEditingId] = useState<string | null>(null);
+  const [editName, setEditName] = useState("");
 
   useEffect(() => {
     if (user) {
@@ -77,6 +82,51 @@ export default function MyTrips() {
     }
   };
 
+  const startRename = (trip: Trip) => {
+    setEditingId(trip.id);
+    setEditName(trip.name);
+  };
+
+  const cancelRename = () => {
+    setEditingId(null);
+    setEditName("");
+  };
+
+  const saveRename = async (id: string) => {
+    if (!editName.trim()) {
+      toast({
+        title: "Name required",
+        description: "Trip name cannot be empty",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    try {
+      const { error } = await supabase
+        .from('trips')
+        .update({ name: editName.trim() })
+        .eq('id', id);
+
+      if (error) throw error;
+
+      setTrips(trips.map(t => t.id === id ? { ...t, name: editName.trim() } : t));
+      setEditingId(null);
+      setEditName("");
+      toast({
+        title: "Trip renamed",
+        description: "Your migration has been updated",
+      });
+    } catch (error) {
+      console.error('Error renaming trip:', error);
+      toast({
+        title: "Rename failed",
+        description: "Could not update trip name",
+        variant: "destructive",
+      });
+    }
+  };
+
   if (loading) {
     return (
       <div className="min-h-screen py-12 px-4">
@@ -113,7 +163,42 @@ export default function MyTrips() {
                 <Card key={trip.id} className="p-5 hover:border-primary/30 transition-colors">
                   <div className="flex items-start justify-between mb-4">
                     <div className="flex-1">
-                      <h3 className="font-semibold text-xl mb-2">{trip.name}</h3>
+                      {editingId === trip.id ? (
+                        <div className="flex items-center gap-2 mb-2">
+                          <Input
+                            value={editName}
+                            onChange={(e) => setEditName(e.target.value)}
+                            className="font-semibold text-xl"
+                            autoFocus
+                          />
+                          <Button
+                            variant="ghost"
+                            size="icon"
+                            onClick={() => saveRename(trip.id)}
+                          >
+                            <Check className="w-4 h-4 text-primary" />
+                          </Button>
+                          <Button
+                            variant="ghost"
+                            size="icon"
+                            onClick={cancelRename}
+                          >
+                            <X className="w-4 h-4" />
+                          </Button>
+                        </div>
+                      ) : (
+                        <div className="flex items-center gap-2 mb-2">
+                          <h3 className="font-semibold text-xl">{trip.name}</h3>
+                          <Button
+                            variant="ghost"
+                            size="icon"
+                            onClick={() => startRename(trip)}
+                            className="h-8 w-8"
+                          >
+                            <Edit2 className="w-3 h-3" />
+                          </Button>
+                        </div>
+                      )}
                       <div className="flex flex-wrap gap-3 text-sm text-muted-foreground">
                         <div className="flex items-center gap-1">
                           <MapPin className="w-4 h-4" />

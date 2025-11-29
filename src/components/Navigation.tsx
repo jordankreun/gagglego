@@ -1,37 +1,25 @@
 import { Link } from 'react-router-dom';
 import { Bird, LogOut, User } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { useAuth } from '@/contexts/AuthContext';
 import gaggleGoLogo from '@/assets/gaggle-go-logo.png';
-
 export const Navigation = () => {
-  const { user, signOut } = useAuth();
-
-  return (
-    <nav className="sticky top-0 z-50 w-full border-b border-border/50 bg-background/80 backdrop-blur-xl">
-      <div className="container mx-auto px-4">
+  const {
+    user,
+    signOut
+  } = useAuth();
+  return <nav className="sticky top-0 z-50 w-full border-b border-border/50 bg-background/80 backdrop-blur-xl">
+      <div className="container mx-auto px-4 bg-primary-foreground">
         <div className="flex h-16 items-center justify-between">
           {/* Logo */}
           <Link to="/" className="flex items-center">
-            <img 
-              src={gaggleGoLogo} 
-              alt="GaggleGO" 
-              className="h-10 w-auto"
-            />
+            <img src={gaggleGoLogo} alt="GaggleGO" className="h-10 w-auto" />
           </Link>
 
           {/* User Menu */}
-          {user ? (
-            <DropdownMenu>
+          {user ? <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <Button variant="ghost" className="relative h-10 w-10 rounded-full">
                   <Avatar className="h-10 w-10 border-2 border-primary/30">
@@ -62,16 +50,12 @@ export const Navigation = () => {
                   Sign Out
                 </DropdownMenuItem>
               </DropdownMenuContent>
-            </DropdownMenu>
-          ) : (
-            <Link to="/auth">
+            </DropdownMenu> : <Link to="/auth">
               <Button variant="accent" size="sm">
                 Join
               </Button>
-            </Link>
-          )}
+            </Link>}
         </div>
       </div>
-    </nav>
-  );
+    </nav>;
 };

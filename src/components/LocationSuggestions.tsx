@@ -2,10 +2,12 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { Label } from "@/components/ui/label";
 import { MapPin, Loader2, Navigation, Sparkles } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 import { GooseStatusCard } from "@/components/GooseStatusCard";
+import { AddressAutocomplete } from "@/components/AddressAutocomplete";
 
 interface LocationSuggestion {
   name: string;
@@ -28,6 +30,9 @@ export const LocationSuggestions = ({ onSelectLocation, families, tripDate }: Lo
   const [loading, setLoading] = useState(false);
   const [suggestions, setSuggestions] = useState<LocationSuggestion[]>([]);
   const [userLocation, setUserLocation] = useState<{ lat: number; lng: number; city?: string } | null>(null);
+  const [searchLocation, setSearchLocation] = useState("");
+  const [searchCoords, setSearchCoords] = useState<{ lat: number; lng: number } | null>(null);
+  const [activityType, setActivityType] = useState<string>("all");
 
   const getLocationName = async (lat: number, lng: number): Promise<string | null> => {
     try {
@@ -45,6 +50,62 @@ export const LocationSuggestions = ({ onSelectLocation, families, tripDate }: Lo
     } catch (error) {
       console.error("Geocoding error:", error);
       return null;
+    }
+  };
+
+  const getSuggestions = async () => {
+    setLoading(true);
+    
+    try {
+      let requestBody: any = {
+        families: families || [],
+        tripDate: tripDate || new Date().toLocaleDateString(),
+        activityType: activityType !== "all" ? activityType : undefined
+      };
+
+      // Use manual location if provided, otherwise use geolocation
+      if (searchLocation && searchCoords) {
+        requestBody.locationQuery = searchLocation;
+        requestBody.latitude = searchCoords.lat;
+        requestBody.longitude = searchCoords.lng;
+      } else if (userLocation) {
+        requestBody.latitude = userLocation.lat;
+        requestBody.longitude = userLocation.lng;
+        requestBody.cityName = userLocation.city;
+      } else {
+        toast({
+          title: "Location required",
+          description: "Please enter a location or use your current location.",
+          variant: "destructive",
+        });
+        setLoading(false);
+        return;
+      }
+
+      const { data, error } = await supabase.functions.invoke('suggest-locations', {
+        body: requestBody
+      });
+
+      if (error) throw error;
+
+      if (data?.suggestions && Array.isArray(data.suggestions)) {
+        setSuggestions(data.suggestions);
+        toast({
+          title: "Suggestions found!",
+          description: `Found ${data.suggestions.length} family-friendly locations.`,
+        });
+      } else {
+        throw new Error("Invalid response format");
+      }
+    } catch (error: any) {
+      console.error("Error fetching suggestions:", error);
+      toast({
+        title: "Error",
+        description: error.message || "Failed to fetch location suggestions.",
+        variant: "destructive",
+      });
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -69,40 +130,14 @@ export const LocationSuggestions = ({ onSelectLocation, families, tripDate }: Lo
         const cityName = await getLocationName(latitude, longitude);
         
         setUserLocation({ lat: latitude, lng: longitude, city: cityName || undefined });
+        setSearchLocation("");
+        setSearchCoords(null);
         
-        // Call edge function to get suggestions with context
-        try {
-          const { data, error } = await supabase.functions.invoke('suggest-locations', {
-            body: { 
-              latitude, 
-              longitude,
-              cityName,
-              families: families || [],
-              tripDate: tripDate || new Date().toLocaleDateString()
-            }
-          });
-
-          if (error) throw error;
-
-          if (data?.suggestions && Array.isArray(data.suggestions)) {
-            setSuggestions(data.suggestions);
-            toast({
-              title: "Suggestions found!",
-              description: `Found ${data.suggestions.length} family-friendly locations near you.`,
-            });
-          } else {
-            throw new Error("Invalid response format");
-          }
-        } catch (error: any) {
-          console.error("Error fetching suggestions:", error);
-          toast({
-            title: "Error",
-            description: error.message || "Failed to fetch location suggestions.",
-            variant: "destructive",
-          });
-        } finally {
-          setLoading(false);
-        }
+        toast({
+          title: "Location found!",
+          description: cityName ? `Using ${cityName}` : "Using your current location",
+        });
+        setLoading(false);
       },
       (error) => {
         console.error("Geolocation error:", error);
@@ -144,8 +179,91 @@ export const LocationSuggestions = ({ onSelectLocation, families, tripDate }: Lo
     ).join(' ');
   };
 
+  const activityTypes = [
+    { value: "all", label: "All Types" },
+    { value: "theme_park", label: "Theme Parks" },
+    { value: "zoo_aquarium", label: "Zoos & Aquariums" },
+    { value: "museum", label: "Museums" },
+    { value: "nature_park", label: "Nature Parks" },
+    { value: "beach", label: "Beaches" },
+    { value: "playground", label: "Playgrounds" },
+    { value: "cultural_site", label: "Cultural Sites" }
+  ];
+
   return (
     <div className="space-y-3 sm:space-y-4">
+      {/* Location & Activity Type Input */}
+      <Card className="p-4 sm:p-5 border-2 space-y-4">
+        <div className="space-y-2">
+          <Label htmlFor="location-input" className="text-sm font-semibold">
+            Where are you exploring?
+          </Label>
+          <div className="flex gap-2">
+            <AddressAutocomplete
+              value={searchLocation}
+              onChange={(address, coords) => {
+                setSearchLocation(address);
+                setSearchCoords(coords || null);
+                setUserLocation(null);
+              }}
+              placeholder="Enter a city or address..."
+              className="flex-1"
+            />
+            <Button
+              onClick={getCurrentLocation}
+              variant="outline"
+              disabled={loading}
+              className="flex-shrink-0 gap-2"
+            >
+              <Navigation className="w-4 h-4" />
+              <span className="hidden sm:inline">Near Me</span>
+            </Button>
+          </div>
+        </div>
+
+        <div className="space-y-2">
+          <Label className="text-sm font-semibold">
+            What kind of activities?
+          </Label>
+          <div className="flex flex-wrap gap-2">
+            {activityTypes.map((type) => (
+              <Badge
+                key={type.value}
+                variant={activityType === type.value ? "default" : "outline"}
+                className={`cursor-pointer transition-all hover:scale-105 ${
+                  activityType === type.value 
+                    ? "bg-accent text-accent-foreground border-accent" 
+                    : "hover:bg-accent/10"
+                }`}
+                onClick={() => setActivityType(type.value)}
+              >
+                {type.label}
+              </Badge>
+            ))}
+          </div>
+        </div>
+
+        <Button
+          onClick={getSuggestions}
+          disabled={loading || (!searchLocation && !userLocation)}
+          variant="hero"
+          size="lg"
+          className="w-full gap-2"
+        >
+          {loading ? (
+            <>
+              <Loader2 className="w-4 h-4 animate-spin" />
+              Finding suggestions...
+            </>
+          ) : (
+            <>
+              <Sparkles className="w-4 h-4" />
+              Get AI Suggestions
+            </>
+          )}
+        </Button>
+      </Card>
+
       {loading ? (
         <div className="flex items-center justify-center py-8">
           <GooseStatusCard
@@ -159,42 +277,7 @@ export const LocationSuggestions = ({ onSelectLocation, families, tripDate }: Lo
             ]}
           />
         </div>
-      ) : !suggestions.length ? (
-        <Card className="p-4 sm:p-5 md:p-6 text-center space-y-3 sm:space-y-4 border-2 border-dashed bg-gradient-to-br from-primary/5 to-accent/5">
-          <div className="flex justify-center">
-            <div className="w-12 h-12 sm:w-16 sm:h-16 rounded-full bg-gradient-to-br from-primary/20 to-accent/20 flex items-center justify-center animate-pulse">
-              <Sparkles className="w-6 h-6 sm:w-8 sm:h-8 text-primary" />
-            </div>
-          </div>
-          <div className="space-y-1 sm:space-y-2">
-            <h3 className="font-semibold text-base sm:text-lg">Discover Nearby Adventures</h3>
-            <p className="text-xs sm:text-sm text-muted-foreground px-2">
-              AI-powered suggestions tailored for your flock
-            </p>
-          </div>
-          <Button
-            onClick={getCurrentLocation}
-            disabled={loading}
-            variant="hero"
-            size="lg"
-            className="gap-2 h-10 sm:h-11 text-sm sm:text-base"
-          >
-            {loading ? (
-              <>
-                <Loader2 className="w-4 h-4 animate-spin" />
-                <span className="hidden sm:inline">Finding perfect spots...</span>
-                <span className="sm:hidden">Finding...</span>
-              </>
-            ) : (
-              <>
-                <Sparkles className="w-4 h-4" />
-                <span className="hidden sm:inline">Get AI Suggestions</span>
-                <span className="sm:hidden">Get Suggestions</span>
-              </>
-            )}
-          </Button>
-        </Card>
-      ) : (
+      ) : suggestions.length > 0 ? (
         <>
           <div className="flex items-center justify-between gap-2">
             <div className="flex items-center gap-1.5 sm:gap-2 min-w-0">
@@ -247,7 +330,7 @@ export const LocationSuggestions = ({ onSelectLocation, families, tripDate }: Lo
             ))}
           </div>
         </>
-      )}
+      ) : null}
     </div>
   );
 };

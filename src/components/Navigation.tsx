@@ -15,7 +15,7 @@ export const Navigation = () => {
         <div className="flex h-16 items-center justify-between">
           {/* Logo */}
           <Link to="/" className="flex items-center">
-            <img src={gaggleGoLogo} alt="GaggleGO" className="h-10 w-auto" />
+            <img src={gaggleGoLogo} alt="GaggleGO" className="h-10 w-auto object-contain" />
           </Link>
 
           {/* User Menu */}

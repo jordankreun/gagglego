@@ -16,7 +16,7 @@ export const Hero = ({ onGetStarted }: { onGetStarted: () => void }) => {
             <img 
               src={gaggleGoLogo} 
               alt="GaggleGO" 
-              className="w-auto h-20 sm:h-24 md:h-28 mx-auto drop-shadow-xl"
+              className="h-20 sm:h-24 md:h-28 w-auto mx-auto drop-shadow-xl object-contain"
             />
             <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-display font-bold text-accent px-4">
               Don't just wing it. Get the Gaggle Going.

@@ -74,7 +74,7 @@ export const GaggleGoWordmark = ({
 
   if (!animate) {
     return (
-      <h1 className={`font-display font-medium italic ${sizeClasses[size]} ${className}`}>
+      <h1 className={`font-display font-medium ${sizeClasses[size]} ${className}`}>
         <span className="text-foreground">Gaggle</span>
         <span className="text-accent">GO</span>
       </h1>
@@ -83,7 +83,7 @@ export const GaggleGoWordmark = ({
 
   return (
     <motion.h1
-      className={`font-display font-medium italic ${sizeClasses[size]} ${className}`}
+      className={`font-display font-medium ${sizeClasses[size]} ${className}`}
       variants={containerVariants}
       initial="hidden"
       animate="visible"

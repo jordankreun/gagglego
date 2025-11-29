@@ -58,6 +58,8 @@ export type Database = {
           families: Json
           id: string
           location: string | null
+          meal_preferences: Json | null
+          nest_config: Json | null
           no_gift_shop: boolean | null
           preset_name: string
           updated_at: string
@@ -68,6 +70,8 @@ export type Database = {
           families: Json
           id?: string
           location?: string | null
+          meal_preferences?: Json | null
+          nest_config?: Json | null
           no_gift_shop?: boolean | null
           preset_name: string
           updated_at?: string
@@ -78,6 +82,8 @@ export type Database = {
           families?: Json
           id?: string
           location?: string | null
+          meal_preferences?: Json | null
+          nest_config?: Json | null
           no_gift_shop?: boolean | null
           preset_name?: string
           updated_at?: string

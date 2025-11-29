@@ -415,20 +415,56 @@ export const TripSetup = ({ onComplete }: TripSetupProps) => {
                 />
               </div>
 
-              <div className="space-y-2">
-                <Label htmlFor="edit-dietary">Dietary Restrictions (Family-wide)</Label>
-                <Input
-                  id="edit-dietary"
-                  placeholder="Separate with commas"
-                  defaultValue={editForm.dietary.join(", ")}
-                  onBlur={(e) => {
-                    const items = e.target.value.split(",").map(item => item.trim()).filter(item => item !== "");
-                    updateEditForm("dietary", items.length > 0 ? items : ["None"]);
-                  }}
-                />
-                <p className="text-xs text-muted-foreground">
-                  Examples: None, Halal, Kosher, Gluten Free, Vegan, Plain Simple
-                </p>
+              <div className="space-y-3">
+                <Label>Dietary Restrictions (Family-wide)</Label>
+                
+                {/* Quick-select chips */}
+                <div className="flex flex-wrap gap-2">
+                  {["None", "Halal", "Kosher", "Gluten Free", "Vegan", "Vegetarian", "Dairy Free", "Nut Allergy", "Plain Simple"].map((option) => {
+                    const isSelected = editForm.dietary.includes(option);
+                    return (
+                      <Badge
+                        key={option}
+                        variant={isSelected ? "default" : "outline"}
+                        className="cursor-pointer hover:bg-primary/80 transition-colors"
+                        onClick={() => {
+                          if (isSelected) {
+                            const filtered = editForm.dietary.filter(item => item !== option);
+                            updateEditForm("dietary", filtered.length > 0 ? filtered : ["None"]);
+                          } else {
+                            const updated = editForm.dietary.filter(item => item !== "None");
+                            updateEditForm("dietary", [...updated, option]);
+                          }
+                        }}
+                      >
+                        {option}
+                      </Badge>
+                    );
+                  })}
+                </div>
+
+                {/* Freeform input for custom restrictions */}
+                <div className="space-y-1">
+                  <Label htmlFor="edit-dietary" className="text-xs text-muted-foreground">
+                    Add custom restrictions (comma-separated)
+                  </Label>
+                  <Input
+                    id="edit-dietary"
+                    placeholder="e.g., Low Sodium, Shellfish Allergy"
+                    onKeyDown={(e) => {
+                      if (e.key === "Enter") {
+                        e.preventDefault();
+                        const input = e.currentTarget;
+                        const items = input.value.split(",").map(item => item.trim()).filter(item => item !== "");
+                        if (items.length > 0) {
+                          const updated = [...new Set([...editForm.dietary.filter(d => d !== "None"), ...items])];
+                          updateEditForm("dietary", updated);
+                          input.value = "";
+                        }
+                      }
+                    }}
+                  />
+                </div>
               </div>
             </div>
           )}

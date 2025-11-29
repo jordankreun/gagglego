@@ -209,7 +209,14 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      user_can_access_trip: {
+        Args: { _trip_id: string; _user_id: string }
+        Returns: boolean
+      }
+      user_can_edit_trip: {
+        Args: { _trip_id: string; _user_id: string }
+        Returns: boolean
+      }
     }
     Enums: {
       [_ in never]: never

@@ -71,6 +71,86 @@ export type Database = {
         }
         Relationships: []
       }
+      trip_collaborators: {
+        Row: {
+          created_at: string | null
+          id: string
+          role: string
+          trip_id: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string | null
+          id?: string
+          role: string
+          trip_id: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string | null
+          id?: string
+          role?: string
+          trip_id?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "trip_collaborators_trip_id_fkey"
+            columns: ["trip_id"]
+            isOneToOne: false
+            referencedRelation: "trips"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      trips: {
+        Row: {
+          created_at: string | null
+          date: string
+          families: Json
+          id: string
+          is_public: boolean | null
+          itinerary: Json
+          location: string
+          name: string
+          progress: Json | null
+          settings: Json | null
+          share_code: string | null
+          updated_at: string | null
+          user_id: string
+        }
+        Insert: {
+          created_at?: string | null
+          date: string
+          families: Json
+          id?: string
+          is_public?: boolean | null
+          itinerary: Json
+          location: string
+          name: string
+          progress?: Json | null
+          settings?: Json | null
+          share_code?: string | null
+          updated_at?: string | null
+          user_id: string
+        }
+        Update: {
+          created_at?: string | null
+          date?: string
+          families?: Json
+          id?: string
+          is_public?: boolean | null
+          itinerary?: Json
+          location?: string
+          name?: string
+          progress?: Json | null
+          settings?: Json | null
+          share_code?: string | null
+          updated_at?: string | null
+          user_id?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never

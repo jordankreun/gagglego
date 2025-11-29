@@ -5,11 +5,6 @@ import { Link, Navigate } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
 import { 
   MapPin, 
-  Users, 
-  Clock, 
-  Sparkles, 
-  Utensils,
-  ShoppingBag,
   Calendar,
   Heart,
   ArrowRight,
@@ -24,6 +19,7 @@ import { AnimatedGoose } from "@/components/AnimatedGoose";
 import { GaggleGoWordmark } from "@/components/GaggleGoWordmark";
 import { PWABanner } from "@/components/PWABanner";
 import { InstallButton } from "@/components/InstallButton";
+import { BrandIcons } from "@/components/icons/BrandIcons";
 
 export default function Landing() {
   const { user, loading } = useAuth();
@@ -142,7 +138,7 @@ export default function Landing() {
           <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
             <Card className="p-5 sm:p-6 space-y-3 border-2 hover:border-primary/30 transition-colors">
               <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-xl bg-destructive/10 flex items-center justify-center">
-                <Clock className="w-5 h-5 sm:w-6 sm:h-6 text-destructive" />
+                <BrandIcons.SleepingGosling size={24} className="text-destructive" />
               </div>
               <h3 className="font-semibold text-base sm:text-lg">Nap Time Chaos</h3>
               <p className="text-sm sm:text-base text-muted-foreground">
@@ -152,7 +148,7 @@ export default function Landing() {
 
             <Card className="p-5 sm:p-6 space-y-3 border-2 hover:border-primary/30 transition-colors">
               <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-xl bg-destructive/10 flex items-center justify-center">
-                <Utensils className="w-5 h-5 sm:w-6 sm:h-6 text-destructive" />
+                <BrandIcons.EatingGoose size={24} className="text-destructive" />
               </div>
               <h3 className="font-semibold text-base sm:text-lg">Dietary Minefield</h3>
               <p className="text-sm sm:text-base text-muted-foreground">
@@ -162,7 +158,7 @@ export default function Landing() {
 
             <Card className="p-5 sm:p-6 space-y-3 border-2 hover:border-primary/30 transition-colors">
               <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-xl bg-destructive/10 flex items-center justify-center">
-                <ShoppingBag className="w-5 h-5 sm:w-6 sm:h-6 text-destructive" />
+                <BrandIcons.AlertGoose size={24} className="text-destructive" />
               </div>
               <h3 className="font-semibold text-base sm:text-lg">Tourist Trap Hell</h3>
               <p className="text-sm sm:text-base text-muted-foreground">
@@ -191,7 +187,7 @@ export default function Landing() {
           <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
             <Card className="p-5 sm:p-6 space-y-3 border-2 hover:border-primary/30 transition-colors">
               <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-xl bg-accent/10 flex items-center justify-center">
-                <Clock className="w-5 h-5 sm:w-6 sm:h-6 text-accent" />
+                <BrandIcons.SleepingGosling size={24} className="text-accent" />
               </div>
               <h3 className="font-semibold text-base sm:text-lg">Nap-Anchored Scheduling</h3>
               <p className="text-sm sm:text-base text-muted-foreground">
@@ -201,7 +197,7 @@ export default function Landing() {
 
             <Card className="p-5 sm:p-6 space-y-3 border-2 hover:border-primary/30 transition-colors">
               <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-xl bg-accent/10 flex items-center justify-center">
-                <Utensils className="w-5 h-5 sm:w-6 sm:h-6 text-accent" />
+                <BrandIcons.EatingGoose size={24} className="text-accent" />
               </div>
               <h3 className="font-semibold text-base sm:text-lg">Dietary Intersection Filtering</h3>
               <p className="text-sm sm:text-base text-muted-foreground">
@@ -211,7 +207,7 @@ export default function Landing() {
 
             <Card className="p-5 sm:p-6 space-y-3 border-2 hover:border-primary/30 transition-colors">
               <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-xl bg-accent/10 flex items-center justify-center">
-                <ShoppingBag className="w-5 h-5 sm:w-6 sm:h-6 text-accent" />
+                <BrandIcons.WaddlingGoose size={24} className="text-accent" />
               </div>
               <h3 className="font-semibold text-base sm:text-lg">Gift Shop Avoidance</h3>
               <p className="text-sm sm:text-base text-muted-foreground">
@@ -221,7 +217,7 @@ export default function Landing() {
 
             <Card className="p-5 sm:p-6 space-y-3 border-2 hover:border-primary/30 transition-colors">
               <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-xl bg-accent/10 flex items-center justify-center">
-                <Users className="w-5 h-5 sm:w-6 sm:h-6 text-accent" />
+                <BrandIcons.Flock size={24} className="text-accent" />
               </div>
               <h3 className="font-semibold text-base sm:text-lg">Multi-Family Coordination</h3>
               <p className="text-sm sm:text-base text-muted-foreground">

@@ -1,9 +1,10 @@
 import { useState, useEffect } from 'react';
-import { Bell, Check, X, Mail, UserPlus, MapPin, Users } from 'lucide-react';
+import { Bell, Check, X } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
 import { Button } from '@/components/ui/button';
+import { BrandIcons } from '@/components/icons/BrandIcons';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -28,15 +29,15 @@ interface Notification {
 const getNotificationIcon = (type: string) => {
   switch (type) {
     case 'trip_invite':
-      return <Mail className="h-4 w-4 text-primary" />;
+      return <BrandIcons.FlyingGoose size={16} className="text-primary" />;
     case 'flock_request':
-      return <UserPlus className="h-4 w-4 text-accent" />;
+      return <BrandIcons.Flock size={16} className="text-accent" />;
     case 'trip_update':
-      return <MapPin className="h-4 w-4 text-muted-foreground" />;
+      return <BrandIcons.AlertGoose size={16} className="text-muted-foreground" />;
     case 'collab_added':
-      return <Users className="h-4 w-4 text-primary" />;
+      return <BrandIcons.HatchingEgg size={16} className="text-primary" />;
     default:
-      return <Bell className="h-4 w-4" />;
+      return <BrandIcons.Goose size={16} />;
   }
 };
 

@@ -4,11 +4,12 @@ import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
-import { MapPin, Calendar, Users, Trash2, ExternalLink, Edit2, Check, X } from "lucide-react";
+import { MapPin, Calendar, Trash2, ExternalLink, Edit2, Check, X } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
 import { AnimatedGoose } from "@/components/AnimatedGoose";
+import { BrandIcons } from "@/components/icons/BrandIcons";
 
 interface Trip {
   id: string;
@@ -172,7 +173,10 @@ export default function MyTrips() {
     <section className="min-h-screen py-12 px-4">
       <div className="container max-w-4xl mx-auto space-y-8">
         <div className="space-y-2">
-          <h1 className="text-3xl md:text-4xl font-display font-bold">My Migrations 🦆</h1>
+          <div className="flex items-center gap-3">
+            <BrandIcons.FlyingGoose size={32} className="text-primary" />
+            <h1 className="text-3xl md:text-4xl font-display font-bold">My Migrations</h1>
+          </div>
           <p className="text-muted-foreground">Your saved family adventures</p>
         </div>
 
@@ -258,7 +262,7 @@ export default function MyTrips() {
                           ) : trip.date}
                         </div>
                         <div className="flex items-center gap-1">
-                          <Users className="w-4 h-4" />
+                          <BrandIcons.Flock size={16} />
                           {Array.isArray(trip.families) ? trip.families.length : 0} {Array.isArray(trip.families) && trip.families.length === 1 ? 'family' : 'families'}
                         </div>
                       </div>

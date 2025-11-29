@@ -3,17 +3,15 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
 import { 
-  Utensils, 
   ExternalLink, 
   RefreshCw, 
   Star,
-  DollarSign,
   Clock,
-  Baby,
   ChefHat,
   AlertTriangle,
   CheckCircle
 } from "lucide-react";
+import { BrandIcons } from "@/components/icons/BrandIcons";
 
 interface DietaryFitScore {
   overallScore: number;
@@ -49,13 +47,13 @@ interface MealCardProps {
 }
 
 const getMealIcon = (mealType: string) => {
-  const icons: Record<string, string> = {
-    breakfast: "🌅",
-    lunch: "☀️",
-    dinner: "🌙",
-    snack: "🍿"
-  };
-  return icons[mealType] || "🍽️";
+  switch (mealType) {
+    case "breakfast": return BrandIcons.EatingGoose;
+    case "lunch": return BrandIcons.EatingGoose;
+    case "dinner": return BrandIcons.EatingGoose;
+    case "snack": return BrandIcons.Gosling;
+    default: return BrandIcons.EatingGoose;
+  }
 };
 
 export const MealCard = ({ time, mealDetails, onSwap }: MealCardProps) => {
@@ -87,14 +85,22 @@ export const MealCard = ({ time, mealDetails, onSwap }: MealCardProps) => {
       {/* Header */}
       <div className="flex items-center justify-between mb-3">
         <div className="flex items-center gap-2">
-          <span className="text-2xl">{getMealIcon(mealType)}</span>
+          {(() => {
+            const MealIcon = getMealIcon(mealType);
+            return <MealIcon size={32} className={
+              mealType === "breakfast" ? "text-yellow-500" :
+              mealType === "lunch" ? "text-orange-500" :
+              mealType === "dinner" ? "text-indigo-500" :
+              "text-secondary"
+            } />;
+          })()}
           <div>
             <Badge variant="outline" className="font-mono text-xs mb-1">{time}</Badge>
             <h3 className="font-semibold text-lg">{restaurantName}</h3>
             <p className="text-xs text-muted-foreground">{cuisine} • {estimatedCost} • {waitTime}</p>
           </div>
         </div>
-        <Utensils className="w-5 h-5 text-secondary" />
+        <BrandIcons.Dining size={20} className="text-secondary" />
       </div>
 
       {/* Dietary Fit Ranking */}
@@ -156,8 +162,8 @@ export const MealCard = ({ time, mealDetails, onSwap }: MealCardProps) => {
       {/* Family-Friendly Features */}
       <div className="flex flex-wrap gap-2 mb-4">
         {kidMenu && (
-          <Badge variant="secondary" className="text-xs">
-            <Baby className="w-3 h-3 mr-1" />
+          <Badge variant="secondary" className="text-xs flex items-center gap-1 w-fit">
+            <BrandIcons.Gosling size={12} />
             Kid Menu
           </Badge>
         )}

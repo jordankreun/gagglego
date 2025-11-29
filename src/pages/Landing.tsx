@@ -27,7 +27,7 @@ export default function Landing() {
         <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-background to-accent/5" />
         
         <div className="container mx-auto px-4 py-12 sm:py-16 md:py-20 relative z-10">
-          <div className="max-w-4xl mx-auto text-center space-y-6 sm:space-y-8 md:space-y-12 animate-fade-in">
+          <div className="max-w-4xl mx-auto text-center space-y-6 sm:space-y-8 md:space-y-12 animate-fade-in-subtle">
             {/* Animated Goose */}
             <div className="flex justify-center">
               <AnimatedGoose size="xl" state="excited" />

@@ -75,7 +75,7 @@ const Auth = () => {
         title: 'Welcome back!',
         description: 'You have successfully logged in.',
       });
-      navigate('/');
+      navigate('/plan');
     } catch (error) {
       toast({
         title: 'Error',
@@ -139,7 +139,7 @@ const Auth = () => {
         title: 'Account created!',
         description: 'Welcome to GaggleGO!',
       });
-      navigate('/');
+      navigate('/plan');
     } catch (error) {
       toast({
         title: 'Error',

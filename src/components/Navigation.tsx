@@ -14,7 +14,7 @@ export const Navigation = () => {
       <div className="container mx-auto px-4 bg-primary-foreground">
         <div className="flex h-16 items-center justify-between">
           {/* Logo */}
-          <Link to="/" className="flex items-center">
+          <Link to="/plan" className="flex items-center">
             <img src={gaggleGoLogo} alt="GaggleGO" className="h-10 w-auto object-contain" />
           </Link>
 

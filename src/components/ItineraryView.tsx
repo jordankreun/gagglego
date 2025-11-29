@@ -118,73 +118,75 @@ const getTypeColor = (type: string) => {
 export const ItineraryView = ({ location, date, items, onBack }: ItineraryViewProps) => {
   const displayItems = items.length > 0 ? items : MOCK_ITEMS;
   return (
-    <section className="min-h-screen py-12 px-4">
-      <div className="container max-w-4xl mx-auto space-y-8">
+    <section className="min-h-screen py-6 sm:py-10 md:py-12 px-3 sm:px-4">
+      <div className="container max-w-4xl mx-auto space-y-4 sm:space-y-6 md:space-y-8">
         {/* Header */}
-        <div className="space-y-6">
-          <Button variant="ghost" onClick={onBack}>
+        <div className="space-y-3 sm:space-y-4 md:space-y-6">
+          <Button variant="ghost" onClick={onBack} className="h-9 sm:h-10">
             ← Back
           </Button>
           
-          <div className="space-y-2">
+          <div className="space-y-1 sm:space-y-2">
             <div className="flex items-center gap-2">
-              <MapPin className="w-6 h-6 text-primary" />
-              <h2 className="text-3xl font-display font-bold">{location}</h2>
+              <MapPin className="w-5 h-5 sm:w-6 sm:h-6 text-primary flex-shrink-0" />
+              <h2 className="text-xl sm:text-2xl md:text-3xl font-display font-bold break-words">{location}</h2>
             </div>
-            <p className="text-muted-foreground">{date}</p>
+            <p className="text-sm sm:text-base text-muted-foreground">{date}</p>
           </div>
 
-          <div className="flex items-center gap-2 text-xs text-muted-foreground">
-            <ShoppingBag className="w-3.5 h-3.5" />
+          <div className="flex items-center gap-2 text-xs sm:text-sm text-muted-foreground">
+            <ShoppingBag className="w-3 h-3 sm:w-3.5 sm:h-3.5" />
             <span>Gift shop routes minimized</span>
           </div>
         </div>
 
         {/* Timeline */}
-        <div className="relative space-y-3">
-          <div className="absolute left-[39px] top-6 bottom-6 w-px bg-border" />
+        <div className="relative space-y-2 sm:space-y-3">
+          <div className="absolute left-[23px] sm:left-[39px] top-6 bottom-6 w-px bg-border" />
 
           {displayItems.map((item, index) => (
             <div key={index} className="relative">
-              <Card className="p-5 ml-16 border-l-2 border-l-primary/30 hover:border-l-primary transition-colors">
+              <Card className="p-3 sm:p-4 md:p-5 ml-10 sm:ml-16 border-l-2 border-l-primary/30 hover:border-l-primary transition-colors">
                 {/* Time badge */}
-                <div className="absolute -left-16 top-5">
-                  <div className={`w-10 h-10 rounded-full border-4 border-background flex items-center justify-center ${getTypeColor(item.type)}`}>
-                    {getTypeIcon(item.type)}
+                <div className="absolute -left-10 sm:-left-16 top-3 sm:top-5">
+                  <div className={`w-7 h-7 sm:w-10 sm:h-10 rounded-full border-2 sm:border-4 border-background flex items-center justify-center ${getTypeColor(item.type)}`}>
+                    <div className="scale-75 sm:scale-100">
+                      {getTypeIcon(item.type)}
+                    </div>
                   </div>
                 </div>
 
-                <div className="space-y-3">
-                  <div className="space-y-2">
-                    <div className="flex items-start justify-between gap-3">
-                      <div className="flex-1">
-                        <div className="flex items-center gap-2 mb-1">
-                          <Badge variant="outline" className="font-mono text-xs">
+                <div className="space-y-2 sm:space-y-3">
+                  <div className="space-y-1.5 sm:space-y-2">
+                    <div className="flex items-start justify-between gap-2 sm:gap-3">
+                      <div className="flex-1 min-w-0">
+                        <div className="flex items-center gap-1.5 sm:gap-2 mb-1 flex-wrap">
+                          <Badge variant="outline" className="font-mono text-[10px] sm:text-xs flex-shrink-0">
                             {item.time}
                           </Badge>
-                          <Badge className={`${getTypeColor(item.type)} text-xs`}>
+                          <Badge className={`${getTypeColor(item.type)} text-[10px] sm:text-xs flex-shrink-0`}>
                             {item.type}
                           </Badge>
                         </div>
-                        <h3 className="font-semibold text-lg">{item.title}</h3>
+                        <h3 className="font-semibold text-sm sm:text-base md:text-lg break-words">{item.title}</h3>
                       </div>
                       
                       {item.link && (
-                        <Button variant="ghost" size="sm" asChild>
+                        <Button variant="ghost" size="sm" asChild className="h-7 w-7 sm:h-8 sm:w-8 flex-shrink-0">
                           <a href={item.link} target="_blank" rel="noopener noreferrer">
-                            <ExternalLink className="w-4 h-4" />
+                            <ExternalLink className="w-3 h-3 sm:w-4 sm:h-4" />
                           </a>
                         </Button>
                       )}
                     </div>
                     
-                    <p className="text-sm text-muted-foreground">{item.description}</p>
+                    <p className="text-xs sm:text-sm text-muted-foreground">{item.description}</p>
                   </div>
 
                   {item.constraints && item.constraints.length > 0 && (
-                    <div className="flex flex-wrap gap-1.5">
+                    <div className="flex flex-wrap gap-1 sm:gap-1.5">
                       {item.constraints.map((constraint, i) => (
-                        <Badge key={i} variant="secondary" className="text-xs">
+                        <Badge key={i} variant="secondary" className="text-[10px] sm:text-xs">
                           {constraint}
                         </Badge>
                       ))}
@@ -197,8 +199,8 @@ export const ItineraryView = ({ location, date, items, onBack }: ItineraryViewPr
         </div>
 
         {/* Footer */}
-        <Card className="p-4 bg-primary/5 border-primary/20">
-          <p className="text-center text-sm text-muted-foreground">
+        <Card className="p-3 sm:p-4 bg-primary/5 border-primary/20">
+          <p className="text-center text-xs sm:text-sm text-muted-foreground">
             Optimized for nap schedules, dietary needs, and family pacing
           </p>
         </Card>

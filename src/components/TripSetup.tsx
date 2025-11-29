@@ -202,23 +202,23 @@ export const TripSetup = ({ onComplete }: TripSetupProps) => {
   };
 
   return (
-    <section className="min-h-screen py-16 px-4">
+    <section className="min-h-screen py-6 sm:py-12 md:py-16 px-3 sm:px-4">
       <div className="container max-w-3xl mx-auto">
-        <div className="space-y-8">
+        <div className="space-y-4 sm:space-y-6 md:space-y-8">
           {/* Header */}
-          <div className="text-center space-y-2">
-            <h2 className="text-4xl font-display font-bold">Plan Your Trip</h2>
-            <p className="text-muted-foreground">
+          <div className="text-center space-y-1 sm:space-y-2">
+            <h2 className="text-2xl sm:text-3xl md:text-4xl font-display font-bold">Plan Your Trip</h2>
+            <p className="text-sm sm:text-base text-muted-foreground">
               Location and families
             </p>
           </div>
 
-          <form onSubmit={handleSubmit} className="space-y-6">
+          <form onSubmit={handleSubmit} className="space-y-4 sm:space-y-5 md:space-y-6">
             {/* Location Input */}
-            <Card className="p-6 border-2 hover:border-primary/30 transition-colors">
-              <div className="space-y-4">
-                <Label htmlFor="location" className="text-base font-semibold flex items-center gap-2">
-                  <MapPin className="w-5 h-5 text-primary" />
+            <Card className="p-4 sm:p-5 md:p-6 border-2 hover:border-primary/30 transition-colors">
+              <div className="space-y-3 sm:space-y-4">
+                <Label htmlFor="location" className="text-sm sm:text-base font-semibold flex items-center gap-2">
+                  <MapPin className="w-4 h-4 sm:w-5 sm:h-5 text-primary" />
                   Destination
                 </Label>
                 <Input
@@ -226,7 +226,7 @@ export const TripSetup = ({ onComplete }: TripSetupProps) => {
                   placeholder="Disneyland, Paris, San Diego Zoo..."
                   value={location}
                   onChange={(e) => setLocation(e.target.value)}
-                  className="h-12"
+                  className="h-11 sm:h-12 text-base"
                   required
                 />
                 
@@ -238,10 +238,10 @@ export const TripSetup = ({ onComplete }: TripSetupProps) => {
             </Card>
 
             {/* Families */}
-            <Card className="p-6 border-2 hover:border-primary/30 transition-colors">
-              <div className="space-y-4">
-                <div className="flex items-center justify-between">
-                  <Label className="text-base font-semibold">Families</Label>
+            <Card className="p-4 sm:p-5 md:p-6 border-2 hover:border-primary/30 transition-colors">
+              <div className="space-y-3 sm:space-y-4">
+                <div className="flex items-center justify-between gap-2">
+                  <Label className="text-sm sm:text-base font-semibold">Families</Label>
                   <div className="flex gap-2">
                     <Button
                       type="button"
@@ -266,54 +266,56 @@ export const TripSetup = ({ onComplete }: TripSetupProps) => {
                 </div>
 
                 {/* Family Cards */}
-                <div className="space-y-3">
+                <div className="space-y-2 sm:space-y-3">
                   {families.map((family) => (
                     <div
                       key={family.id}
-                      className="p-4 bg-muted/50 rounded-xl border hover:border-primary/30 transition-colors"
+                      className="p-3 sm:p-4 bg-muted/50 rounded-xl border hover:border-primary/30 transition-colors"
                     >
-                      <div className="flex items-start justify-between mb-3">
-                        <div className="flex-1">
-                          <h4 className="font-semibold text-lg">{family.name}</h4>
-                          <p className="text-sm text-muted-foreground">
+                      <div className="flex items-start justify-between mb-2 sm:mb-3">
+                        <div className="flex-1 min-w-0">
+                          <h4 className="font-semibold text-base sm:text-lg truncate">{family.name}</h4>
+                          <p className="text-xs sm:text-sm text-muted-foreground">
                             {family.members.length} member{family.members.length !== 1 ? 's' : ''}
                           </p>
                         </div>
-                        <div className="flex gap-1">
+                        <div className="flex gap-1 flex-shrink-0">
                           <Button
                             type="button"
                             variant="ghost"
                             size="icon"
+                            className="h-8 w-8 sm:h-10 sm:w-10"
                             onClick={() => openEditDialog(family)}
                           >
-                            <Pencil className="w-4 h-4" />
+                            <Pencil className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
                           </Button>
                           <Button
                             type="button"
                             variant="ghost"
                             size="icon"
+                            className="h-8 w-8 sm:h-10 sm:w-10"
                             onClick={() => removeFamily(family.id)}
                           >
-                            <X className="w-4 h-4" />
+                            <X className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
                           </Button>
                         </div>
                       </div>
                       
                       {/* Members List */}
-                      <div className="space-y-1.5 mb-3">
+                      <div className="space-y-1 sm:space-y-1.5 mb-2 sm:mb-3">
                         {family.members.map((member) => (
-                          <div key={member.id} className="text-sm flex items-center gap-2">
-                            <Badge variant={member.type === "adult" ? "secondary" : "default"} className="text-xs">
+                          <div key={member.id} className="text-xs sm:text-sm flex items-center gap-1.5 sm:gap-2 flex-wrap">
+                            <Badge variant={member.type === "adult" ? "secondary" : "default"} className="text-xs flex-shrink-0">
                               {member.type === "adult" ? "👤" : "🧒"}
                             </Badge>
-                            <span>{member.name}</span>
+                            <span className="truncate">{member.name}</span>
                             {member.type === "kid" && member.age && (
-                              <span className="text-muted-foreground">({member.age}y)</span>
+                              <span className="text-muted-foreground flex-shrink-0">({member.age}y)</span>
                             )}
                             {member.type === "kid" && member.napTime && (
-                              <span className="text-muted-foreground flex items-center gap-1">
+                              <span className="text-muted-foreground flex items-center gap-0.5 sm:gap-1 flex-shrink-0">
                                 <Clock className="w-3 h-3" />
-                                {member.napTime}
+                                <span className="text-xs">{member.napTime}</span>
                               </span>
                             )}
                           </div>
@@ -338,8 +340,9 @@ export const TripSetup = ({ onComplete }: TripSetupProps) => {
                     value={newFamilyName}
                     onChange={(e) => setNewFamilyName(e.target.value)}
                     onKeyDown={(e) => e.key === "Enter" && (e.preventDefault(), addFamily())}
+                    className="h-10 sm:h-11 text-sm sm:text-base"
                   />
-                  <Button type="button" onClick={addFamily} variant="outline">
+                  <Button type="button" onClick={addFamily} variant="outline" className="h-10 sm:h-11 px-3 sm:px-4">
                     <Plus className="w-4 h-4" />
                   </Button>
                 </div>
@@ -347,13 +350,13 @@ export const TripSetup = ({ onComplete }: TripSetupProps) => {
             </Card>
 
             {/* Settings */}
-            <Card className="p-6 border-2 hover:border-primary/30 transition-colors">
-              <div className="flex items-center justify-between">
-                <div className="space-y-1">
-                  <Label htmlFor="gift-shop" className="text-base font-semibold">
+            <Card className="p-4 sm:p-5 md:p-6 border-2 hover:border-primary/30 transition-colors">
+              <div className="flex items-start sm:items-center justify-between gap-3">
+                <div className="space-y-0.5 sm:space-y-1 flex-1">
+                  <Label htmlFor="gift-shop" className="text-sm sm:text-base font-semibold">
                     Avoid Tourist Traps
                   </Label>
-                  <p className="text-sm text-muted-foreground">
+                  <p className="text-xs sm:text-sm text-muted-foreground">
                     Skip retail areas when planning paths
                   </p>
                 </div>
@@ -361,6 +364,7 @@ export const TripSetup = ({ onComplete }: TripSetupProps) => {
                   id="gift-shop"
                   checked={noGiftShop}
                   onCheckedChange={setNoGiftShop}
+                  className="flex-shrink-0"
                 />
               </div>
             </Card>
@@ -370,13 +374,14 @@ export const TripSetup = ({ onComplete }: TripSetupProps) => {
               type="submit"
               variant="hero"
               size="lg"
-              className="w-full h-12"
+              className="w-full h-12 sm:h-14 text-sm sm:text-base"
               disabled={!location || families.length === 0 || isGenerating}
             >
               {isGenerating ? (
                 <>
                   <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                  Generating Your Itinerary...
+                  <span className="hidden sm:inline">Generating Your Itinerary...</span>
+                  <span className="sm:hidden">Generating...</span>
                 </>
               ) : (
                 "Generate Itinerary"

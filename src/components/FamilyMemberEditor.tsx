@@ -73,20 +73,20 @@ export const FamilyMemberEditor = ({ members, onChange }: FamilyMemberEditorProp
   };
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-3 sm:space-y-4">
       {/* Existing Members */}
       <div className="space-y-2">
         {members.map((member) => (
-          <div key={member.id} className="p-3 bg-muted/50 rounded-lg space-y-2">
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-2 flex-1">
-                <Badge variant={member.type === "adult" ? "secondary" : "default"}>
-                  {member.type === "adult" ? "Adult" : "Kid"}
+          <div key={member.id} className="p-2.5 sm:p-3 bg-muted/50 rounded-lg space-y-2">
+            <div className="flex items-center justify-between gap-2">
+              <div className="flex items-center gap-1.5 sm:gap-2 flex-1 min-w-0">
+                <Badge variant={member.type === "adult" ? "secondary" : "default"} className="text-xs flex-shrink-0">
+                  {member.type === "adult" ? "👤" : "🧒"}
                 </Badge>
                 <Input
                   value={member.name}
                   onChange={(e) => updateMember(member.id, { name: e.target.value })}
-                  className="h-8 flex-1"
+                  className="h-8 sm:h-9 flex-1 text-sm"
                   placeholder="Name"
                 />
               </div>
@@ -94,10 +94,10 @@ export const FamilyMemberEditor = ({ members, onChange }: FamilyMemberEditorProp
                 type="button"
                 variant="ghost"
                 size="icon"
-                className="h-8 w-8"
+                className="h-7 w-7 sm:h-8 sm:w-8 flex-shrink-0"
                 onClick={() => removeMember(member.id)}
               >
-                <X className="w-4 h-4" />
+                <X className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
               </Button>
             </div>
 
@@ -111,7 +111,7 @@ export const FamilyMemberEditor = ({ members, onChange }: FamilyMemberEditorProp
                     max="18"
                     value={member.age || ""}
                     onChange={(e) => updateMember(member.id, { age: parseInt(e.target.value) || undefined })}
-                    className="h-8"
+                    className="h-8 sm:h-9 text-sm"
                     placeholder="Age"
                   />
                 </div>
@@ -121,7 +121,7 @@ export const FamilyMemberEditor = ({ members, onChange }: FamilyMemberEditorProp
                     type="time"
                     value={convertTimeToInput(member.napTime)}
                     onChange={(e) => updateMember(member.id, { napTime: convertInputToTime(e.target.value) })}
-                    className="h-8"
+                    className="h-8 sm:h-9 text-sm"
                   />
                 </div>
               </div>
@@ -131,11 +131,11 @@ export const FamilyMemberEditor = ({ members, onChange }: FamilyMemberEditorProp
       </div>
 
       {/* Add New Member */}
-      <div className="p-3 border-2 border-dashed rounded-lg space-y-2">
-        <Label className="text-sm font-semibold">Add Member</Label>
+      <div className="p-2.5 sm:p-3 border-2 border-dashed rounded-lg space-y-2">
+        <Label className="text-xs sm:text-sm font-semibold">Add Member</Label>
         <div className="flex gap-2">
           <Select value={newMemberType} onValueChange={(v: "adult" | "kid") => setNewMemberType(v)}>
-            <SelectTrigger className="w-24">
+            <SelectTrigger className="w-20 sm:w-24 h-9 sm:h-10 text-sm">
               <SelectValue />
             </SelectTrigger>
             <SelectContent>
@@ -148,9 +148,9 @@ export const FamilyMemberEditor = ({ members, onChange }: FamilyMemberEditorProp
             value={newMemberName}
             onChange={(e) => setNewMemberName(e.target.value)}
             onKeyDown={(e) => e.key === "Enter" && (e.preventDefault(), addMember())}
-            className="flex-1"
+            className="flex-1 h-9 sm:h-10 text-sm"
           />
-          <Button type="button" onClick={addMember} size="icon">
+          <Button type="button" onClick={addMember} size="icon" className="h-9 w-9 sm:h-10 sm:w-10 flex-shrink-0">
             <Plus className="w-4 h-4" />
           </Button>
         </div>

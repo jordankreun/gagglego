@@ -137,17 +137,17 @@ export const LocationSuggestions = ({ onSelectLocation }: LocationSuggestionsPro
   };
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-3 sm:space-y-4">
       {!suggestions.length ? (
-        <Card className="p-6 text-center space-y-4 border-2 border-dashed">
+        <Card className="p-4 sm:p-5 md:p-6 text-center space-y-3 sm:space-y-4 border-2 border-dashed">
           <div className="flex justify-center">
-            <div className="w-16 h-16 rounded-full bg-primary/10 flex items-center justify-center">
-              <Navigation className="w-8 h-8 text-primary" />
+            <div className="w-12 h-12 sm:w-16 sm:h-16 rounded-full bg-primary/10 flex items-center justify-center">
+              <Navigation className="w-6 h-6 sm:w-8 sm:h-8 text-primary" />
             </div>
           </div>
-          <div className="space-y-2">
-            <h3 className="font-semibold text-lg">Need Destination Ideas?</h3>
-            <p className="text-sm text-muted-foreground">
+          <div className="space-y-1 sm:space-y-2">
+            <h3 className="font-semibold text-base sm:text-lg">Need Destination Ideas?</h3>
+            <p className="text-xs sm:text-sm text-muted-foreground px-2">
               Let us suggest family-friendly locations near you
             </p>
           </div>
@@ -156,12 +156,13 @@ export const LocationSuggestions = ({ onSelectLocation }: LocationSuggestionsPro
             disabled={loading}
             variant="outline"
             size="lg"
-            className="gap-2"
+            className="gap-2 h-10 sm:h-11 text-sm sm:text-base"
           >
             {loading ? (
               <>
                 <Loader2 className="w-4 h-4 animate-spin" />
-                Finding locations...
+                <span className="hidden sm:inline">Finding locations...</span>
+                <span className="sm:hidden">Finding...</span>
               </>
             ) : (
               <>
@@ -173,10 +174,10 @@ export const LocationSuggestions = ({ onSelectLocation }: LocationSuggestionsPro
         </Card>
       ) : (
         <>
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-2">
-              <MapPin className="w-5 h-5 text-primary" />
-              <h3 className="font-semibold">
+          <div className="flex items-center justify-between gap-2">
+            <div className="flex items-center gap-1.5 sm:gap-2 min-w-0">
+              <MapPin className="w-4 h-4 sm:w-5 sm:h-5 text-primary flex-shrink-0" />
+              <h3 className="font-semibold text-sm sm:text-base truncate">
                 Near {userLocation?.city || "Your Location"}
               </h3>
             </div>
@@ -185,31 +186,32 @@ export const LocationSuggestions = ({ onSelectLocation }: LocationSuggestionsPro
               disabled={loading}
               variant="ghost"
               size="sm"
+              className="flex-shrink-0 h-8 px-2 sm:px-3"
             >
-              Refresh
+              <span className="text-xs sm:text-sm">Refresh</span>
             </Button>
           </div>
 
-          <div className="grid gap-3">
+          <div className="grid gap-2 sm:gap-3">
             {suggestions.map((suggestion, index) => (
               <Card
                 key={index}
-                className="p-4 hover:border-primary/30 transition-colors cursor-pointer"
+                className="p-3 sm:p-4 hover:border-primary/30 transition-colors cursor-pointer active:scale-[0.98]"
                 onClick={() => onSelectLocation(suggestion.name)}
               >
-                <div className="space-y-2">
+                <div className="space-y-1.5 sm:space-y-2">
                   <div className="flex items-start justify-between gap-2">
-                    <h4 className="font-semibold flex-1">{suggestion.name}</h4>
-                    <Badge variant="secondary" className={`text-xs ${getTypeColor(suggestion.type)}`}>
+                    <h4 className="font-semibold text-sm sm:text-base flex-1 break-words">{suggestion.name}</h4>
+                    <Badge variant="secondary" className={`text-[10px] sm:text-xs flex-shrink-0 ${getTypeColor(suggestion.type)}`}>
                       {formatType(suggestion.type)}
                     </Badge>
                   </div>
-                  <p className="text-sm text-muted-foreground">
+                  <p className="text-xs sm:text-sm text-muted-foreground">
                     {suggestion.description}
                   </p>
                   <div className="flex items-center gap-1 text-xs text-muted-foreground">
-                    <MapPin className="w-3 h-3" />
-                    {suggestion.estimatedDistance}
+                    <MapPin className="w-3 h-3 flex-shrink-0" />
+                    <span>{suggestion.estimatedDistance}</span>
                   </div>
                 </div>
               </Card>

@@ -7,6 +7,7 @@ import { AuthProvider } from "@/contexts/AuthContext";
 import { ProtectedRoute } from "@/components/ProtectedRoute";
 import { Navigation } from "@/components/Navigation";
 import Index from "./pages/Index";
+import Landing from "./pages/Landing";
 import Auth from "./pages/Auth";
 import Profile from "./pages/Profile";
 import IconShowcase from "./pages/IconShowcase";
@@ -21,31 +22,40 @@ const App = () => (
         <Toaster />
         <Sonner />
         <BrowserRouter>
-          <div className="min-h-screen flex flex-col">
-            <Navigation />
-            <Routes>
-              <Route path="/auth" element={<Auth />} />
-              <Route path="/icons" element={<IconShowcase />} />
-              <Route 
-                path="/" 
-                element={
-                  <ProtectedRoute>
-                    <Index />
-                  </ProtectedRoute>
-                } 
-              />
-              <Route 
-                path="/profile" 
-                element={
-                  <ProtectedRoute>
-                    <Profile />
-                  </ProtectedRoute>
-                } 
-              />
-              {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
-              <Route path="*" element={<NotFound />} />
-            </Routes>
-          </div>
+          <Routes>
+            {/* Public routes without navigation */}
+            <Route path="/" element={<Landing />} />
+            <Route path="/auth" element={<Auth />} />
+            
+            {/* App routes with navigation */}
+            <Route path="/plan" element={
+              <div className="min-h-screen flex flex-col">
+                <Navigation />
+                <ProtectedRoute>
+                  <Index />
+                </ProtectedRoute>
+              </div>
+            } />
+            
+            <Route path="/profile" element={
+              <div className="min-h-screen flex flex-col">
+                <Navigation />
+                <ProtectedRoute>
+                  <Profile />
+                </ProtectedRoute>
+              </div>
+            } />
+            
+            <Route path="/icons" element={
+              <div className="min-h-screen flex flex-col">
+                <Navigation />
+                <IconShowcase />
+              </div>
+            } />
+            
+            {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
+            <Route path="*" element={<NotFound />} />
+          </Routes>
         </BrowserRouter>
       </AuthProvider>
     </TooltipProvider>

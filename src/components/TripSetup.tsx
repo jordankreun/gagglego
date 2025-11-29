@@ -35,8 +35,9 @@ interface Family {
 }
 
 interface NestConfig {
-  address: string;
-  isShared: boolean;
+  mode: "shared" | "separate";
+  sharedAddress?: string;
+  perFamilyAddresses?: Map<string, string>;
   allowCarNaps: boolean;
 }
 
@@ -82,8 +83,9 @@ export const TripSetup = ({ onComplete }: TripSetupProps) => {
   const [editForm, setEditForm] = useState<Family | null>(null);
   
   const [nestConfig, setNestConfig] = useState<NestConfig>({
-    address: "",
-    isShared: false,
+    mode: "shared",
+    sharedAddress: "",
+    perFamilyAddresses: new Map(),
     allowCarNaps: false,
   });
   
@@ -236,11 +238,15 @@ export const TripSetup = ({ onComplete }: TripSetupProps) => {
         description: `Created ${data.items.length} activities for your trip`,
       });
 
+      const hasNestConfig = nestConfig.mode === "shared" 
+        ? !!nestConfig.sharedAddress 
+        : nestConfig.perFamilyAddresses && nestConfig.perFamilyAddresses.size > 0;
+      
       onComplete({ 
         location, 
         families, 
         noGiftShop,
-        nestConfig: nestConfig.address ? nestConfig : undefined,
+        nestConfig: hasNestConfig ? nestConfig : undefined,
         mealPreferences 
       }, data.items);
     } catch (error) {
@@ -286,7 +292,11 @@ export const TripSetup = ({ onComplete }: TripSetupProps) => {
                 
                 {/* AI-powered location suggestions */}
                 <div className="pt-4 border-t">
-                  <LocationSuggestions onSelectLocation={setLocation} />
+                  <LocationSuggestions 
+                    onSelectLocation={setLocation}
+                    families={families}
+                    tripDate={new Date().toLocaleDateString()}
+                  />
                 </div>
               </div>
             </Card>
@@ -407,33 +417,72 @@ export const TripSetup = ({ onComplete }: TripSetupProps) => {
             <Card className="p-4 sm:p-5 md:p-6 border-2 hover:border-primary/30 transition-colors">
               <div className="space-y-4">
                 <Label className="text-sm sm:text-base font-semibold">🏠 The Nest (Home Base)</Label>
-                <Input
-                  placeholder="Hotel address or meeting point (optional)"
-                  value={nestConfig.address}
-                  onChange={(e) => setNestConfig({ ...nestConfig, address: e.target.value })}
-                  className="h-11 sm:h-12"
-                />
-                <div className="space-y-3">
-                  <div className="flex items-center justify-between">
-                    <Label htmlFor="shared-lodging" className="text-sm">
-                      Shared lodging (multiple families)
-                    </Label>
-                    <Switch
-                      id="shared-lodging"
-                      checked={nestConfig.isShared}
-                      onCheckedChange={(checked) => setNestConfig({ ...nestConfig, isShared: checked })}
-                    />
+                
+                {/* Mode selector */}
+                <div className="flex gap-2">
+                  <Button
+                    type="button"
+                    variant={nestConfig.mode === "shared" ? "default" : "outline"}
+                    size="sm"
+                    onClick={() => setNestConfig({ ...nestConfig, mode: "shared" })}
+                    className="flex-1"
+                  >
+                    Shared Nest
+                  </Button>
+                  <Button
+                    type="button"
+                    variant={nestConfig.mode === "separate" ? "default" : "outline"}
+                    size="sm"
+                    onClick={() => setNestConfig({ ...nestConfig, mode: "separate" })}
+                    className="flex-1"
+                  >
+                    Separate Nests
+                  </Button>
+                </div>
+
+                {/* Shared nest input */}
+                {nestConfig.mode === "shared" && (
+                  <Input
+                    placeholder="Hotel address or meeting point (optional)"
+                    value={nestConfig.sharedAddress || ""}
+                    onChange={(e) => setNestConfig({ ...nestConfig, sharedAddress: e.target.value })}
+                    className="h-11 sm:h-12"
+                  />
+                )}
+
+                {/* Per-family nest inputs */}
+                {nestConfig.mode === "separate" && families.length > 0 && (
+                  <div className="space-y-3">
+                    {families.map((family) => (
+                      <div key={family.id} className="space-y-2">
+                        <Label htmlFor={`nest-${family.id}`} className="text-sm font-medium">
+                          {family.name}'s Nest
+                        </Label>
+                        <Input
+                          id={`nest-${family.id}`}
+                          placeholder={`${family.name}'s accommodation address`}
+                          value={nestConfig.perFamilyAddresses?.get(family.id) || ""}
+                          onChange={(e) => {
+                            const newMap = new Map(nestConfig.perFamilyAddresses);
+                            newMap.set(family.id, e.target.value);
+                            setNestConfig({ ...nestConfig, perFamilyAddresses: newMap });
+                          }}
+                          className="h-10 sm:h-11"
+                        />
+                      </div>
+                    ))}
                   </div>
-                  <div className="flex items-center justify-between">
-                    <Label htmlFor="car-naps" className="text-sm">
-                      Allow car naps during travel
-                    </Label>
-                    <Switch
-                      id="car-naps"
-                      checked={nestConfig.allowCarNaps}
-                      onCheckedChange={(checked) => setNestConfig({ ...nestConfig, allowCarNaps: checked })}
-                    />
-                  </div>
+                )}
+
+                <div className="flex items-center justify-between pt-2 border-t">
+                  <Label htmlFor="car-naps" className="text-sm">
+                    Allow car naps during travel
+                  </Label>
+                  <Switch
+                    id="car-naps"
+                    checked={nestConfig.allowCarNaps}
+                    onCheckedChange={(checked) => setNestConfig({ ...nestConfig, allowCarNaps: checked })}
+                  />
                 </div>
               </div>
             </Card>

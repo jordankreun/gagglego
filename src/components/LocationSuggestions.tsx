@@ -17,7 +17,12 @@ interface LocationSuggestionsProps {
   onSelectLocation: (location: string) => void;
 }
 
-export const LocationSuggestions = ({ onSelectLocation }: LocationSuggestionsProps) => {
+interface LocationSuggestionsExtendedProps extends LocationSuggestionsProps {
+  families?: any[];
+  tripDate?: string;
+}
+
+export const LocationSuggestions = ({ onSelectLocation, families, tripDate }: LocationSuggestionsExtendedProps) => {
   const { toast } = useToast();
   const [loading, setLoading] = useState(false);
   const [suggestions, setSuggestions] = useState<LocationSuggestion[]>([]);
@@ -64,13 +69,15 @@ export const LocationSuggestions = ({ onSelectLocation }: LocationSuggestionsPro
         
         setUserLocation({ lat: latitude, lng: longitude, city: cityName || undefined });
         
-        // Call edge function to get suggestions
+        // Call edge function to get suggestions with context
         try {
           const { data, error } = await supabase.functions.invoke('suggest-locations', {
             body: { 
               latitude, 
               longitude,
-              cityName 
+              cityName,
+              families: families || [],
+              tripDate: tripDate || new Date().toLocaleDateString()
             }
           });
 
@@ -139,35 +146,36 @@ export const LocationSuggestions = ({ onSelectLocation }: LocationSuggestionsPro
   return (
     <div className="space-y-3 sm:space-y-4">
       {!suggestions.length ? (
-        <Card className="p-4 sm:p-5 md:p-6 text-center space-y-3 sm:space-y-4 border-2 border-dashed">
+        <Card className="p-4 sm:p-5 md:p-6 text-center space-y-3 sm:space-y-4 border-2 border-dashed bg-gradient-to-br from-primary/5 to-accent/5">
           <div className="flex justify-center">
-            <div className="w-12 h-12 sm:w-16 sm:h-16 rounded-full bg-primary/10 flex items-center justify-center">
-              <Navigation className="w-6 h-6 sm:w-8 sm:h-8 text-primary" />
+            <div className="w-12 h-12 sm:w-16 sm:h-16 rounded-full bg-gradient-to-br from-primary/20 to-accent/20 flex items-center justify-center animate-pulse">
+              <Sparkles className="w-6 h-6 sm:w-8 sm:h-8 text-primary" />
             </div>
           </div>
           <div className="space-y-1 sm:space-y-2">
-            <h3 className="font-semibold text-base sm:text-lg">Need Destination Ideas?</h3>
+            <h3 className="font-semibold text-base sm:text-lg">Discover Nearby Adventures</h3>
             <p className="text-xs sm:text-sm text-muted-foreground px-2">
-              Let us suggest family-friendly locations near you
+              AI-powered suggestions tailored for your flock
             </p>
           </div>
           <Button
             onClick={getCurrentLocation}
             disabled={loading}
-            variant="outline"
+            variant="hero"
             size="lg"
             className="gap-2 h-10 sm:h-11 text-sm sm:text-base"
           >
             {loading ? (
               <>
                 <Loader2 className="w-4 h-4 animate-spin" />
-                <span className="hidden sm:inline">Finding locations...</span>
+                <span className="hidden sm:inline">Finding perfect spots...</span>
                 <span className="sm:hidden">Finding...</span>
               </>
             ) : (
               <>
                 <Sparkles className="w-4 h-4" />
-                Get Suggestions
+                <span className="hidden sm:inline">Get AI Suggestions</span>
+                <span className="sm:hidden">Get Suggestions</span>
               </>
             )}
           </Button>
@@ -196,22 +204,29 @@ export const LocationSuggestions = ({ onSelectLocation }: LocationSuggestionsPro
             {suggestions.map((suggestion, index) => (
               <Card
                 key={index}
-                className="p-3 sm:p-4 hover:border-primary/30 transition-colors cursor-pointer active:scale-[0.98]"
+                className="p-3 sm:p-4 hover:border-primary/50 hover:shadow-md transition-all cursor-pointer active:scale-[0.98] group"
                 onClick={() => onSelectLocation(suggestion.name)}
               >
                 <div className="space-y-1.5 sm:space-y-2">
                   <div className="flex items-start justify-between gap-2">
-                    <h4 className="font-semibold text-sm sm:text-base flex-1 break-words">{suggestion.name}</h4>
+                    <h4 className="font-semibold text-sm sm:text-base flex-1 break-words group-hover:text-primary transition-colors">
+                      {suggestion.name}
+                    </h4>
                     <Badge variant="secondary" className={`text-[10px] sm:text-xs flex-shrink-0 ${getTypeColor(suggestion.type)}`}>
                       {formatType(suggestion.type)}
                     </Badge>
                   </div>
-                  <p className="text-xs sm:text-sm text-muted-foreground">
+                  <p className="text-xs sm:text-sm text-muted-foreground leading-relaxed">
                     {suggestion.description}
                   </p>
-                  <div className="flex items-center gap-1 text-xs text-muted-foreground">
-                    <MapPin className="w-3 h-3 flex-shrink-0" />
-                    <span>{suggestion.estimatedDistance}</span>
+                  <div className="flex items-center justify-between pt-1">
+                    <div className="flex items-center gap-1 text-xs text-muted-foreground">
+                      <MapPin className="w-3 h-3 flex-shrink-0" />
+                      <span>{suggestion.estimatedDistance}</span>
+                    </div>
+                    <span className="text-xs text-primary opacity-0 group-hover:opacity-100 transition-opacity">
+                      Select →
+                    </span>
                   </div>
                 </div>
               </Card>

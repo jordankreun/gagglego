@@ -145,7 +145,7 @@ export const CalendarIcon = ({ className = "", size = 24 }: IconProps) => (
   </svg>
 );
 
-// Goose Icon - Charcoal with Orange beak
+// Goose Icon - Cute white goose with big eyes and rosy cheeks
 export const GooseIcon = ({ className = "", size = 24 }: IconProps) => (
   <svg 
     width={size} 
@@ -155,40 +155,56 @@ export const GooseIcon = ({ className = "", size = 24 }: IconProps) => (
     className={className}
     xmlns="http://www.w3.org/2000/svg"
   >
+    {/* Fluffy body */}
     <ellipse 
       cx="12" 
-      cy="13" 
-      rx="5" 
-      ry="4.5" 
-      fill="hsl(0 0% 29%)"
+      cy="15" 
+      rx="6" 
+      ry="5" 
+      fill="hsl(0 0% 98%)"
       stroke="hsl(0 0% 29%)"
-      strokeWidth="2"
+      strokeWidth="1.5"
     />
+    
+    {/* Large head with cute proportions */}
     <circle 
       cx="12" 
-      cy="8" 
-      r="3.5" 
-      fill="hsl(0 0% 29%)"
+      cy="7.5" 
+      r="4.5" 
+      fill="hsl(0 0% 98%)"
       stroke="hsl(0 0% 29%)"
-      strokeWidth="2"
+      strokeWidth="1.5"
     />
-    <circle cx="11" cy="7.5" r="1" fill="white" />
+    
+    {/* Big expressive eye with highlight sparkle */}
+    <circle cx="10.5" cy="7" r="1.8" fill="hsl(0 0% 29%)" />
+    <circle cx="11" cy="6.5" r="0.7" fill="white" />
+    
+    {/* Friendly orange beak */}
+    <ellipse 
+      cx="15.5" 
+      cy="7.5" 
+      rx="2" 
+      ry="1.2" 
+      fill="hsl(28 82% 51%)"
+      stroke="hsl(0 0% 29%)"
+      strokeWidth="1"
+    />
+    
+    {/* Rosy cheek */}
+    <circle cx="13" cy="9" r="1.2" fill="hsl(350 80% 75%)" opacity="0.5" />
+    
+    {/* Cute webbed feet */}
     <path 
-      d="M15 8.5c.8.4 1.5.8 2.5 1" 
+      d="M9 19c-.5.5-1 1-1.5 1.5 M9 19c0 .7-.3 1.3-.8 1.8 M9 19c0 .7.3 1.3.8 1.8" 
       stroke="hsl(28 82% 51%)"
-      strokeWidth="2"
+      strokeWidth="1.5"
       strokeLinecap="round"
     />
     <path 
-      d="M8 14c-1.5 1-2.5 2-2.5 3.5" 
+      d="M14 19c.5.5 1 1 1.5 1.5 M14 19c0 .7.3 1.3.8 1.8 M14 19c0 .7-.3 1.3-.8 1.8" 
       stroke="hsl(28 82% 51%)"
-      strokeWidth="2"
-      strokeLinecap="round"
-    />
-    <path 
-      d="M16 14c1.5 1 2.5 2 2.5 3.5" 
-      stroke="hsl(28 82% 51%)"
-      strokeWidth="2"
+      strokeWidth="1.5"
       strokeLinecap="round"
     />
   </svg>
@@ -366,7 +382,7 @@ export const HeartIcon = ({ className = "", size = 24 }: IconProps) => (
   </svg>
 );
 
-// Gosling Icon - Smaller, cuter version of Goose for kids
+// Gosling Icon - Adorable baby goose with huge eyes and fluffy body
 export const GoslingIcon = ({ className = "", size = 24 }: IconProps) => (
   <svg 
     width={size} 
@@ -376,39 +392,76 @@ export const GoslingIcon = ({ className = "", size = 24 }: IconProps) => (
     className={className}
     xmlns="http://www.w3.org/2000/svg"
   >
+    {/* Fluffy round body - baby proportions */}
     <ellipse 
       cx="12" 
-      cy="14" 
-      rx="4" 
-      ry="3.5" 
-      fill="hsl(28 82% 51%)"
+      cy="14.5" 
+      rx="5" 
+      ry="4" 
+      fill="hsl(45 90% 70%)"
       stroke="hsl(0 0% 29%)"
-      strokeWidth="2"
+      strokeWidth="1.5"
     />
+    
+    {/* Big head (chibi/kawaii style) */}
     <circle 
       cx="12" 
-      cy="9.5" 
-      r="3" 
+      cy="8.5" 
+      r="4" 
+      fill="hsl(45 90% 70%)"
+      stroke="hsl(0 0% 29%)"
+      strokeWidth="1.5"
+    />
+    
+    {/* Extra big cute eyes with sparkle */}
+    <circle cx="10.2" cy="8" r="2" fill="hsl(0 0% 29%)" />
+    <circle cx="10.7" cy="7.5" r="0.8" fill="white" />
+    
+    {/* Tiny adorable beak */}
+    <ellipse 
+      cx="14.5" 
+      cy="8.5" 
+      rx="1.3" 
+      ry="0.8" 
       fill="hsl(28 82% 51%)"
       stroke="hsl(0 0% 29%)"
-      strokeWidth="2"
+      strokeWidth="1"
     />
-    <circle cx="11.2" cy="9" r="0.8" fill="hsl(0 0% 29%)" />
-    <path 
-      d="M14.5 9.5c.6.3 1.2.5 1.8.7" 
+    
+    {/* Two rosy cheeks for maximum cuteness */}
+    <circle cx="8.5" cy="9.5" r="1" fill="hsl(350 80% 75%)" opacity="0.4" />
+    <circle cx="13.5" cy="9.8" r="0.9" fill="hsl(350 80% 75%)" opacity="0.4" />
+    
+    {/* Small fluffy wing suggestion */}
+    <ellipse 
+      cx="7.5" 
+      cy="13.5" 
+      rx="1.5" 
+      ry="2" 
+      fill="hsl(45 90% 65%)"
       stroke="hsl(0 0% 29%)"
+      strokeWidth="1"
+    />
+    <ellipse 
+      cx="16.5" 
+      cy="13.5" 
+      rx="1.5" 
+      ry="2" 
+      fill="hsl(45 90% 65%)"
+      stroke="hsl(0 0% 29%)"
+      strokeWidth="1"
+    />
+    
+    {/* Stubby baby feet */}
+    <path 
+      d="M10 18c-.3.4-.6.8-.9 1.2 M10 18c-.1.5-.3 1-.5 1.4" 
+      stroke="hsl(28 82% 51%)"
       strokeWidth="1.5"
       strokeLinecap="round"
     />
     <path 
-      d="M9 15c-1.2.8-2 1.5-2 2.5" 
-      stroke="hsl(0 0% 29%)"
-      strokeWidth="1.5"
-      strokeLinecap="round"
-    />
-    <path 
-      d="M15 15c1.2.8 2 1.5 2 2.5" 
-      stroke="hsl(0 0% 29%)"
+      d="M14 18c.3.4.6.8.9 1.2 M14 18c.1.5.3 1 .5 1.4" 
+      stroke="hsl(28 82% 51%)"
       strokeWidth="1.5"
       strokeLinecap="round"
     />

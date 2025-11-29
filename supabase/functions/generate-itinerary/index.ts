@@ -11,9 +11,9 @@ serve(async (req) => {
   }
 
   try {
-    const { location, families, noGiftShop, date } = await req.json();
+    const { location, families, noGiftShop, youngestAge, date } = await req.json();
     
-    console.log('Generating itinerary for:', { location, families, noGiftShop, date });
+    console.log('Generating itinerary for:', { location, families, noGiftShop, youngestAge, date });
 
     const LOVABLE_API_KEY = Deno.env.get('LOVABLE_API_KEY');
     if (!LOVABLE_API_KEY) {
@@ -42,6 +42,10 @@ serve(async (req) => {
       ? 'GIFT SHOP AVOIDANCE: User has disabled Gift Shop Mode. Route the itinerary to minimize exposure to high-commercial zones. Alert with "Warning: High commercial exposure zone" if unavoidable.'
       : 'Standard routing (Gift Shop Mode ON).';
 
+    const ageConstraint = youngestAge !== undefined
+      ? `AGE-APPROPRIATE FILTERING: The youngest family member is ${youngestAge} years old. ALL activities and recommendations MUST be appropriate and safe for age ${youngestAge}+. Filter out activities with age restrictions above ${youngestAge}. Prioritize family-friendly activities that engage this age group. Consider attention spans, physical capabilities, and safety requirements for age ${youngestAge}.`
+      : 'No specific age constraints provided - assume general family-friendly activities suitable for all ages.';
+
     const systemPrompt = `You are an expert family travel planner for "GaggleGO" - The Village v2.0, powered by a sophisticated Constraint Solver Engine.
 
 CORE ARCHITECTURE - Location-First Context Engine:
@@ -54,8 +58,9 @@ Analyze the location "${location}" to determine:
 CONSTRAINT SOLVER RULES (MANDATORY):
 1. ${napConstraint}
 2. ${dietaryConstraint}
-3. PACING CALCULATIONS: Buffer all walking times by 20% to account for toddlers and elderly family members. Never assume standard adult walking pace.
-4. ${giftShopMode}
+3. ${ageConstraint}
+4. PACING CALCULATIONS: Buffer all walking times by 20% to account for toddlers and elderly family members. Never assume standard adult walking pace.
+5. ${giftShopMode}
 
 FAMILY CONTEXT:
 ${families.map((f: any, i: number) => `

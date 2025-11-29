@@ -6,6 +6,7 @@ interface AnimatedGooseProps {
   size?: "sm" | "md" | "lg" | "xl";
   state?: "idle" | "thinking" | "talking" | "excited";
   className?: string;
+  enableConstantAnimation?: boolean;
 }
 
 const sizeClasses = {
@@ -15,7 +16,7 @@ const sizeClasses = {
   xl: "w-32 h-32",
 };
 
-export const AnimatedGoose = ({ size = "md", state = "idle", className = "" }: AnimatedGooseProps) => {
+export const AnimatedGoose = ({ size = "md", state = "idle", className = "", enableConstantAnimation = false }: AnimatedGooseProps) => {
   const [blink, setBlink] = useState(false);
   const [isHovered, setIsHovered] = useState(false);
 
@@ -75,7 +76,8 @@ export const AnimatedGoose = ({ size = "md", state = "idle", className = "" }: A
   return (
     <motion.div
       className={`relative ${sizeClasses[size]} ${className} cursor-pointer`}
-      animate={getAnimation()}
+      animate={enableConstantAnimation ? getAnimation() : {}}
+      whileHover={enableConstantAnimation ? {} : { scale: 1.05 }}
       onHoverStart={() => setIsHovered(true)}
       onHoverEnd={() => setIsHovered(false)}
     >

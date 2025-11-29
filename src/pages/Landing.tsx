@@ -30,7 +30,7 @@ export default function Landing() {
           <div className="max-w-4xl mx-auto text-center space-y-6 sm:space-y-8 md:space-y-12 animate-fade-in-subtle">
             {/* Animated Goose */}
             <div className="flex justify-center">
-              <AnimatedGoose size="xl" state="excited" />
+              <AnimatedGoose size="xl" />
             </div>
             
             {/* Logo */}

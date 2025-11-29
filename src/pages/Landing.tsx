@@ -16,6 +16,7 @@ import {
 } from "lucide-react";
 import gaggleGoLogo from "@/assets/gaggle-go-logo.png";
 import heroImage from "@/assets/hero-families.jpg";
+import { WiseGooseAnimation } from "@/components/WiseGooseAnimation";
 
 export default function Landing() {
   return (
@@ -206,8 +207,8 @@ export default function Landing() {
             </div>
 
             <Card className="p-6 sm:p-8 border-2 bg-gradient-to-br from-accent/5 to-primary/5">
-              <div className="aspect-[4/3] rounded-xl bg-gradient-to-br from-primary/20 to-accent/20 flex items-center justify-center">
-                <Sparkles className="w-16 h-16 sm:w-20 sm:h-20 text-accent opacity-50" />
+              <div className="aspect-[4/3] rounded-xl bg-gradient-to-br from-primary/20 to-accent/20 flex items-center justify-center overflow-hidden">
+                <WiseGooseAnimation />
               </div>
             </Card>
           </div>

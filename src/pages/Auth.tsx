@@ -16,7 +16,7 @@ const emailSchema = z.string().email('Please enter a valid email address');
 const passwordSchema = z.string().min(6, 'Password must be at least 6 characters');
 
 const Auth = () => {
-  const [activeTab, setActiveTab] = useState<'signin' | 'signup'>('signin');
+  const [activeTab, setActiveTab] = useState<'signin' | 'signup'>('signup');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [displayName, setDisplayName] = useState('');
@@ -169,7 +169,7 @@ const Auth = () => {
             <img 
               src={gaggleGoLogo} 
               alt="GaggleGO" 
-              className="w-16 h-16 sm:w-20 sm:h-20 mx-auto"
+              className="h-16 sm:h-20 w-auto mx-auto object-contain"
             />
             <div className="space-y-1 sm:space-y-2">
               <CardTitle className="text-2xl sm:text-3xl font-display font-bold">

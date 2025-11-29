@@ -17,6 +17,7 @@ import {
 import gaggleGoLogo from "@/assets/gaggle-go-logo.png";
 import heroImage from "@/assets/hero-families.jpg";
 import { WiseGooseAnimation } from "@/components/WiseGooseAnimation";
+import { AnimatedGoose } from "@/components/AnimatedGoose";
 
 export default function Landing() {
   return (
@@ -27,8 +28,13 @@ export default function Landing() {
         
         <div className="container mx-auto px-4 py-12 sm:py-16 md:py-20 relative z-10">
           <div className="max-w-4xl mx-auto text-center space-y-6 sm:space-y-8 md:space-y-12 animate-fade-in">
+            {/* Animated Goose */}
+            <div className="flex justify-center">
+              <AnimatedGoose size="xl" state="excited" />
+            </div>
+            
             {/* Logo */}
-            <img 
+            <img
               src={gaggleGoLogo} 
               alt="GaggleGO" 
               className="h-24 sm:h-32 md:h-40 w-auto mx-auto drop-shadow-2xl object-contain"

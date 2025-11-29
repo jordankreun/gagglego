@@ -3,6 +3,7 @@ import { MapPin, Users, Clock, Bird } from "lucide-react";
 import heroImage from "@/assets/hero-families.jpg";
 import gaggleGoLogo from "@/assets/gaggle-go-logo.png";
 import { MapPinIcon, GroupIcon, ClockIcon } from "@/components/icons/BrandIcons";
+import { AnimatedGoose } from "./AnimatedGoose";
 
 export const Hero = ({ onGetStarted }: { onGetStarted: () => void }) => {
   return (
@@ -11,6 +12,11 @@ export const Hero = ({ onGetStarted }: { onGetStarted: () => void }) => {
 
       <div className="container mx-auto py-12 md:py-20 relative z-10">
         <div className="max-w-2xl mx-auto text-center space-y-8 md:space-y-12 animate-in fade-in duration-1000">
+          {/* Animated Goose */}
+          <div className="flex justify-center">
+            <AnimatedGoose size="xl" state="excited" />
+          </div>
+
           {/* Logo and tagline */}
           <div className="space-y-4 md:space-y-6">
             <img 

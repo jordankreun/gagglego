@@ -22,6 +22,7 @@ import { MealCard } from "./MealCard";
 import { ShareTripDialog } from "./ShareTripDialog";
 import { ExportTripButton } from "./ExportTripButton";
 import { WeatherCard } from "./WeatherCard";
+import { TripMap } from "./TripMap";
 import { useWeather } from "@/hooks/useWeather";
 import { useState, useEffect } from "react";
 import { supabase } from "@/integrations/supabase/client";
@@ -220,6 +221,15 @@ export const ItineraryView = ({ location, date, dateRange, items, onBack, tripId
               </div>
             </div>
           )}
+
+          {/* Interactive Map */}
+          <div className="space-y-2">
+            <h3 className="text-sm font-semibold flex items-center gap-2">
+              <MapPin className="w-4 h-4 text-primary" />
+              Route Map
+            </h3>
+            <TripMap activities={currentItems} location={location} />
+          </div>
         </div>
 
         {/* Multi-day tabs or single day view */}

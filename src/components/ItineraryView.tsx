@@ -18,7 +18,9 @@ import { TravelConnector } from "./TravelConnector";
 import { MealCard } from "./MealCard";
 import { ShareTripDialog } from "./ShareTripDialog";
 import { ExportTripButton } from "./ExportTripButton";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { supabase } from "@/integrations/supabase/client";
+import { useToast } from "@/hooks/use-toast";
 
 interface ItineraryItem {
   time: string;
@@ -67,8 +69,40 @@ export const ItineraryView = ({ location, date, items, onBack, tripId, onItemsUp
   const [currentItems, setCurrentItems] = useState(items);
   const [completed, setCompleted] = useState<Set<number>>(new Set());
   const [shareDialogOpen, setShareDialogOpen] = useState(false);
+  const [shareCode, setShareCode] = useState<string | undefined>();
+  const { toast } = useToast();
 
-  const toggleComplete = (index: number) => {
+  // Load initial progress and share code from trip data
+  useEffect(() => {
+    const loadProgress = async () => {
+      if (tripId) {
+        try {
+          const { data, error } = await supabase
+            .from('trips')
+            .select('progress, share_code')
+            .eq('id', tripId)
+            .single();
+
+          if (error) throw error;
+          
+          if (data?.progress && typeof data.progress === 'object' && 'completed' in data.progress) {
+            const progressData = data.progress as { completed?: number[] };
+            if (progressData.completed) {
+              setCompleted(new Set(progressData.completed));
+            }
+          }
+          if (data?.share_code) {
+            setShareCode(data.share_code);
+          }
+        } catch (error) {
+          console.error('Error loading progress:', error);
+        }
+      }
+    };
+    loadProgress();
+  }, [tripId]);
+
+  const toggleComplete = async (index: number) => {
     const newCompleted = new Set(completed);
     if (newCompleted.has(index)) {
       newCompleted.delete(index);
@@ -76,6 +110,26 @@ export const ItineraryView = ({ location, date, items, onBack, tripId, onItemsUp
       newCompleted.add(index);
     }
     setCompleted(newCompleted);
+
+    // Persist to database
+    if (tripId) {
+      try {
+        await supabase
+          .from('trips')
+          .update({ 
+            progress: { completed: Array.from(newCompleted) },
+            updated_at: new Date().toISOString()
+          })
+          .eq('id', tripId);
+      } catch (error) {
+        console.error('Error saving progress:', error);
+        toast({
+          title: "Failed to save progress",
+          description: "Your changes may not be saved",
+          variant: "destructive",
+        });
+      }
+    }
   };
 
   const handleItineraryUpdate = (updatedItems: ItineraryItem[]) => {
@@ -208,6 +262,7 @@ export const ItineraryView = ({ location, date, items, onBack, tripId, onItemsUp
           open={shareDialogOpen}
           onOpenChange={setShareDialogOpen}
           tripId={tripId}
+          shareCode={shareCode}
         />
       )}
     </section>

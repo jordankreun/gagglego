@@ -420,10 +420,10 @@ export const TripSetup = ({ onComplete }: TripSetupProps) => {
                 <Input
                   id="edit-dietary"
                   placeholder="Separate with commas"
-                  value={editForm.dietary.join(", ")}
-                  onChange={(e) => {
+                  defaultValue={editForm.dietary.join(", ")}
+                  onBlur={(e) => {
                     const items = e.target.value.split(",").map(item => item.trim()).filter(item => item !== "");
-                    updateEditForm("dietary", items);
+                    updateEditForm("dietary", items.length > 0 ? items : ["None"]);
                   }}
                 />
                 <p className="text-xs text-muted-foreground">

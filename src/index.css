@@ -9,108 +9,108 @@ All colors MUST be HSL.
 @layer base {
   :root {
     /* GaggleGO Brand Colors - Charcoal Duck & Bright Orange */
-    --background: 42 48% 94%; /* Warm Cream */
-    --foreground: 0 0% 29%; /* Charcoal Duck Body */
+    --background: 42 48% 96%; /* Lighter Warm Cream for better contrast */
+    --foreground: 0 0% 20%; /* Darker charcoal for better readability */
 
     --card: 0 0% 100%; /* White */
-    --card-foreground: 0 0% 29%;
+    --card-foreground: 0 0% 20%;
 
     --popover: 0 0% 100%;
-    --popover-foreground: 0 0% 29%;
+    --popover-foreground: 0 0% 20%;
 
     /* Charcoal Duck Body - Primary */
-    --primary: 0 0% 29%;
+    --primary: 0 0% 25%; /* Darker for better contrast on light backgrounds */
     --primary-foreground: 0 0% 100%;
-    --primary-light: 0 0% 45%;
-    --primary-dark: 0 0% 20%;
+    --primary-light: 0 0% 40%;
+    --primary-dark: 0 0% 15%;
 
     /* Bright Orange - Secondary */
-    --secondary: 28 82% 51%;
+    --secondary: 25 89% 40%; /* Darker orange for better contrast */
     --secondary-foreground: 0 0% 100%;
 
-    --muted: 0 0% 79%; /* Soft Gray */
-    --muted-foreground: 0 0% 50%;
+    --muted: 0 0% 90%; /* Soft Gray */
+    --muted-foreground: 0 0% 35%; /* Darker for readability */
 
     /* Bright Orange - Accent */
-    --accent: 28 82% 51%;
+    --accent: 25 89% 45%; /* Slightly darker for better contrast */
     --accent-foreground: 0 0% 100%;
 
-    --destructive: 0 72% 51%;
+    --destructive: 0 72% 45%; /* Darker red for better contrast */
     --destructive-foreground: 0 0% 100%;
 
-    --border: 0 0% 79%; /* Soft Gray */
-    --input: 0 0% 88%;
-    --ring: 28 82% 51%; /* Bright Orange */
+    --border: 0 0% 85%; /* Visible borders */
+    --input: 0 0% 85%;
+    --ring: 25 89% 45%; /* Bright Orange */
 
     --radius: 1rem; /* Softer, more playful rounded corners */
     
     /* Custom gradients */
-    --gradient-primary: linear-gradient(135deg, hsl(0 0% 29%) 0%, hsl(0 0% 40%) 100%);
-    --gradient-accent: linear-gradient(135deg, hsl(28 82% 51%) 0%, hsl(25 89% 36%) 100%); /* Bright Orange to Deep Orange */
-    --gradient-hero: linear-gradient(180deg, hsl(42 48% 94%) 0%, hsl(0 0% 100%) 100%); /* Warm Cream to White */
+    --gradient-primary: linear-gradient(135deg, hsl(0 0% 25%) 0%, hsl(0 0% 35%) 100%);
+    --gradient-accent: linear-gradient(135deg, hsl(25 89% 45%) 0%, hsl(25 89% 36%) 100%);
+    --gradient-hero: linear-gradient(180deg, hsl(42 48% 96%) 0%, hsl(0 0% 100%) 100%);
     
     /* Shadows - Softer, warmer */
-    --shadow-card: 0 2px 12px -2px hsl(0 0% 29% / 0.08);
-    --shadow-elevated: 0 8px 24px -4px hsl(28 82% 51% / 0.2);
+    --shadow-card: 0 2px 12px -2px hsl(0 0% 25% / 0.12);
+    --shadow-elevated: 0 8px 24px -4px hsl(25 89% 45% / 0.25);
     
     /* Animation */
     --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 
-    --sidebar-background: 42 48% 94%;
-    --sidebar-foreground: 0 0% 29%;
-    --sidebar-primary: 0 0% 29%;
+    --sidebar-background: 42 48% 96%;
+    --sidebar-foreground: 0 0% 20%;
+    --sidebar-primary: 0 0% 25%;
     --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 0 0% 79%;
-    --sidebar-accent-foreground: 0 0% 29%;
-    --sidebar-border: 0 0% 79%;
-    --sidebar-ring: 28 82% 51%;
+    --sidebar-accent: 0 0% 90%;
+    --sidebar-accent-foreground: 0 0% 20%;
+    --sidebar-border: 0 0% 85%;
+    --sidebar-ring: 25 89% 45%;
   }
 
   .dark {
-    --background: 0 0% 12%;
-    --foreground: 0 0% 95%;
+    --background: 0 0% 10%;
+    --foreground: 0 0% 98%;
 
-    --card: 0 0% 16%;
-    --card-foreground: 0 0% 95%;
+    --card: 0 0% 14%;
+    --card-foreground: 0 0% 98%;
 
-    --popover: 0 0% 16%;
-    --popover-foreground: 0 0% 95%;
+    --popover: 0 0% 14%;
+    --popover-foreground: 0 0% 98%;
 
-    --primary: 0 0% 29%;
+    --primary: 0 0% 25%;
     --primary-foreground: 0 0% 100%;
-    --primary-light: 0 0% 45%;
-    --primary-dark: 0 0% 20%;
+    --primary-light: 0 0% 40%;
+    --primary-dark: 0 0% 15%;
 
-    --secondary: 28 82% 51%;
+    --secondary: 25 89% 50%;
     --secondary-foreground: 0 0% 100%;
 
-    --muted: 0 0% 20%;
-    --muted-foreground: 0 0% 65%;
+    --muted: 0 0% 22%;
+    --muted-foreground: 0 0% 70%;
 
-    --accent: 28 82% 51%;
+    --accent: 25 89% 50%;
     --accent-foreground: 0 0% 100%;
 
-    --destructive: 0 72% 51%;
+    --destructive: 0 72% 55%;
     --destructive-foreground: 0 0% 100%;
 
-    --border: 0 0% 24%;
-    --input: 0 0% 24%;
-    --ring: 28 82% 51%;
+    --border: 0 0% 26%;
+    --input: 0 0% 26%;
+    --ring: 25 89% 50%;
     
-    --gradient-primary: linear-gradient(135deg, hsl(0 0% 29%) 0%, hsl(0 0% 40%) 100%);
-    --gradient-accent: linear-gradient(135deg, hsl(28 82% 51%) 0%, hsl(25 89% 36%) 100%);
-    --gradient-hero: linear-gradient(180deg, hsl(0 0% 12%) 0%, hsl(25 10% 16%) 100%);
+    --gradient-primary: linear-gradient(135deg, hsl(0 0% 25%) 0%, hsl(0 0% 35%) 100%);
+    --gradient-accent: linear-gradient(135deg, hsl(25 89% 50%) 0%, hsl(25 89% 40%) 100%);
+    --gradient-hero: linear-gradient(180deg, hsl(0 0% 10%) 0%, hsl(0 0% 14%) 100%);
     
-    --shadow-card: 0 2px 12px -2px hsl(0 0% 0% / 0.4);
-    --shadow-elevated: 0 8px 24px -4px hsl(28 82% 51% / 0.3);
-    --sidebar-background: 0 0% 16%;
-    --sidebar-foreground: 0 0% 95%;
-    --sidebar-primary: 0 0% 29%;
+    --shadow-card: 0 2px 12px -2px hsl(0 0% 0% / 0.5);
+    --shadow-elevated: 0 8px 24px -4px hsl(25 89% 50% / 0.35);
+    --sidebar-background: 0 0% 14%;
+    --sidebar-foreground: 0 0% 98%;
+    --sidebar-primary: 0 0% 25%;
     --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 0 0% 20%;
-    --sidebar-accent-foreground: 0 0% 95%;
-    --sidebar-border: 0 0% 24%;
-    --sidebar-ring: 28 82% 51%;
+    --sidebar-accent: 0 0% 22%;
+    --sidebar-accent-foreground: 0 0% 98%;
+    --sidebar-border: 0 0% 26%;
+    --sidebar-ring: 25 89% 50%;
   }
 }
 

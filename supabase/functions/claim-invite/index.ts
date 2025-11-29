@@ -114,6 +114,34 @@ serve(async (req) => {
       console.error('Error marking invite as claimed:', claimError);
     }
 
+    // Get trip and user details for notification
+    const { data: trip } = await supabase
+      .from('trips')
+      .select('name, user_id')
+      .eq('id', invite.trip_id)
+      .single();
+
+    const { data: claimerProfile } = await supabase
+      .from('profiles')
+      .select('display_name, email')
+      .eq('id', user.id)
+      .single();
+
+    // Create notification for trip owner
+    if (trip) {
+      const claimerName = claimerProfile?.display_name || claimerProfile?.email || 'Someone';
+      await supabase
+        .from('notifications')
+        .insert({
+          user_id: trip.user_id,
+          type: 'collab_added',
+          title: '🦆 New Gaggle Member!',
+          message: `${claimerName} joined your trip "${trip.name}"`,
+          link: `/plan?tripId=${invite.trip_id}`,
+          metadata: { tripId: invite.trip_id, userId: user.id, role: invite.role },
+        });
+    }
+
     console.log('Invite claimed successfully');
 
     return new Response(

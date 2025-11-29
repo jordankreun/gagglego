@@ -6,6 +6,7 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { useAuth } from '@/contexts/AuthContext';
 import { GaggleGoWordmark } from '@/components/GaggleGoWordmark';
 import { NavLink } from '@/components/NavLink';
+import { NotificationCenter } from '@/components/NotificationCenter';
 
 export const Navigation = () => {
   const {
@@ -42,8 +43,10 @@ export const Navigation = () => {
             )}
           </div>
 
-          {/* User Menu */}
-          {user ? <DropdownMenu>
+          {/* Notification Bell & User Menu */}
+          <div className="flex items-center gap-2">
+            {user && <NotificationCenter />}
+            {user ? <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <Button variant="ghost" className="relative h-10 w-10 rounded-full">
                   <Avatar className="h-10 w-10 border-2 border-primary/30">
@@ -91,6 +94,7 @@ export const Navigation = () => {
                 Join
               </Button>
             </Link>}
+          </div>
         </div>
       </div>
     </nav>;

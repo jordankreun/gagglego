@@ -5,6 +5,7 @@ import { Badge } from "@/components/ui/badge";
 import { MapPin, Loader2, Navigation, Sparkles } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
+import { GooseStatusCard } from "@/components/GooseStatusCard";
 
 interface LocationSuggestion {
   name: string;
@@ -145,7 +146,20 @@ export const LocationSuggestions = ({ onSelectLocation, families, tripDate }: Lo
 
   return (
     <div className="space-y-3 sm:space-y-4">
-      {!suggestions.length ? (
+      {loading ? (
+        <div className="flex items-center justify-center py-8">
+          <GooseStatusCard
+            title="Finding Nearby Adventures"
+            estimatedSeconds={8}
+            messages={[
+              "Getting your location...",
+              "Finding family-friendly spots...",
+              "Checking age-appropriateness...",
+              "Ready to explore!"
+            ]}
+          />
+        </div>
+      ) : !suggestions.length ? (
         <Card className="p-4 sm:p-5 md:p-6 text-center space-y-3 sm:space-y-4 border-2 border-dashed bg-gradient-to-br from-primary/5 to-accent/5">
           <div className="flex justify-center">
             <div className="w-12 h-12 sm:w-16 sm:h-16 rounded-full bg-gradient-to-br from-primary/20 to-accent/20 flex items-center justify-center animate-pulse">

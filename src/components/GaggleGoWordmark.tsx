@@ -19,7 +19,7 @@ export const GaggleGoWordmark = ({
   className = "",
   animate = true 
 }: GaggleGoWordmarkProps) => {
-  const letters = "Gaggle".split("");
+  const letters = "gaggle".split("");
   const goLetters = "GO".split("");
 
   const containerVariants = {
@@ -75,7 +75,7 @@ export const GaggleGoWordmark = ({
   if (!animate) {
     return (
       <h1 className={`font-display font-medium ${sizeClasses[size]} ${className}`}>
-        <span className="text-foreground">Gaggle</span>
+        <span className="text-foreground">gaggle</span>
         <span className="text-accent">GO</span>
       </h1>
     );

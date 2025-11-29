@@ -166,9 +166,29 @@ export const ItineraryView = ({ location, date, dateRange, items, onBack, tripId
     }
   };
 
-  const handleItineraryUpdate = (updatedItems: ItineraryItem[]) => {
+  const handleItineraryUpdate = async (updatedItems: ItineraryItem[]) => {
     setCurrentItems(updatedItems);
     onItemsUpdate?.(updatedItems);
+
+    // Auto-save updated itinerary to database
+    if (tripId) {
+      try {
+        await supabase
+          .from('trips')
+          .update({ 
+            itinerary: updatedItems as any,
+            updated_at: new Date().toISOString()
+          })
+          .eq('id', tripId);
+      } catch (error) {
+        console.error('Error auto-saving itinerary:', error);
+        toast({
+          title: "Auto-save failed",
+          description: "Your itinerary changes may not be saved",
+          variant: "destructive",
+        });
+      }
+    }
   };
 
   const completedCount = completed.size;

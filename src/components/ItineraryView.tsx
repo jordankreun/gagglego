@@ -19,6 +19,7 @@ import { MealCard } from "./MealCard";
 import { ShareTripDialog } from "./ShareTripDialog";
 import { ExportTripButton } from "./ExportTripButton";
 import { WeatherCard } from "./WeatherCard";
+import { SaveButton } from "./SaveButton";
 import { useWeather } from "@/hooks/useWeather";
 import { useState, useEffect } from "react";
 import { supabase } from "@/integrations/supabase/client";
@@ -445,6 +446,11 @@ export const ItineraryView = ({ location, date, dateRange, items, onBack, tripId
           </p>
         </Card>
       </div>
+
+      <SaveButton 
+        tripId={tripId}
+        itineraryItems={currentItems}
+      />
 
       <ItineraryChat 
         location={location}

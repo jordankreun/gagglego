@@ -250,20 +250,29 @@ export const ItineraryChat = ({ location, currentItinerary, tripId, onItineraryU
 
   return (
     <>
-      {/* Floating Chat Button */}
-      <Button
-        onClick={() => setIsOpen(!isOpen)}
-        className="fixed bottom-6 right-6 h-14 w-14 rounded-full shadow-lg bg-primary hover:bg-primary/90 z-50"
-        size="icon"
-      >
-        {isOpen ? <X className="w-6 h-6" /> : <MessageSquare className="w-6 h-6" />}
-      </Button>
+      {/* Bottom Panel - Collapsed State */}
+      {!isOpen && (
+        <div className="fixed bottom-0 left-0 right-0 z-40 bg-primary text-primary-foreground shadow-lg border-t-4 border-primary">
+          <Button
+            onClick={() => setIsOpen(true)}
+            variant="ghost"
+            className="w-full h-16 rounded-none hover:bg-primary-foreground/20 flex items-center justify-center gap-3"
+          >
+            <AnimatedGoose size="md" state="idle" />
+            <div className="flex flex-col items-start">
+              <span className="font-display font-bold text-lg">Chat with GaggleGO Assistant</span>
+              <span className="text-xs opacity-90">Click to open AI-powered itinerary editor</span>
+            </div>
+            <MessageSquare className="w-6 h-6 ml-auto" />
+          </Button>
+        </div>
+      )}
 
-      {/* Chat Window */}
+      {/* Bottom Panel - Expanded State */}
       {isOpen && (
-        <Card className="fixed bottom-24 right-6 w-[90vw] sm:w-96 h-[600px] shadow-2xl flex flex-col z-50 border-2 border-primary/20">
+        <Card className="fixed bottom-0 left-0 right-0 z-40 h-[500px] shadow-2xl flex flex-col border-t-4 border-primary rounded-t-2xl">
           {/* Header */}
-          <div className="bg-primary text-primary-foreground p-4 rounded-t-lg">
+          <div className="bg-primary text-primary-foreground p-4 rounded-t-2xl">
             <div className="flex items-center justify-between mb-2">
               <div className="flex items-center gap-3">
                 <AnimatedGoose 
@@ -271,21 +280,29 @@ export const ItineraryChat = ({ location, currentItinerary, tripId, onItineraryU
                   state={isLoading ? "thinking" : isSpeaking ? "talking" : "idle"} 
                 />
                 <div>
-                  <h3 className="font-display font-bold">GaggleGO Guide</h3>
-                  <p className="text-xs opacity-90">
-                    {isLoading ? "Thinking..." : isSpeaking ? "Speaking..." : "Your friendly travel assistant"}
+                  <h3 className="font-display font-bold text-lg">GaggleGO Assistant</h3>
+                  <p className="text-sm opacity-90">
+                    {isLoading ? "Thinking..." : isSpeaking ? "Speaking..." : "Your AI-powered itinerary editor"}
                   </p>
                 </div>
               </div>
-              <div className="flex gap-1">
+              <div className="flex gap-2">
                 <Button
                   variant="ghost"
                   size="icon"
                   onClick={toggleVoiceOutput}
-                  className="h-8 w-8 hover:bg-primary-foreground/20"
+                  className="h-9 w-9 hover:bg-primary-foreground/20"
                   title={voiceEnabled ? "Disable voice" : "Enable voice"}
                 >
-                  {voiceEnabled ? <Volume2 className="w-4 h-4" /> : <VolumeX className="w-4 h-4" />}
+                  {voiceEnabled ? <Volume2 className="w-5 h-5" /> : <VolumeX className="w-5 h-5" />}
+                </Button>
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  onClick={() => setIsOpen(false)}
+                  className="h-9 w-9 hover:bg-primary-foreground/20"
+                >
+                  <X className="w-5 h-5" />
                 </Button>
               </div>
             </div>
@@ -297,90 +314,96 @@ export const ItineraryChat = ({ location, currentItinerary, tripId, onItineraryU
           </div>
 
           {/* Messages */}
-          <div className="flex-1 overflow-y-auto p-4 space-y-4 bg-background/50">
-            {messages.map((message, index) => (
-              <div
-                key={index}
-                className={`flex ${message.role === 'user' ? 'justify-end' : 'justify-start'}`}
-              >
+          <div className="flex-1 overflow-y-auto p-6 space-y-4 bg-background/50">
+            <div className="max-w-4xl mx-auto">
+              {messages.map((message, index) => (
                 <div
-                  className={`max-w-[80%] rounded-2xl px-4 py-2 flex items-start gap-2 ${
-                    message.role === 'user'
-                      ? 'bg-primary text-primary-foreground'
-                      : 'bg-muted text-foreground'
-                  }`}
+                  key={index}
+                  className={`flex ${message.role === 'user' ? 'justify-end' : 'justify-start'} mb-4`}
                 >
-                  {message.role === 'assistant' && (
-                    <AnimatedGoose 
-                      size="sm" 
-                      state="idle" 
-                      className="flex-shrink-0 mt-1"
-                    />
-                  )}
-                  <span className="text-sm whitespace-pre-wrap">{message.content}</span>
+                  <div
+                    className={`max-w-[75%] rounded-2xl px-5 py-3 flex items-start gap-3 ${
+                      message.role === 'user'
+                        ? 'bg-primary text-primary-foreground'
+                        : 'bg-muted text-foreground'
+                    }`}
+                  >
+                    {message.role === 'assistant' && (
+                      <AnimatedGoose 
+                        size="sm" 
+                        state="idle" 
+                        className="flex-shrink-0 mt-1"
+                      />
+                    )}
+                    <span className="text-base whitespace-pre-wrap">{message.content}</span>
+                  </div>
                 </div>
-              </div>
-            ))}
-            {isLoading && (
-              <div className="flex justify-start">
-                <div className="bg-muted rounded-2xl px-4 py-2 flex items-center gap-2">
-                  <AnimatedGoose size="sm" state="thinking" />
-                  <span className="text-sm">Thinking...</span>
+              ))}
+              {isLoading && (
+                <div className="flex justify-start mb-4">
+                  <div className="bg-muted rounded-2xl px-5 py-3 flex items-center gap-3">
+                    <AnimatedGoose size="sm" state="thinking" />
+                    <span className="text-base">Thinking...</span>
+                  </div>
                 </div>
-              </div>
-            )}
-            {isListening && interimTranscript && (
-              <div className="flex justify-end">
-                <div className="bg-primary/20 rounded-2xl px-4 py-2 border-2 border-primary/40">
-                  <span className="text-sm italic text-muted-foreground">{interimTranscript}</span>
+              )}
+              {isListening && interimTranscript && (
+                <div className="flex justify-end mb-4">
+                  <div className="bg-primary/20 rounded-2xl px-5 py-3 border-2 border-primary/40">
+                    <span className="text-base italic text-muted-foreground">{interimTranscript}</span>
+                  </div>
                 </div>
-              </div>
-            )}
-            <div ref={messagesEndRef} />
+              )}
+              <div ref={messagesEndRef} />
+            </div>
           </div>
 
           {/* Smart Suggestions */}
-          <SmartSuggestions onSuggestionClick={handleSuggestionClick} disabled={isLoading} />
+          <div className="px-6">
+            <SmartSuggestions onSuggestionClick={handleSuggestionClick} disabled={isLoading} />
+          </div>
 
           {/* Input */}
-          <div className="p-4 border-t bg-background">
-            {isListening && (
-              <div className="mb-2 text-center">
-                <Badge variant="secondary" className="animate-pulse">
-                  <Mic className="w-3 h-3 mr-1" />
-                  Listening...
-                </Badge>
-              </div>
-            )}
-            <div className="flex gap-2">
-              {voiceRecognitionRef.current?.isSupported() && (
-                <Button
-                  onClick={toggleVoiceInput}
-                  variant={isListening ? "default" : "outline"}
-                  size="icon"
-                  className="flex-shrink-0"
-                  disabled={isLoading}
-                  title={isListening ? "Stop listening" : "Start voice input"}
-                >
-                  {isListening ? <MicOff className="w-4 h-4" /> : <Mic className="w-4 h-4" />}
-                </Button>
+          <div className="p-6 border-t bg-background">
+            <div className="max-w-4xl mx-auto">
+              {isListening && (
+                <div className="mb-3 text-center">
+                  <Badge variant="secondary" className="animate-pulse text-sm px-3 py-1">
+                    <Mic className="w-4 h-4 mr-2" />
+                    Listening...
+                  </Badge>
+                </div>
               )}
-              <Input
-                value={input}
-                onChange={(e) => setInput(e.target.value)}
-                onKeyPress={handleKeyPress}
-                placeholder={isListening ? "Speak now..." : "Ask to change your schedule..."}
-                disabled={isLoading}
-                className="flex-1"
-              />
-              <Button
-                onClick={() => handleSend()}
-                disabled={!input.trim() || isLoading}
-                size="icon"
-                className="flex-shrink-0"
-              >
-                <Send className="w-4 h-4" />
-              </Button>
+              <div className="flex gap-3">
+                {voiceRecognitionRef.current?.isSupported() && (
+                  <Button
+                    onClick={toggleVoiceInput}
+                    variant={isListening ? "default" : "outline"}
+                    size="lg"
+                    className="flex-shrink-0 h-12"
+                    disabled={isLoading}
+                    title={isListening ? "Stop listening" : "Start voice input"}
+                  >
+                    {isListening ? <MicOff className="w-5 h-5" /> : <Mic className="w-5 h-5" />}
+                  </Button>
+                )}
+                <Input
+                  value={input}
+                  onChange={(e) => setInput(e.target.value)}
+                  onKeyPress={handleKeyPress}
+                  placeholder={isListening ? "Speak now..." : "Ask to change your schedule..."}
+                  disabled={isLoading}
+                  className="flex-1 h-12 text-base"
+                />
+                <Button
+                  onClick={() => handleSend()}
+                  disabled={!input.trim() || isLoading}
+                  size="lg"
+                  className="flex-shrink-0 h-12 px-6"
+                >
+                  <Send className="w-5 h-5" />
+                </Button>
+              </div>
             </div>
           </div>
         </Card>

@@ -39,6 +39,18 @@ export const Navigation = () => {
                 </DropdownMenuLabel>
                 <DropdownMenuSeparator />
                 <DropdownMenuItem asChild>
+                  <Link to="/plan" className="cursor-pointer">
+                    <Bird className="mr-2 h-4 w-4" />
+                    Plan Trip
+                  </Link>
+                </DropdownMenuItem>
+                <DropdownMenuItem asChild>
+                  <Link to="/trips" className="cursor-pointer">
+                    <Bird className="mr-2 h-4 w-4" />
+                    My Migrations
+                  </Link>
+                </DropdownMenuItem>
+                <DropdownMenuItem asChild>
                   <Link to="/profile" className="cursor-pointer">
                     <User className="mr-2 h-4 w-4" />
                     Profile

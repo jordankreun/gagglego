@@ -11,6 +11,8 @@ import Landing from "./pages/Landing";
 import Auth from "./pages/Auth";
 import Profile from "./pages/Profile";
 import IconShowcase from "./pages/IconShowcase";
+import MyTrips from "./pages/MyTrips";
+import SharedTrip from "./pages/SharedTrip";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -36,6 +38,17 @@ const App = () => (
                 </ProtectedRoute>
               </div>
             } />
+            
+            <Route path="/trips" element={
+              <div className="min-h-screen flex flex-col">
+                <Navigation />
+                <ProtectedRoute>
+                  <MyTrips />
+                </ProtectedRoute>
+              </div>
+            } />
+            
+            <Route path="/trip/:shareCode" element={<SharedTrip />} />
             
             <Route path="/profile" element={
               <div className="min-h-screen flex flex-col">

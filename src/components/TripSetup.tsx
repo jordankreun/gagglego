@@ -34,8 +34,31 @@ interface Family {
   members: Member[];
 }
 
+interface NestConfig {
+  address: string;
+  isShared: boolean;
+  allowCarNaps: boolean;
+}
+
+interface MealPreferences {
+  mealCount: 2 | 3 | 4;
+  preferredLunchTime: string;
+  preferredDinnerTime?: string;
+  budgetLevel: "budget" | "moderate" | "splurge";
+  packLunch: boolean;
+  kidMenuRequired: boolean;
+  highchairRequired: boolean;
+  quickServiceOk: boolean;
+}
+
 interface TripSetupProps {
-  onComplete: (data: { location: string; families: Family[]; noGiftShop: boolean }, items: any[]) => void;
+  onComplete: (data: { 
+    location: string; 
+    families: Family[]; 
+    noGiftShop: boolean;
+    nestConfig?: NestConfig;
+    mealPreferences: MealPreferences;
+  }, items: any[]) => void;
 }
 
 interface FamilyPreset {
@@ -57,6 +80,23 @@ export const TripSetup = ({ onComplete }: TripSetupProps) => {
   const [newFamilyName, setNewFamilyName] = useState("");
   const [editingFamily, setEditingFamily] = useState<Family | null>(null);
   const [editForm, setEditForm] = useState<Family | null>(null);
+  
+  const [nestConfig, setNestConfig] = useState<NestConfig>({
+    address: "",
+    isShared: false,
+    allowCarNaps: false,
+  });
+  
+  const [mealPreferences, setMealPreferences] = useState<MealPreferences>({
+    mealCount: 3,
+    preferredLunchTime: "12:00 PM",
+    preferredDinnerTime: "6:00 PM",
+    budgetLevel: "moderate",
+    packLunch: false,
+    kidMenuRequired: true,
+    highchairRequired: true,
+    quickServiceOk: true,
+  });
   
   const [presets, setPresets] = useState<FamilyPreset[]>([]);
   const [showSavePreset, setShowSavePreset] = useState(false);
@@ -196,7 +236,13 @@ export const TripSetup = ({ onComplete }: TripSetupProps) => {
         description: `Created ${data.items.length} activities for your trip`,
       });
 
-      onComplete({ location, families, noGiftShop }, data.items);
+      onComplete({ 
+        location, 
+        families, 
+        noGiftShop,
+        nestConfig: nestConfig.address ? nestConfig : undefined,
+        mealPreferences 
+      }, data.items);
     } catch (error) {
       console.error('Error generating itinerary:', error);
       toast({
@@ -353,6 +399,151 @@ export const TripSetup = ({ onComplete }: TripSetupProps) => {
                   <Button type="button" onClick={addFamily} variant="outline" className="h-10 sm:h-11 px-3 sm:px-4">
                     <Plus className="w-4 h-4" />
                   </Button>
+                </div>
+              </div>
+            </Card>
+
+            {/* The Nest */}
+            <Card className="p-4 sm:p-5 md:p-6 border-2 hover:border-primary/30 transition-colors">
+              <div className="space-y-4">
+                <Label className="text-sm sm:text-base font-semibold">🏠 The Nest (Home Base)</Label>
+                <Input
+                  placeholder="Hotel address or meeting point (optional)"
+                  value={nestConfig.address}
+                  onChange={(e) => setNestConfig({ ...nestConfig, address: e.target.value })}
+                  className="h-11 sm:h-12"
+                />
+                <div className="space-y-3">
+                  <div className="flex items-center justify-between">
+                    <Label htmlFor="shared-lodging" className="text-sm">
+                      Shared lodging (multiple families)
+                    </Label>
+                    <Switch
+                      id="shared-lodging"
+                      checked={nestConfig.isShared}
+                      onCheckedChange={(checked) => setNestConfig({ ...nestConfig, isShared: checked })}
+                    />
+                  </div>
+                  <div className="flex items-center justify-between">
+                    <Label htmlFor="car-naps" className="text-sm">
+                      Allow car naps during travel
+                    </Label>
+                    <Switch
+                      id="car-naps"
+                      checked={nestConfig.allowCarNaps}
+                      onCheckedChange={(checked) => setNestConfig({ ...nestConfig, allowCarNaps: checked })}
+                    />
+                  </div>
+                </div>
+              </div>
+            </Card>
+
+            {/* Feeding the Flock */}
+            <Card className="p-4 sm:p-5 md:p-6 border-2 hover:border-primary/30 transition-colors">
+              <div className="space-y-4">
+                <Label className="text-sm sm:text-base font-semibold">🍽️ Feeding the Flock</Label>
+                
+                <div className="flex gap-2">
+                  {([2, 3, 4] as const).map((count) => (
+                    <Button
+                      key={count}
+                      type="button"
+                      variant={mealPreferences.mealCount === count ? "default" : "outline"}
+                      size="sm"
+                      onClick={() => setMealPreferences({ ...mealPreferences, mealCount: count })}
+                      className="flex-1"
+                    >
+                      {count} meals/day
+                    </Button>
+                  ))}
+                </div>
+
+                <div className="grid grid-cols-2 gap-3">
+                  <div className="space-y-2">
+                    <Label htmlFor="lunch-time" className="text-xs">Lunch time</Label>
+                    <Input
+                      id="lunch-time"
+                      type="time"
+                      value={mealPreferences.preferredLunchTime}
+                      onChange={(e) => setMealPreferences({ ...mealPreferences, preferredLunchTime: e.target.value })}
+                      className="h-10"
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="dinner-time" className="text-xs">Dinner time</Label>
+                    <Input
+                      id="dinner-time"
+                      type="time"
+                      value={mealPreferences.preferredDinnerTime}
+                      onChange={(e) => setMealPreferences({ ...mealPreferences, preferredDinnerTime: e.target.value })}
+                      className="h-10"
+                    />
+                  </div>
+                </div>
+
+                <div className="flex gap-2">
+                  <Button
+                    type="button"
+                    variant={mealPreferences.budgetLevel === "budget" ? "default" : "outline"}
+                    size="sm"
+                    onClick={() => setMealPreferences({ ...mealPreferences, budgetLevel: "budget" })}
+                    className="flex-1"
+                  >
+                    $
+                  </Button>
+                  <Button
+                    type="button"
+                    variant={mealPreferences.budgetLevel === "moderate" ? "default" : "outline"}
+                    size="sm"
+                    onClick={() => setMealPreferences({ ...mealPreferences, budgetLevel: "moderate" })}
+                    className="flex-1"
+                  >
+                    $$
+                  </Button>
+                  <Button
+                    type="button"
+                    variant={mealPreferences.budgetLevel === "splurge" ? "default" : "outline"}
+                    size="sm"
+                    onClick={() => setMealPreferences({ ...mealPreferences, budgetLevel: "splurge" })}
+                    className="flex-1"
+                  >
+                    $$$
+                  </Button>
+                </div>
+
+                <div className="space-y-2">
+                  <div className="flex items-center gap-2">
+                    <Switch
+                      id="pack-lunch"
+                      checked={mealPreferences.packLunch}
+                      onCheckedChange={(checked) => setMealPreferences({ ...mealPreferences, packLunch: checked })}
+                    />
+                    <Label htmlFor="pack-lunch" className="text-sm">Pack lunch (skip restaurants)</Label>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <Switch
+                      id="kid-menu"
+                      checked={mealPreferences.kidMenuRequired}
+                      onCheckedChange={(checked) => setMealPreferences({ ...mealPreferences, kidMenuRequired: checked })}
+                    />
+                    <Label htmlFor="kid-menu" className="text-sm">Kid menu required</Label>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <Switch
+                      id="highchairs"
+                      checked={mealPreferences.highchairRequired}
+                      onCheckedChange={(checked) => setMealPreferences({ ...mealPreferences, highchairRequired: checked })}
+                    />
+                    <Label htmlFor="highchairs" className="text-sm">Highchairs needed</Label>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <Switch
+                      id="quick-service"
+                      checked={mealPreferences.quickServiceOk}
+                      onCheckedChange={(checked) => setMealPreferences({ ...mealPreferences, quickServiceOk: checked })}
+                    />
+                    <Label htmlFor="quick-service" className="text-sm">Quick service OK</Label>
+                  </div>
                 </div>
               </div>
             </Card>

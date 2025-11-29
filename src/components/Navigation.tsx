@@ -21,11 +21,11 @@ export const Navigation = () => {
       <div className="container mx-auto px-4">
         <div className="flex h-16 items-center justify-between">
           {/* Logo */}
-          <Link to="/" className="flex items-center group">
+          <Link to="/" className="flex items-center">
             <img 
               src={gaggleGoLogo} 
               alt="GaggleGO" 
-              className="h-10 w-auto transition-all duration-300 group-hover:scale-105 group-hover:rotate-2 group-hover:drop-shadow-[0_4px_12px_rgba(232,123,26,0.4)]"
+              className="h-10 w-auto"
             />
           </Link>
 

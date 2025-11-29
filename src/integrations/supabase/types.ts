@@ -55,6 +55,7 @@ export type Database = {
       family_preferences: {
         Row: {
           created_at: string
+          end_date: string | null
           families: Json
           id: string
           location: string | null
@@ -62,11 +63,13 @@ export type Database = {
           nest_config: Json | null
           no_gift_shop: boolean | null
           preset_name: string
+          start_date: string | null
           updated_at: string
           user_id: string
         }
         Insert: {
           created_at?: string
+          end_date?: string | null
           families: Json
           id?: string
           location?: string | null
@@ -74,11 +77,13 @@ export type Database = {
           nest_config?: Json | null
           no_gift_shop?: boolean | null
           preset_name: string
+          start_date?: string | null
           updated_at?: string
           user_id: string
         }
         Update: {
           created_at?: string
+          end_date?: string | null
           families?: Json
           id?: string
           location?: string | null
@@ -86,6 +91,7 @@ export type Database = {
           nest_config?: Json | null
           no_gift_shop?: boolean | null
           preset_name?: string
+          start_date?: string | null
           updated_at?: string
           user_id?: string
         }

@@ -366,6 +366,55 @@ export const HeartIcon = ({ className = "", size = 24 }: IconProps) => (
   </svg>
 );
 
+// Gosling Icon - Smaller, cuter version of Goose for kids
+export const GoslingIcon = ({ className = "", size = 24 }: IconProps) => (
+  <svg 
+    width={size} 
+    height={size} 
+    viewBox="0 0 24 24" 
+    fill="none" 
+    className={className}
+    xmlns="http://www.w3.org/2000/svg"
+  >
+    <ellipse 
+      cx="12" 
+      cy="14" 
+      rx="4" 
+      ry="3.5" 
+      fill="hsl(28 82% 51%)"
+      stroke="hsl(0 0% 29%)"
+      strokeWidth="2"
+    />
+    <circle 
+      cx="12" 
+      cy="9.5" 
+      r="3" 
+      fill="hsl(28 82% 51%)"
+      stroke="hsl(0 0% 29%)"
+      strokeWidth="2"
+    />
+    <circle cx="11.2" cy="9" r="0.8" fill="hsl(0 0% 29%)" />
+    <path 
+      d="M14.5 9.5c.6.3 1.2.5 1.8.7" 
+      stroke="hsl(0 0% 29%)"
+      strokeWidth="1.5"
+      strokeLinecap="round"
+    />
+    <path 
+      d="M9 15c-1.2.8-2 1.5-2 2.5" 
+      stroke="hsl(0 0% 29%)"
+      strokeWidth="1.5"
+      strokeLinecap="round"
+    />
+    <path 
+      d="M15 15c1.2.8 2 1.5 2 2.5" 
+      stroke="hsl(0 0% 29%)"
+      strokeWidth="1.5"
+      strokeLinecap="round"
+    />
+  </svg>
+);
+
 // Export all icons
 export const BrandIcons = {
   MapPin: MapPinIcon,
@@ -373,6 +422,7 @@ export const BrandIcons = {
   Chat: ChatIcon,
   Calendar: CalendarIcon,
   Goose: GooseIcon,
+  Gosling: GoslingIcon,
   Group: GroupIcon,
   Dining: DiningIcon,
   Clock: ClockIcon,

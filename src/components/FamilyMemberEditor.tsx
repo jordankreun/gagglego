@@ -5,6 +5,7 @@ import { Label } from "@/components/ui/label";
 import { Badge } from "@/components/ui/badge";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Plus, X } from "lucide-react";
+import { GooseIcon, GoslingIcon } from "@/components/icons/BrandIcons";
 import {
   Select,
   SelectContent,
@@ -81,8 +82,8 @@ export const FamilyMemberEditor = ({ members, onChange }: FamilyMemberEditorProp
           <div key={member.id} className="p-2.5 sm:p-3 bg-muted/50 rounded-lg space-y-2">
             <div className="flex items-center justify-between gap-2">
               <div className="flex items-center gap-1.5 sm:gap-2 flex-1 min-w-0">
-                <Badge variant={member.type === "adult" ? "secondary" : "default"} className="text-xs flex-shrink-0">
-                  {member.type === "adult" ? "👤" : "🧒"}
+                <Badge variant={member.type === "adult" ? "secondary" : "default"} className="text-xs flex-shrink-0 flex items-center justify-center p-1">
+                  {member.type === "adult" ? <GooseIcon size={14} /> : <GoslingIcon size={14} />}
                 </Badge>
                 <Input
                   value={member.name}

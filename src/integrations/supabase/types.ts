@@ -115,6 +115,33 @@ export type Database = {
         }
         Relationships: []
       }
+      saved_families: {
+        Row: {
+          created_at: string
+          dietary: Json
+          id: string
+          members: Json
+          name: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          dietary?: Json
+          id?: string
+          members?: Json
+          name: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          dietary?: Json
+          id?: string
+          members?: Json
+          name?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       trip_collaborators: {
         Row: {
           created_at: string | null

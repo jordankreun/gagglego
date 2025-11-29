@@ -23,6 +23,7 @@ import { FamilyMemberEditor } from "@/components/FamilyMemberEditor";
 import { supabase } from "@/integrations/supabase/client";
 import { AnimatedGoose } from "@/components/AnimatedGoose";
 import { useAuth } from "@/contexts/AuthContext";
+import { AddressAutocomplete } from "@/components/AddressAutocomplete";
 
 interface Member {
   id: string;
@@ -42,7 +43,9 @@ interface Family {
 interface NestConfig {
   mode: "shared" | "separate";
   sharedAddress?: string;
+  sharedCoordinates?: { lat: number; lng: number };
   perFamilyAddresses?: Map<string, string>;
+  perFamilyCoordinates?: Map<string, { lat: number; lng: number }>;
   allowCarNaps: boolean;
 }
 
@@ -95,7 +98,9 @@ export const TripSetup = ({ onComplete }: TripSetupProps) => {
   const [nestConfig, setNestConfig] = useState<NestConfig>({
     mode: "shared",
     sharedAddress: "",
+    sharedCoordinates: undefined,
     perFamilyAddresses: new Map(),
+    perFamilyCoordinates: new Map(),
     allowCarNaps: false,
   });
   
@@ -349,6 +354,27 @@ export const TripSetup = ({ onComplete }: TripSetupProps) => {
         variant: "destructive"
       });
       return;
+    }
+
+    // Check if any kids need naps
+    const hasNapTimeKids = families.some(f => 
+      f.members.some(m => m.type === 'kid' && m.napTime)
+    );
+
+    // Require nest address if kids have nap times
+    if (hasNapTimeKids) {
+      const hasNestAddress = nestConfig.mode === "shared" 
+        ? !!nestConfig.sharedAddress 
+        : families.every(f => nestConfig.perFamilyAddresses?.get(f.id));
+      
+      if (!hasNestAddress) {
+        toast({
+          title: "Nest address required",
+          description: "Please provide a nest address for nap times",
+          variant: "destructive"
+        });
+        return;
+      }
     }
 
     setIsGenerating(true);
@@ -626,11 +652,16 @@ export const TripSetup = ({ onComplete }: TripSetupProps) => {
                       <MapPin className="w-4 h-4 text-primary" />
                       Nest Address
                     </Label>
-                    <Input
-                      id="shared-address"
-                      placeholder="Hotel address or home base location"
+                    <AddressAutocomplete
                       value={nestConfig.sharedAddress || ""}
-                      onChange={(e) => setNestConfig({ ...nestConfig, sharedAddress: e.target.value })}
+                      onChange={(address, coords) => 
+                        setNestConfig({ 
+                          ...nestConfig, 
+                          sharedAddress: address,
+                          sharedCoordinates: coords 
+                        })
+                      }
+                      placeholder="Hotel address or home base location"
                       className="h-11 sm:h-12"
                     />
                   </div>
@@ -646,15 +677,24 @@ export const TripSetup = ({ onComplete }: TripSetupProps) => {
                           <MapPin className="w-4 h-4 text-primary" />
                           {family.name}
                         </Label>
-                        <Input
-                          id={`nest-${family.id}`}
-                          placeholder={`Address for ${family.name}`}
+                        <AddressAutocomplete
                           value={nestConfig.perFamilyAddresses?.get(family.id) || ""}
-                          onChange={(e) => {
-                            const newMap = new Map(nestConfig.perFamilyAddresses);
-                            newMap.set(family.id, e.target.value);
-                            setNestConfig({ ...nestConfig, perFamilyAddresses: newMap });
+                          onChange={(address, coords) => {
+                            const newAddressMap = new Map(nestConfig.perFamilyAddresses);
+                            newAddressMap.set(family.id, address);
+                            
+                            const newCoordMap = new Map(nestConfig.perFamilyCoordinates);
+                            if (coords) {
+                              newCoordMap.set(family.id, coords);
+                            }
+                            
+                            setNestConfig({ 
+                              ...nestConfig, 
+                              perFamilyAddresses: newAddressMap,
+                              perFamilyCoordinates: newCoordMap
+                            });
                           }}
+                          placeholder={`Address for ${family.name}`}
                           className="h-10 sm:h-11"
                         />
                       </div>
@@ -663,9 +703,16 @@ export const TripSetup = ({ onComplete }: TripSetupProps) => {
                 )}
 
                 <div className="flex items-center justify-between pt-2 border-t">
-                  <Label htmlFor="car-naps" className="text-sm">
-                    Allow car naps during travel
-                  </Label>
+                  <div className="space-y-1">
+                    <Label htmlFor="car-naps" className="text-sm">
+                      Allow car naps during travel
+                    </Label>
+                    {nestConfig.allowCarNaps && (
+                      <p className="text-xs text-muted-foreground">
+                        🚗 Only for drives 2+ hours long
+                      </p>
+                    )}
+                  </div>
                   <Switch
                     id="car-naps"
                     checked={nestConfig.allowCarNaps}

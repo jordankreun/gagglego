@@ -46,9 +46,18 @@ serve(async (req) => {
       ? `AGE-APPROPRIATE FILTERING: The youngest family member is ${youngestAge} years old. ALL activities and recommendations MUST be appropriate and safe for age ${youngestAge}+. Filter out activities with age restrictions above ${youngestAge}. Prioritize family-friendly activities that engage this age group. Consider attention spans, physical capabilities, and safety requirements for age ${youngestAge}.`
       : 'No specific age constraints provided - assume general family-friendly activities suitable for all ages.';
 
-    const nestConstraint = nestConfig?.address
-      ? `THE NEST ANCHOR: Home base is at "${nestConfig.address}". ${nestConfig.isShared ? 'Shared lodging with multiple families.' : 'Private lodging.'} ${nestConfig.allowCarNaps ? 'Car naps are acceptable during travel times.' : 'Avoid long drives during nap times.'} Plan activities that can return to nest for rest periods. Include realistic travel times with 20% buffer for families.`
-      : 'No home base specified - plan as a continuous day trip.';
+    const nestConstraint = nestConfig?.sharedAddress || nestConfig?.perFamilyAddresses
+      ? `THE NEST ANCHOR: Home base is at "${nestConfig.sharedAddress || 'per-family addresses'}". 
+     
+CRITICAL NAP LOCATION RULE:
+- ALL naps MUST occur at the Nest (home base) by default
+- Naps are NOT optional - schedule must accommodate returning to nest for nap times
+- ${nestConfig.allowCarNaps 
+    ? 'CAR NAPS ALLOWED: Only if the drive is 2+ hours long. Mark these with "isCarNap": true and ensure travelTime shows at least "2 hr" duration. Do NOT allow car naps for shorter drives.'
+    : 'CAR NAPS DISABLED: ALL naps must be at the Nest. Plan the schedule to return home for nap times.'}
+- Include realistic travel times with 20% buffer for families
+- Plan morning activities → Return to Nest for nap → Afternoon activities`
+      : 'No home base specified - include rest/quiet time periods for young children.';
 
     const mealConstraint = mealPreferences
       ? `MEAL PLANNING:

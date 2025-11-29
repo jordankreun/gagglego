@@ -24,6 +24,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { AnimatedGoose } from "@/components/AnimatedGoose";
 import { useAuth } from "@/contexts/AuthContext";
 import { AddressAutocomplete } from "@/components/AddressAutocomplete";
+import { GooseStatusCard } from "@/components/GooseStatusCard";
 
 interface Member {
   id: string;
@@ -461,6 +462,22 @@ export const TripSetup = ({ onComplete }: TripSetupProps) => {
 
   return (
     <section className="min-h-screen py-6 sm:py-12 md:py-16 px-3 sm:px-4">
+      {isGenerating ? (
+        <div className="container max-w-3xl mx-auto flex items-center justify-center min-h-[60vh]">
+          <GooseStatusCard
+            title="Generating Your Itinerary"
+            estimatedSeconds={25}
+            messages={[
+              "Gathering the flock...",
+              "Plotting the migration route...",
+              "Finding family-friendly spots...",
+              "Checking for quiet zones...",
+              "Almost ready for takeoff!"
+            ]}
+            onCancel={() => setIsGenerating(false)}
+          />
+        </div>
+      ) : (
       <div className="container max-w-3xl mx-auto">
         <div className="space-y-4 sm:space-y-6 md:space-y-8">
           {/* Header */}
@@ -969,6 +986,7 @@ export const TripSetup = ({ onComplete }: TripSetupProps) => {
           </form>
         </div>
       </div>
+      )}
 
       {/* Edit Family Dialog */}
       <Dialog open={!!editingFamily} onOpenChange={(open) => !open && setEditingFamily(null)}>

@@ -73,6 +73,28 @@ Deno.serve(async (req) => {
       });
     }
 
+    // If accepted, create notification for the requester
+    if (action === 'accept') {
+      const { data: responderProfile } = await supabase
+        .from('profiles')
+        .select('display_name, email')
+        .eq('id', user.id)
+        .single();
+
+      const responderName = responderProfile?.display_name || responderProfile?.email || 'Someone';
+      
+      await supabase
+        .from('notifications')
+        .insert({
+          user_id: connection.user_id,
+          type: 'flock_request',
+          title: '✅ Flock Request Accepted!',
+          message: `${responderName} accepted your flock request`,
+          link: `/profile`,
+          metadata: { connectionId: connectionId, responderId: user.id },
+        });
+    }
+
     console.log(`Flock request ${action}ed successfully:`, connectionId);
 
     return new Response(

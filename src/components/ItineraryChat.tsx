@@ -10,6 +10,7 @@ import { useAuth } from "@/contexts/AuthContext";
 import { SmartSuggestions } from "./SmartSuggestions";
 import { VoiceRecognition, VoiceSynthesis } from "@/utils/voiceInterface";
 import { AnimatedGoose } from "./AnimatedGoose";
+import { GooseStatusCard } from "./GooseStatusCard";
 
 interface Message {
   role: "user" | "assistant";

@@ -110,6 +110,26 @@ Deno.serve(async (req) => {
       });
     }
 
+    // Get sender profile for notification
+    const { data: senderProfile } = await supabase
+      .from('profiles')
+      .select('display_name, email')
+      .eq('id', user.id)
+      .single();
+
+    // Create notification for the recipient
+    const senderName = senderProfile?.display_name || senderProfile?.email || user.email;
+    await supabase
+      .from('notifications')
+      .insert({
+        user_id: friendProfile.id,
+        type: 'flock_request',
+        title: '🐥 New Flock Request!',
+        message: `${senderName} wants to join your flock`,
+        link: `/profile`,
+        metadata: { connectionId: connection.id, senderId: user.id },
+      });
+
     console.log('Flock request sent successfully:', connection.id);
 
     return new Response(

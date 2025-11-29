@@ -251,7 +251,7 @@ export default function Landing() {
           <Card className="p-8 sm:p-12 md:p-16 text-center space-y-6 sm:space-y-8 bg-gradient-to-br from-accent/10 via-primary/5 to-background border-2">
             <div className="space-y-3 sm:space-y-4">
               <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-display font-bold">
-                Ready to stop winging it?
+                Stop winging it. Start flying smart.
               </h2>
               <p className="text-base sm:text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto">
                 Join families who've already discovered stress-free group travel

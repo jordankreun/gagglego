@@ -13,6 +13,7 @@ import { Alert, AlertDescription } from "@/components/ui/alert";
 import { GooseIcon, GoslingIcon } from "@/components/icons/BrandIcons";
 import { AnimatedGoose } from "@/components/AnimatedGoose";
 import { useNavigate } from "react-router-dom";
+import { FlockList } from "@/components/FlockList";
 
 interface Profile {
   display_name: string | null;
@@ -285,7 +286,13 @@ const Profile = () => {
         {/* Header */}
         <div className="text-center space-y-2">
           <h1 className="text-4xl font-display font-bold">Profile</h1>
-          <p className="text-muted-foreground">Manage your account settings</p>
+          <p className="text-muted-foreground">Manage your account and flock</p>
+        </div>
+
+        {/* Flock List */}
+        <div className="space-y-4">
+          <h2 className="text-2xl font-display font-bold">My Flock 🦆</h2>
+          <FlockList />
         </div>
 
         {/* Profile Info */}

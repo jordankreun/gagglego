@@ -17,6 +17,9 @@ export default {
         sans: ['DM Sans', 'system-ui', 'sans-serif'],
         display: ['new-kansas', 'DM Sans', 'system-ui', 'sans-serif'],
       },
+      fontWeight: {
+        display: '500',
+      },
       colors: {
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",

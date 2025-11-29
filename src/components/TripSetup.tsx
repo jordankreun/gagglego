@@ -20,6 +20,7 @@ import { useToast } from "@/hooks/use-toast";
 import { LocationSuggestions } from "@/components/LocationSuggestions";
 import { FamilyMemberEditor } from "@/components/FamilyMemberEditor";
 import { supabase } from "@/integrations/supabase/client";
+import { AnimatedGoose } from "@/components/AnimatedGoose";
 
 interface Member {
   id: string;

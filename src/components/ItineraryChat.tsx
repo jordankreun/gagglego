@@ -9,6 +9,7 @@ import { useToast } from "@/components/ui/use-toast";
 import { useAuth } from "@/contexts/AuthContext";
 import { SmartSuggestions } from "./SmartSuggestions";
 import { VoiceRecognition, VoiceSynthesis } from "@/utils/voiceInterface";
+import { AnimatedGoose } from "./AnimatedGoose";
 
 interface Message {
   role: "user" | "assistant";
@@ -264,10 +265,15 @@ export const ItineraryChat = ({ location, currentItinerary, tripId, onItineraryU
           <div className="bg-primary text-primary-foreground p-4 rounded-t-lg">
             <div className="flex items-center justify-between mb-2">
               <div className="flex items-center gap-3">
-                <div className="text-2xl">🦆</div>
+                <AnimatedGoose 
+                  size="md" 
+                  state={isLoading ? "thinking" : isSpeaking ? "talking" : "idle"} 
+                />
                 <div>
                   <h3 className="font-display font-bold">GaggleGO Guide</h3>
-                  <p className="text-xs opacity-90">Your friendly travel assistant</p>
+                  <p className="text-xs opacity-90">
+                    {isLoading ? "Thinking..." : isSpeaking ? "Speaking..." : "Your friendly travel assistant"}
+                  </p>
                 </div>
               </div>
               <div className="flex gap-1">
@@ -297,14 +303,18 @@ export const ItineraryChat = ({ location, currentItinerary, tripId, onItineraryU
                 className={`flex ${message.role === 'user' ? 'justify-end' : 'justify-start'}`}
               >
                 <div
-                  className={`max-w-[80%] rounded-2xl px-4 py-2 ${
+                  className={`max-w-[80%] rounded-2xl px-4 py-2 flex items-start gap-2 ${
                     message.role === 'user'
                       ? 'bg-primary text-primary-foreground'
                       : 'bg-muted text-foreground'
                   }`}
                 >
                   {message.role === 'assistant' && (
-                    <span className="text-lg mr-2">🦆</span>
+                    <AnimatedGoose 
+                      size="sm" 
+                      state="idle" 
+                      className="flex-shrink-0 mt-1"
+                    />
                   )}
                   <span className="text-sm whitespace-pre-wrap">{message.content}</span>
                 </div>
@@ -313,8 +323,7 @@ export const ItineraryChat = ({ location, currentItinerary, tripId, onItineraryU
             {isLoading && (
               <div className="flex justify-start">
                 <div className="bg-muted rounded-2xl px-4 py-2 flex items-center gap-2">
-                  <span className="text-lg">🦆</span>
-                  <Loader2 className="w-4 h-4 animate-spin" />
+                  <AnimatedGoose size="sm" state="thinking" />
                   <span className="text-sm">Thinking...</span>
                 </div>
               </div>

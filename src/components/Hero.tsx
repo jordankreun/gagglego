@@ -19,6 +19,9 @@ export const Hero = ({ onGetStarted }: { onGetStarted: () => void }) => {
               className="w-auto h-32 mx-auto drop-shadow-xl cursor-pointer transition-all duration-500 hover:scale-110 hover:rotate-3 hover:drop-shadow-[0_8px_24px_rgba(232,123,26,0.5)] animate-in fade-in duration-1000"
             />
             <div>
+              <h2 className="text-3xl md:text-4xl font-display font-bold text-accent mb-2">
+                Don't just wing it. Get the Gaggle Going.
+              </h2>
               <p className="text-2xl md:text-3xl font-display text-muted-foreground">
                 Flock together, travel smarter
               </p>

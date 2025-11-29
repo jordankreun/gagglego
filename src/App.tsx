@@ -6,6 +6,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { AuthProvider } from "@/contexts/AuthContext";
 import { ProtectedRoute } from "@/components/ProtectedRoute";
 import { Navigation } from "@/components/Navigation";
+import { InstallPrompt } from "@/components/InstallPrompt";
 import Index from "./pages/Index";
 import Landing from "./pages/Landing";
 import Auth from "./pages/Auth";
@@ -14,6 +15,7 @@ import IconShowcase from "./pages/IconShowcase";
 import MyTrips from "./pages/MyTrips";
 import SharedTrip from "./pages/SharedTrip";
 import NotFound from "./pages/NotFound";
+import Install from "./pages/Install";
 
 const queryClient = new QueryClient();
 
@@ -23,11 +25,13 @@ const App = () => (
       <AuthProvider>
         <Toaster />
         <Sonner />
+        <InstallPrompt />
         <BrowserRouter>
           <Routes>
             {/* Public routes without navigation */}
             <Route path="/" element={<Landing />} />
             <Route path="/auth" element={<Auth />} />
+            <Route path="/install" element={<Install />} />
             
             {/* App routes with navigation */}
             <Route path="/plan" element={

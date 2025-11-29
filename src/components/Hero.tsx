@@ -1,9 +1,9 @@
 import { Button } from "@/components/ui/button";
 import { MapPin, Users, Clock, Bird } from "lucide-react";
 import heroImage from "@/assets/hero-families.jpg";
-import gaggleGoLogo from "@/assets/gaggle-go-logo.png";
 import { MapPinIcon, GroupIcon, ClockIcon } from "@/components/icons/BrandIcons";
 import { AnimatedGoose } from "./AnimatedGoose";
+import { GaggleGoWordmark } from "./GaggleGoWordmark";
 
 export const Hero = ({ onGetStarted }: { onGetStarted: () => void }) => {
   return (
@@ -19,11 +19,9 @@ export const Hero = ({ onGetStarted }: { onGetStarted: () => void }) => {
 
           {/* Logo and tagline */}
           <div className="space-y-4 md:space-y-6">
-            <img 
-              src={gaggleGoLogo} 
-              alt="GaggleGO" 
-              className="h-20 sm:h-24 md:h-28 w-auto mx-auto drop-shadow-xl object-contain"
-            />
+            <div className="flex justify-center">
+              <GaggleGoWordmark size="lg" animate={false} />
+            </div>
             <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-display font-bold text-accent px-4">
               Don't just wing it. Get the Gaggle Going.
             </h1>

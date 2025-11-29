@@ -4,7 +4,7 @@ import { Button } from '@/components/ui/button';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { useAuth } from '@/contexts/AuthContext';
-import gaggleGoLogo from '@/assets/gaggle-go-logo.png';
+import gaggleGoLogo from '@/assets/gagglego-nav-logo.png';
 export const Navigation = () => {
   const {
     user,

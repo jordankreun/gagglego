@@ -11,7 +11,7 @@ serve(async (req) => {
   }
 
   try {
-    const { latitude, longitude, cityName, families = [], tripDate } = await req.json();
+    const { latitude, longitude, cityName, locationQuery, activityType, families = [], tripDate } = await req.json();
 
     const LOVABLE_API_KEY = Deno.env.get("LOVABLE_API_KEY");
     if (!LOVABLE_API_KEY) {
@@ -19,7 +19,9 @@ serve(async (req) => {
     }
 
     // Build context about the location
-    const locationContext = cityName 
+    const locationContext = locationQuery
+      ? locationQuery
+      : cityName 
       ? `near ${cityName} (coordinates: ${latitude}, ${longitude})`
       : `at coordinates ${latitude}, ${longitude}`;
 
@@ -43,6 +45,11 @@ ${nappers > 0 ? `${nappers} child${nappers > 1 ? "ren" : ""} need${nappers === 1
 ${dietaryRestrictions.length > 0 ? `Dietary considerations: ${dietaryRestrictions.join(", ")}.` : ""}`;
     }
 
+    // Build activity type context
+    const activityTypeContext = activityType 
+      ? `Focus primarily on ${activityType.split('_').join(' ')} options. ` 
+      : '';
+
     const systemPrompt = `You are a family travel expert specializing in multi-family trips with young children. 
 Your task is to suggest family-friendly destinations that are:
 - Safe and accessible for families with toddlers and young children
@@ -53,10 +60,12 @@ Your task is to suggest family-friendly destinations that are:
 - Age-appropriate for the youngest child in the group
 - Accessible and practical for large groups
 
+${activityTypeContext}
+
 Return EXACTLY 5 suggestions as a JSON array. Each suggestion must have:
 - name: The destination name (real, specific places only)
 - description: A compelling 1-2 sentence description focusing on why it's perfect for this family group
-- type: One of "theme_park", "zoo_aquarium", "museum", "nature_park", or "cultural_site"
+- type: One of "theme_park", "zoo_aquarium", "museum", "nature_park", "beach", "playground", or "cultural_site"
 - estimatedDistance: Approximate distance in miles from the user's location (e.g., "2.5 miles", "15 miles")
 
 Format your response as valid JSON only, no other text.`;

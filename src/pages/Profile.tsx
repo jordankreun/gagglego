@@ -10,6 +10,7 @@ import { Badge } from "@/components/ui/badge";
 import { useToast } from "@/hooks/use-toast";
 import { Loader2, Upload, Trash2, Clock, Users } from "lucide-react";
 import { Alert, AlertDescription } from "@/components/ui/alert";
+import { Skeleton } from "@/components/ui/skeleton";
 import { GooseIcon, GoslingIcon } from "@/components/icons/BrandIcons";
 import { AnimatedGoose } from "@/components/AnimatedGoose";
 import { useNavigate } from "react-router-dom";
@@ -285,8 +286,26 @@ const Profile = () => {
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
-        <Loader2 className="w-8 h-8 animate-spin text-primary" />
+      <div className="min-h-screen py-16 px-4">
+        <div className="container max-w-3xl mx-auto space-y-8">
+          <div className="text-center space-y-2">
+            <h1 className="text-4xl font-display font-bold">Profile</h1>
+            <p className="text-muted-foreground">Manage your account and flock</p>
+          </div>
+
+          <Card className="p-8 border-2">
+            <div className="space-y-8">
+              <div className="flex flex-col items-center space-y-4">
+                <Skeleton className="w-32 h-32 rounded-full" />
+                <Skeleton className="h-10 w-32" />
+              </div>
+              <div className="space-y-4">
+                <Skeleton className="h-12 w-full" />
+                <Skeleton className="h-12 w-full" />
+              </div>
+            </div>
+          </Card>
+        </div>
       </div>
     );
   }

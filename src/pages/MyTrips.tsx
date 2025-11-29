@@ -4,6 +4,7 @@ import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
+import { Skeleton } from "@/components/ui/skeleton";
 import { MapPin, Calendar, Trash2, ExternalLink, Edit2, Check, X } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
@@ -172,11 +173,41 @@ export default function MyTrips() {
 
   if (loading) {
     return (
-      <div className="min-h-screen py-12 px-4">
-        <div className="container max-w-4xl mx-auto">
-          <p className="text-center text-muted-foreground">Loading your migrations...</p>
+      <section className="min-h-screen py-12 px-4">
+        <div className="container max-w-4xl mx-auto space-y-8">
+          <div className="space-y-2">
+            <div className="flex items-center gap-3">
+              <BrandIcons.FlyingGoose size={32} className="text-primary" />
+              <h1 className="text-3xl md:text-4xl font-display font-bold">My Migrations</h1>
+            </div>
+            <p className="text-muted-foreground">Your saved family adventures</p>
+          </div>
+          
+          <div className="grid gap-4">
+            {[1, 2, 3].map((i) => (
+              <Card key={i} className="p-5">
+                <div className="flex items-start justify-between mb-4">
+                  <div className="flex-1 space-y-3">
+                    <Skeleton className="h-7 w-48" />
+                    <div className="flex gap-3">
+                      <Skeleton className="h-5 w-32" />
+                      <Skeleton className="h-5 w-40" />
+                      <Skeleton className="h-5 w-24" />
+                    </div>
+                    <Skeleton className="h-6 w-20" />
+                  </div>
+                  <Skeleton className="h-10 w-10 rounded-full" />
+                </div>
+                <div className="space-y-2 mb-4">
+                  <Skeleton className="h-4 w-full" />
+                  <Skeleton className="h-2 w-full rounded-full" />
+                </div>
+                <Skeleton className="h-10 w-full" />
+              </Card>
+            ))}
+          </div>
         </div>
-      </div>
+      </section>
     );
   }
 
@@ -202,9 +233,14 @@ export default function MyTrips() {
               <h3 className="text-2xl font-display font-bold">Ready to Fly?</h3>
               <p className="text-muted-foreground">No migrations saved yet. Start planning your first family adventure!</p>
             </div>
-            <Button onClick={() => navigate('/plan')} variant="hero" size="lg">
-              Plan Your First Trip
-            </Button>
+            <div className="flex flex-col sm:flex-row gap-3 justify-center">
+              <Button onClick={() => navigate('/plan')} variant="hero" size="lg" className="text-lg px-8">
+                Plan Your First Trip
+              </Button>
+              <Button onClick={() => navigate('/profile')} variant="outline" size="lg">
+                Set Up Your Profile
+              </Button>
+            </div>
           </Card>
         ) : (
           <div className="grid gap-4">
@@ -334,7 +370,7 @@ export default function MyTrips() {
                     className="w-full"
                   >
                     <ExternalLink className="w-4 h-4 mr-2" />
-                    Open Trip
+                    {progressPercent < 100 ? 'Continue Planning' : 'View Trip'}
                   </Button>
                 </Card>
               );

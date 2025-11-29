@@ -85,7 +85,7 @@ export const Navigation = () => {
                       activeClassName="text-foreground bg-muted"
                       onClick={() => setMobileMenuOpen(false)}
                     >
-                      <User className="h-5 w-5" />
+                      <GooseIcon size={20} />
                       Profile
                     </NavLink>
                     <Button 
@@ -104,7 +104,7 @@ export const Navigation = () => {
               </Sheet>
             )}
             {user ? <DropdownMenu>
-              <DropdownMenuTrigger asChild>
+              <DropdownMenuTrigger asChild className="hidden md:block">
                 <Button variant="ghost" className="relative h-10 w-10 rounded-full">
                   <Avatar className="h-10 w-10 border-2 border-primary/30">
                     <AvatarImage src={user.user_metadata?.avatar_url} />
@@ -122,18 +122,6 @@ export const Navigation = () => {
                   </div>
                 </DropdownMenuLabel>
                 <DropdownMenuSeparator />
-                <DropdownMenuItem asChild>
-                  <Link to="/plan" className="cursor-pointer">
-                    <FlyingGooseIcon size={16} className="mr-2" />
-                    Plan Trip
-                  </Link>
-                </DropdownMenuItem>
-                <DropdownMenuItem asChild>
-                  <Link to="/trips" className="cursor-pointer">
-                    <FlyingGooseIcon size={16} className="mr-2" />
-                    My Migrations
-                  </Link>
-                </DropdownMenuItem>
                 <DropdownMenuItem asChild>
                   <Link to="/profile" className="cursor-pointer">
                     <GooseIcon size={16} className="mr-2" />

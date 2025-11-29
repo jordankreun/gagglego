@@ -17,6 +17,7 @@ const sizeClasses = {
 
 export const AnimatedGoose = ({ size = "md", state = "idle", className = "" }: AnimatedGooseProps) => {
   const [blink, setBlink] = useState(false);
+  const [isHovered, setIsHovered] = useState(false);
 
   // Periodic blinking animation
   useEffect(() => {
@@ -73,8 +74,10 @@ export const AnimatedGoose = ({ size = "md", state = "idle", className = "" }: A
 
   return (
     <motion.div
-      className={`relative ${sizeClasses[size]} ${className}`}
+      className={`relative ${sizeClasses[size]} ${className} cursor-pointer`}
       animate={getAnimation()}
+      onHoverStart={() => setIsHovered(true)}
+      onHoverEnd={() => setIsHovered(false)}
     >
       <motion.img
         src={gooseMascot}
@@ -85,6 +88,24 @@ export const AnimatedGoose = ({ size = "md", state = "idle", className = "" }: A
         }}
         transition={{ duration: 0.1 }}
       />
+      
+      {/* Honk speech bubble on hover */}
+      {isHovered && (
+        <motion.div
+          className="absolute -top-8 -right-8 bg-accent text-accent-foreground px-3 py-1.5 rounded-full text-sm font-bold whitespace-nowrap shadow-lg"
+          initial={{ scale: 0, opacity: 0 }}
+          animate={{ scale: 1, opacity: 1 }}
+          exit={{ scale: 0, opacity: 0 }}
+          transition={{ 
+            type: "spring" as const, 
+            stiffness: 500, 
+            damping: 15 
+          }}
+        >
+          HONK!
+          <div className="absolute -bottom-1 left-4 w-3 h-3 bg-accent transform rotate-45" />
+        </motion.div>
+      )}
       
       {/* Thinking indicator */}
       {state === "thinking" && (

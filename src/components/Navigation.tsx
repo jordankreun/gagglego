@@ -4,7 +4,7 @@ import { Button } from '@/components/ui/button';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { useAuth } from '@/contexts/AuthContext';
-import gaggleGoLogo from '@/assets/gagglego-nav-logo.png';
+import { GaggleGoWordmark } from '@/components/GaggleGoWordmark';
 export const Navigation = () => {
   const {
     user,
@@ -15,7 +15,7 @@ export const Navigation = () => {
         <div className="flex h-16 items-center justify-between">
           {/* Logo */}
           <Link to="/plan" className="flex items-center">
-            <img src={gaggleGoLogo} alt="GaggleGO" className="h-10 w-auto object-contain" />
+            <GaggleGoWordmark size="sm" animate={false} />
           </Link>
 
           {/* User Menu */}

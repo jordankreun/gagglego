@@ -1,4 +1,4 @@
-import wiseGoose from "@/assets/wise-goose-sage.png";
+import wiseGoose from "@/assets/wise-goose-minimal.png";
 
 export const WiseGooseAnimation = () => {
   return (

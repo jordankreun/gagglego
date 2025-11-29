@@ -14,10 +14,10 @@ import {
   ArrowRight,
   Check
 } from "lucide-react";
-import gaggleGoLogo from "@/assets/gaggle-go-logo.png";
 import heroImage from "@/assets/hero-families.jpg";
 import { WiseGooseAnimation } from "@/components/WiseGooseAnimation";
 import { AnimatedGoose } from "@/components/AnimatedGoose";
+import { GaggleGoWordmark } from "@/components/GaggleGoWordmark";
 
 export default function Landing() {
   return (
@@ -34,11 +34,7 @@ export default function Landing() {
             </div>
             
             {/* Logo */}
-            <img
-              src={gaggleGoLogo} 
-              alt="GaggleGO" 
-              className="h-24 sm:h-32 md:h-40 w-auto mx-auto drop-shadow-2xl object-contain"
-            />
+            <GaggleGoWordmark size="xl" className="drop-shadow-2xl" />
             
             {/* Headline */}
             <div className="space-y-3 sm:space-y-4">
@@ -287,7 +283,7 @@ export default function Landing() {
       <footer className="py-6 sm:py-8 px-4 border-t">
         <div className="container max-w-6xl mx-auto flex flex-col sm:flex-row justify-between items-center gap-4 text-sm text-muted-foreground">
           <div className="flex items-center gap-2">
-            <img src={gaggleGoLogo} alt="GaggleGO" className="h-6 w-auto object-contain" />
+            <GaggleGoWordmark size="sm" animate={false} />
             <span>© 2025 GaggleGO</span>
           </div>
           <div className="flex gap-4 sm:gap-6">

@@ -166,11 +166,19 @@ export const TripSetup = ({ onComplete }: TripSetupProps) => {
     setIsGenerating(true);
 
     try {
+      // Calculate youngest family member age for age-appropriate filtering
+      const allAges = families
+        .flatMap(f => f.members)
+        .filter(m => m.age !== undefined)
+        .map(m => m.age as number);
+      const youngestAge = allAges.length > 0 ? Math.min(...allAges) : undefined;
+
       const { data, error } = await supabase.functions.invoke('generate-itinerary', {
         body: {
           location,
           families,
           noGiftShop,
+          youngestAge,
           date: new Date().toLocaleDateString("en-US", {
             weekday: "long",
             year: "numeric",

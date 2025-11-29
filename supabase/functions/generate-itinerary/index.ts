@@ -11,9 +11,9 @@ serve(async (req) => {
   }
 
   try {
-    const { location, families, noGiftShop, youngestAge, date, nestConfig, mealPreferences } = await req.json();
+    const { location, families, noGiftShop, youngestAge, startDate, endDate, durationDays, nestConfig, mealPreferences } = await req.json();
     
-    console.log('Generating itinerary for:', { location, families, noGiftShop, youngestAge, date, nestConfig, mealPreferences });
+    console.log('Generating itinerary for:', { location, families, noGiftShop, youngestAge, startDate, endDate, durationDays, nestConfig, mealPreferences });
 
     const LOVABLE_API_KEY = Deno.env.get('LOVABLE_API_KEY');
     if (!LOVABLE_API_KEY) {
@@ -165,10 +165,18 @@ Return a JSON array of 5-7 itinerary items with this structure:
   "travelFromPrevious": true,
   "returnsToNest": false,
   "isCarNap": false,
-  "mealDetails": { ... } // Only for type: "meal"
+  "mealDetails": { ... }, // Only for type: "meal"
+  "day": 1 // Day number (1-indexed)
 }
 
-Generate a complete day itinerary for ${date || 'the trip date'} at ${location}.`;
+MULTI-DAY TRIP STRUCTURE:
+This is a ${durationDays}-day trip from ${new Date(startDate).toLocaleDateString()} to ${new Date(endDate).toLocaleDateString()}.
+Generate activities for ALL ${durationDays} days, with each item tagged with its day number (1-${durationDays}).
+- Day 1: Start fresh, higher energy activities
+${durationDays > 1 ? `- Days 2-${durationDays}: Balance energy levels, include rest periods` : ''}
+${durationDays > 2 ? `- Final day: Lighter schedule for travel/departure` : ''}
+
+Generate the complete ${durationDays}-day itinerary for ${location}.`;
 
     console.log('Calling Lovable AI...');
 

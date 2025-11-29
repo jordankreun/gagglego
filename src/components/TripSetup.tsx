@@ -4,8 +4,10 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card } from "@/components/ui/card";
 import { Switch } from "@/components/ui/switch";
-import { MapPin, Plus, X, Clock, UtensilsCrossed, Pencil, Save, FolderOpen, Trash2, Loader2 } from "lucide-react";
+import { MapPin, Plus, X, Clock, UtensilsCrossed, Pencil, Save, FolderOpen, Trash2, Loader2, Calendar as CalendarIcon } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
+import { DateRange } from "react-day-picker";
+import { DateRangePicker } from "@/components/DateRangePicker";
 import {
   Dialog,
   DialogContent,
@@ -59,6 +61,7 @@ interface TripSetupProps {
     noGiftShop: boolean;
     nestConfig?: NestConfig;
     mealPreferences: MealPreferences;
+    dateRange?: DateRange;
   }, items: any[]) => void;
 }
 
@@ -76,6 +79,7 @@ const PRESETS_STORAGE_KEY = "village-family-presets";
 export const TripSetup = ({ onComplete }: TripSetupProps) => {
   const { toast } = useToast();
   const [location, setLocation] = useState("");
+  const [dateRange, setDateRange] = useState<DateRange | undefined>();
   const [families, setFamilies] = useState<Family[]>(DEFAULT_FAMILIES);
   const [noGiftShop, setNoGiftShop] = useState(false);
   const [newFamilyName, setNewFamilyName] = useState("");
@@ -203,7 +207,14 @@ export const TripSetup = ({ onComplete }: TripSetupProps) => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!location || families.length === 0) return;
+    if (!location || families.length === 0 || !dateRange?.from) {
+      toast({
+        title: "Missing information",
+        description: "Please select a location, add families, and choose trip dates",
+        variant: "destructive"
+      });
+      return;
+    }
 
     setIsGenerating(true);
 
@@ -215,18 +226,22 @@ export const TripSetup = ({ onComplete }: TripSetupProps) => {
         .map(m => m.age as number);
       const youngestAge = allAges.length > 0 ? Math.min(...allAges) : undefined;
 
+      // Calculate trip duration
+      const startDate = dateRange.from;
+      const endDate = dateRange.to || dateRange.from;
+      const durationDays = Math.ceil((endDate.getTime() - startDate.getTime()) / (1000 * 60 * 60 * 24)) + 1;
+
       const { data, error } = await supabase.functions.invoke('generate-itinerary', {
         body: {
           location,
           families,
           noGiftShop,
           youngestAge,
-          date: new Date().toLocaleDateString("en-US", {
-            weekday: "long",
-            year: "numeric",
-            month: "long",
-            day: "numeric",
-          }),
+          startDate: startDate.toISOString(),
+          endDate: endDate.toISOString(),
+          durationDays,
+          nestConfig,
+          mealPreferences
         },
       });
 
@@ -235,7 +250,7 @@ export const TripSetup = ({ onComplete }: TripSetupProps) => {
 
       toast({
         title: "Itinerary generated!",
-        description: `Created ${data.items.length} activities for your trip`,
+        description: `Created ${durationDays}-day trip with ${data.items.length} activities`,
       });
 
       const hasNestConfig = nestConfig.mode === "shared" 
@@ -247,7 +262,8 @@ export const TripSetup = ({ onComplete }: TripSetupProps) => {
         families, 
         noGiftShop,
         nestConfig: hasNestConfig ? nestConfig : undefined,
-        mealPreferences 
+        mealPreferences,
+        dateRange
       }, data.items);
     } catch (error) {
       console.error('Error generating itinerary:', error);
@@ -298,6 +314,25 @@ export const TripSetup = ({ onComplete }: TripSetupProps) => {
                     tripDate={new Date().toLocaleDateString()}
                   />
                 </div>
+              </div>
+            </Card>
+
+            {/* Trip Dates */}
+            <Card className="p-4 sm:p-5 md:p-6 border-2 hover:border-primary/30 transition-colors">
+              <div className="space-y-3 sm:space-y-4">
+                <Label className="text-sm sm:text-base font-semibold flex items-center gap-2">
+                  <CalendarIcon className="w-4 h-4 sm:w-5 sm:h-5 text-primary" />
+                  Trip Dates
+                </Label>
+                <DateRangePicker
+                  dateRange={dateRange}
+                  onDateRangeChange={setDateRange}
+                />
+                {dateRange?.from && dateRange?.to && (
+                  <div className="text-sm text-muted-foreground">
+                    {Math.ceil((dateRange.to.getTime() - dateRange.from.getTime()) / (1000 * 60 * 60 * 24)) + 1} day trip
+                  </div>
+                )}
               </div>
             </Card>
 

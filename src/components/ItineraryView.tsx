@@ -3,6 +3,8 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
 import { Checkbox } from "@/components/ui/checkbox";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { DateRange } from "react-day-picker";
 import { 
   Clock, 
   MapPin, 
@@ -11,13 +13,16 @@ import {
   Baby,
   Sparkles,
   ShoppingBag,
-  Share2
+  Share2,
+  ThermometerSun
 } from "lucide-react";
 import { ItineraryChat } from "./ItineraryChat";
 import { TravelConnector } from "./TravelConnector";
 import { MealCard } from "./MealCard";
 import { ShareTripDialog } from "./ShareTripDialog";
 import { ExportTripButton } from "./ExportTripButton";
+import { WeatherCard } from "./WeatherCard";
+import { useWeather } from "@/hooks/useWeather";
 import { useState, useEffect } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
@@ -39,6 +44,7 @@ interface ItineraryItem {
 interface ItineraryViewProps {
   location: string;
   date: string;
+  dateRange?: DateRange;
   items: ItineraryItem[];
   onBack: () => void;
   tripId?: string | null;
@@ -65,12 +71,35 @@ const getTypeColor = (type: string) => {
   }
 };
 
-export const ItineraryView = ({ location, date, items, onBack, tripId, onItemsUpdate }: ItineraryViewProps) => {
+export const ItineraryView = ({ location, date, dateRange, items, onBack, tripId, onItemsUpdate }: ItineraryViewProps) => {
   const [currentItems, setCurrentItems] = useState(items);
   const [completed, setCompleted] = useState<Set<number>>(new Set());
   const [shareDialogOpen, setShareDialogOpen] = useState(false);
   const [shareCode, setShareCode] = useState<string | undefined>();
+  const [selectedDay, setSelectedDay] = useState(1);
   const { toast } = useToast();
+  
+  // Fetch weather data
+  const { weather, loading: weatherLoading } = useWeather(
+    location,
+    dateRange?.from,
+    dateRange?.to || dateRange?.from
+  );
+
+  // Calculate trip duration
+  const durationDays = dateRange?.from && dateRange?.to
+    ? Math.ceil((dateRange.to.getTime() - dateRange.from.getTime()) / (1000 * 60 * 60 * 24)) + 1
+    : 1;
+
+  // Group items by day
+  const itemsByDay = currentItems.reduce((acc, item, index) => {
+    const day = (item as any).day || 1;
+    if (!acc[day]) acc[day] = [];
+    acc[day].push({ ...item, originalIndex: index });
+    return acc;
+  }, {} as Record<number, any[]>);
+
+  const currentDayItems = itemsByDay[selectedDay] || [];
 
   // Load initial progress and share code from trip data
   useEffect(() => {
@@ -163,7 +192,10 @@ export const ItineraryView = ({ location, date, items, onBack, tripId, onItemsUp
               <MapPin className="w-5 h-5 sm:w-6 sm:h-6 text-primary flex-shrink-0" />
               <h2 className="text-xl sm:text-2xl md:text-3xl font-display font-bold break-words">{location}</h2>
             </div>
-            <p className="text-sm sm:text-base text-muted-foreground">{date}</p>
+            <p className="text-sm sm:text-base text-muted-foreground">
+              {date}
+              {durationDays > 1 && <Badge variant="outline" className="ml-2">{durationDays} days</Badge>}
+            </p>
           </div>
 
           <div className="space-y-2">
@@ -173,10 +205,129 @@ export const ItineraryView = ({ location, date, items, onBack, tripId, onItemsUp
             </div>
             <Progress value={progressPercent} className="h-2" />
           </div>
+
+          {/* Weather Forecast */}
+          {weather.length > 0 && (
+            <div className="space-y-2">
+              <h3 className="text-sm font-semibold flex items-center gap-2">
+                <ThermometerSun className="w-4 h-4 text-primary" />
+                Weather Forecast
+              </h3>
+              <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2">
+                {weather.map((day, i) => (
+                  <WeatherCard key={i} {...day} />
+                ))}
+              </div>
+            </div>
+          )}
         </div>
 
-        <div className="relative space-y-2 sm:space-y-3">
-          <div className="absolute left-[23px] sm:left-[39px] top-6 bottom-6 w-px bg-border" />
+        {/* Multi-day tabs or single day view */}
+        {durationDays > 1 ? (
+          <Tabs value={selectedDay.toString()} onValueChange={(v) => setSelectedDay(parseInt(v))}>
+            <TabsList className="w-full grid" style={{ gridTemplateColumns: `repeat(${durationDays}, 1fr)` }}>
+              {Array.from({ length: durationDays }, (_, i) => i + 1).map(day => {
+                const dayItems = itemsByDay[day] || [];
+                const dayCompleted = dayItems.filter(item => completed.has(item.originalIndex)).length;
+                const dayDate = dateRange?.from 
+                  ? new Date(dateRange.from.getTime() + (day - 1) * 24 * 60 * 60 * 1000)
+                  : null;
+                
+                return (
+                  <TabsTrigger key={day} value={day.toString()} className="flex flex-col gap-1 py-3">
+                    <span className="font-semibold">Day {day}</span>
+                    {dayDate && (
+                      <span className="text-xs text-muted-foreground">
+                        {dayDate.toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}
+                      </span>
+                    )}
+                    <Badge variant="secondary" className="text-xs mt-1">
+                      {dayCompleted}/{dayItems.length}
+                    </Badge>
+                  </TabsTrigger>
+                );
+              })}
+            </TabsList>
+
+            {Array.from({ length: durationDays }, (_, i) => i + 1).map(day => (
+              <TabsContent key={day} value={day.toString()} className="mt-6">
+                <div className="relative space-y-2 sm:space-y-3">
+                  <div className="absolute left-[23px] sm:left-[39px] top-6 bottom-6 w-px bg-border" />
+
+                  {(itemsByDay[day] || []).map((item, idx) => {
+                    const globalIndex = item.originalIndex;
+                    return (
+                      <div key={idx}>
+                        {item.travelTime && idx > 0 && (
+                          <TravelConnector
+                            travelTime={item.travelTime}
+                            travelMode={item.travelMode || "walk"}
+                            returnsToNest={item.returnsToNest}
+                            isCarNap={item.isCarNap}
+                          />
+                        )}
+
+                        {item.type === "meal" && item.mealDetails ? (
+                          <div className="ml-10 sm:ml-16">
+                            <MealCard time={item.time} mealDetails={item.mealDetails} />
+                          </div>
+                        ) : (
+                          <div className="relative">
+                            <Card className={`p-3 sm:p-4 md:p-5 ml-10 sm:ml-16 border-l-2 border-l-primary/30 hover:border-l-primary transition-colors ${completed.has(globalIndex) ? 'opacity-60' : ''}`}>
+                              <div className="absolute -left-10 sm:-left-16 top-3 sm:top-5">
+                                <div className={`w-7 h-7 sm:w-10 sm:h-10 rounded-full border-2 sm:border-4 border-background flex items-center justify-center ${getTypeColor(item.type)}`}>
+                                  <div className="scale-75 sm:scale-100">{getTypeIcon(item.type)}</div>
+                                </div>
+                              </div>
+
+                              <div className="space-y-2 sm:space-y-3">
+                                <div className="flex items-start gap-3">
+                                  <Checkbox
+                                    checked={completed.has(globalIndex)}
+                                    onCheckedChange={() => toggleComplete(globalIndex)}
+                                    className="mt-1"
+                                  />
+                                  <div className="flex-1 min-w-0">
+                                    <div className="flex items-center gap-1.5 sm:gap-2 mb-1 flex-wrap">
+                                      <Badge variant="outline" className="font-mono text-[10px] sm:text-xs">{item.time}</Badge>
+                                      <Badge className={`${getTypeColor(item.type)} text-[10px] sm:text-xs`}>{item.type}</Badge>
+                                    </div>
+                                    <h3 className={`font-semibold text-sm sm:text-base md:text-lg ${completed.has(globalIndex) ? 'line-through' : ''}`}>
+                                      {item.title}
+                                    </h3>
+                                    <p className="text-xs sm:text-sm text-muted-foreground mt-1">{item.description}</p>
+                                    
+                                    {item.constraints && item.constraints.length > 0 && (
+                                      <div className="flex flex-wrap gap-1 sm:gap-1.5 mt-2">
+                                        {item.constraints.map((constraint: string, i: number) => (
+                                          <Badge key={i} variant="secondary" className="text-[10px] sm:text-xs">{constraint}</Badge>
+                                        ))}
+                                      </div>
+                                    )}
+                                  </div>
+                                  
+                                  {item.link && (
+                                    <Button variant="ghost" size="sm" asChild className="h-7 w-7 sm:h-8 sm:w-8 flex-shrink-0">
+                                      <a href={item.link} target="_blank" rel="noopener noreferrer">
+                                        <ExternalLink className="w-3 h-3 sm:w-4 sm:h-4" />
+                                      </a>
+                                    </Button>
+                                  )}
+                                </div>
+                              </div>
+                            </Card>
+                          </div>
+                        )}
+                      </div>
+                    );
+                  })}
+                </div>
+              </TabsContent>
+            ))}
+          </Tabs>
+        ) : (
+          <div className="relative space-y-2 sm:space-y-3">
+            <div className="absolute left-[23px] sm:left-[39px] top-6 bottom-6 w-px bg-border" />
 
           {currentItems.map((item, index) => (
             <div key={index}>
@@ -243,6 +394,7 @@ export const ItineraryView = ({ location, date, items, onBack, tripId, onItemsUp
             </div>
           ))}
         </div>
+        )}
 
         <Card className="p-3 sm:p-4 bg-primary/5 border-primary/20">
           <p className="text-center text-xs sm:text-sm text-muted-foreground">

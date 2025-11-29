@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { useLocation } from "react-router-dom";
+import { DateRange } from "react-day-picker";
 import { Hero } from "@/components/Hero";
 import { TripSetup } from "@/components/TripSetup";
 import { ItineraryView } from "@/components/ItineraryView";
@@ -26,6 +27,7 @@ interface TripData {
     members: Member[];
   }>;
   noGiftShop: boolean;
+  dateRange?: DateRange;
 }
 
 const Index = () => {
@@ -56,24 +58,39 @@ const Index = () => {
     setView("setup");
   };
 
-  const handleSetupComplete = async (data: TripData, items: any[]) => {
+  const handleSetupComplete = async (data: any, items: any[]) => {
     setTripData(data);
     setItineraryItems(items);
     setView("itinerary");
     
     // Auto-save trip to database
-    if (user) {
+    if (user && data.dateRange?.from) {
       try {
+        const durationDays = data.dateRange.to 
+          ? Math.ceil((data.dateRange.to.getTime() - data.dateRange.from.getTime()) / (1000 * 60 * 60 * 1000)) + 1
+          : 1;
+
         const { data: trip, error } = await supabase
           .from('trips')
           .insert([{
             user_id: user.id,
             name: `${data.location} Trip`,
             location: data.location,
-            date: new Date().toISOString(),
+            start_date: data.dateRange.from.toISOString().split('T')[0],
+            end_date: (data.dateRange.to || data.dateRange.from).toISOString().split('T')[0],
+            date: data.dateRange.from.toLocaleDateString("en-US", {
+              weekday: "long",
+              year: "numeric",
+              month: "long",
+              day: "numeric",
+            }),
             families: data.families as any,
             itinerary: items as any,
-            settings: { noGiftShop: data.noGiftShop },
+            settings: { 
+              noGiftShop: data.noGiftShop,
+              nestConfig: data.nestConfig,
+              mealPreferences: data.mealPreferences
+            },
             progress: { completed: [] }
           }])
           .select()
@@ -84,7 +101,7 @@ const Index = () => {
         setTripId(trip.id);
         toast({
           title: "Trip saved!",
-          description: "Your itinerary has been automatically saved",
+          description: `Your ${durationDays}-day itinerary has been saved`,
         });
       } catch (error) {
         console.error('Error saving trip:', error);
@@ -110,12 +127,21 @@ const Index = () => {
       {view === "itinerary" && tripData && (
         <ItineraryView
           location={tripData.location}
-          date={new Date().toLocaleDateString("en-US", {
-            weekday: "long",
-            year: "numeric",
-            month: "long",
-            day: "numeric",
-          })}
+          date={tripData.dateRange?.from 
+            ? tripData.dateRange.from.toLocaleDateString("en-US", {
+                weekday: "long",
+                year: "numeric",
+                month: "long",
+                day: "numeric",
+              })
+            : new Date().toLocaleDateString("en-US", {
+                weekday: "long",
+                year: "numeric",
+                month: "long",
+                day: "numeric",
+              })
+          }
+          dateRange={tripData.dateRange}
           items={itineraryItems}
           onBack={handleBack}
           tripId={tripId}

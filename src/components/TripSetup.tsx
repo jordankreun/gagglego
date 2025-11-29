@@ -79,6 +79,8 @@ interface FamilyPreset {
   no_gift_shop?: boolean;
   nest_config?: NestConfig;
   meal_preferences?: MealPreferences;
+  start_date?: string;
+  end_date?: string;
   created_at: string;
 }
 
@@ -151,6 +153,8 @@ export const TripSetup = ({ onComplete }: TripSetupProps) => {
         no_gift_shop: preset.no_gift_shop || undefined,
         nest_config: preset.nest_config as unknown as NestConfig | undefined,
         meal_preferences: preset.meal_preferences as unknown as MealPreferences | undefined,
+        start_date: preset.start_date || undefined,
+        end_date: preset.end_date || undefined,
         created_at: preset.created_at,
       }));
       
@@ -232,6 +236,8 @@ export const TripSetup = ({ onComplete }: TripSetupProps) => {
           no_gift_shop: noGiftShop,
           nest_config: nestConfig as any,
           meal_preferences: mealPreferences as any,
+          start_date: dateRange?.from?.toISOString().split('T')[0] || null,
+          end_date: dateRange?.to?.toISOString().split('T')[0] || null,
         }])
         .select()
         .single();
@@ -246,6 +252,8 @@ export const TripSetup = ({ onComplete }: TripSetupProps) => {
         no_gift_shop: data.no_gift_shop || undefined,
         nest_config: data.nest_config as unknown as NestConfig | undefined,
         meal_preferences: data.meal_preferences as unknown as MealPreferences | undefined,
+        start_date: data.start_date || undefined,
+        end_date: data.end_date || undefined,
         created_at: data.created_at,
       };
 
@@ -274,6 +282,19 @@ export const TripSetup = ({ onComplete }: TripSetupProps) => {
     if (preset.no_gift_shop !== undefined) setNoGiftShop(preset.no_gift_shop);
     if (preset.nest_config) setNestConfig(preset.nest_config);
     if (preset.meal_preferences) setMealPreferences(preset.meal_preferences);
+    
+    // Load date range if available
+    if (preset.start_date && preset.end_date) {
+      setDateRange({
+        from: new Date(preset.start_date),
+        to: new Date(preset.end_date),
+      });
+    } else if (preset.start_date) {
+      setDateRange({
+        from: new Date(preset.start_date),
+        to: undefined,
+      });
+    }
     
     setShowLoadPreset(false);
     toast({
@@ -1045,14 +1066,14 @@ export const TripSetup = ({ onComplete }: TripSetupProps) => {
       <Dialog open={showSavePreset} onOpenChange={setShowSavePreset}>
         <DialogContent className="sm:max-w-[400px]">
           <DialogHeader>
-            <DialogTitle>Save Family Configuration</DialogTitle>
+            <DialogTitle>Save Trip Configuration</DialogTitle>
             <DialogDescription>
-              Save your current family setup as a preset for future trips.
+              Save your complete trip setup including families, dates, location, and preferences.
             </DialogDescription>
           </DialogHeader>
           <div className="space-y-4 py-4">
             <div className="space-y-2">
-              <Label htmlFor="preset-name">Preset Name</Label>
+              <Label htmlFor="preset-name">Configuration Name</Label>
               <Input
                 id="preset-name"
                 placeholder="e.g., Summer 2024, Weekend Trip..."
@@ -1061,8 +1082,16 @@ export const TripSetup = ({ onComplete }: TripSetupProps) => {
                 onKeyDown={(e) => e.key === "Enter" && savePreset()}
               />
             </div>
-            <div className="text-sm text-muted-foreground">
-              Currently saving {families.length} {families.length === 1 ? "family" : "families"}
+            <div className="text-sm text-muted-foreground space-y-1">
+              <p>✓ {families.length} {families.length === 1 ? "family" : "families"}</p>
+              {location && <p>✓ Location: {location}</p>}
+              {dateRange?.from && (
+                <p>
+                  ✓ Dates: {dateRange.from.toLocaleDateString()}
+                  {dateRange.to && dateRange.to !== dateRange.from && ` - ${dateRange.to.toLocaleDateString()}`}
+                </p>
+              )}
+              {nestConfig.sharedAddress && <p>✓ Nest configured</p>}
             </div>
           </div>
           <DialogFooter>
@@ -1080,9 +1109,9 @@ export const TripSetup = ({ onComplete }: TripSetupProps) => {
       <Dialog open={showLoadPreset} onOpenChange={setShowLoadPreset}>
         <DialogContent className="sm:max-w-[500px]">
           <DialogHeader>
-            <DialogTitle>Load Family Configuration</DialogTitle>
+            <DialogTitle>Load Trip Configuration</DialogTitle>
             <DialogDescription>
-              Select a saved preset to quickly set up your families.
+              Select a saved configuration to quickly set up your entire trip.
             </DialogDescription>
           </DialogHeader>
           <div className="space-y-3 py-4 max-h-[400px] overflow-y-auto">
@@ -1102,8 +1131,23 @@ export const TripSetup = ({ onComplete }: TripSetupProps) => {
                     <h4 className="font-semibold">{preset.preset_name}</h4>
                     <div className="flex items-center gap-2 text-sm text-muted-foreground">
                       <span>{preset.families.length} {preset.families.length === 1 ? "family" : "families"}</span>
-                      <span>•</span>
-                      <span>{new Date(preset.created_at).toLocaleDateString()}</span>
+                      {preset.location && (
+                        <>
+                          <span>•</span>
+                          <span>{preset.location}</span>
+                        </>
+                      )}
+                      {preset.start_date && (
+                        <>
+                          <span>•</span>
+                          <span>
+                            {new Date(preset.start_date).toLocaleDateString()}
+                            {preset.end_date && preset.end_date !== preset.start_date && 
+                              ` - ${new Date(preset.end_date).toLocaleDateString()}`
+                            }
+                          </span>
+                        </>
+                      )}
                     </div>
                     <div className="flex flex-wrap gap-1 mt-2">
                       {preset.families.map((f) => (

@@ -37,13 +37,13 @@ export default function Landing() {
             {/* Headline */}
             <div className="space-y-3 sm:space-y-4">
               <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-display font-bold text-foreground leading-tight">
-                Multi-Family Travel,
+                Keep Your Flock Together,
                 <br />
-                <span className="text-accent">Actually Planned Right</span>
+                <span className="text-accent">Navigate Like a Pro</span>
               </h1>
               <p className="text-base sm:text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto px-4">
                 Stop juggling nap times, dietary restrictions, and gift shop detours. 
-                Let AI build itineraries that actually work for your gaggle.
+                Let AI chart a flight plan that actually works for your gaggle.
               </p>
             </div>
 
@@ -148,10 +148,10 @@ export default function Landing() {
               The Solution
             </Badge>
             <h2 className="text-2xl sm:text-3xl md:text-4xl font-display font-bold">
-              AI that actually gets it
+              AI co-pilot that actually gets it
             </h2>
             <p className="text-base sm:text-lg text-muted-foreground max-w-2xl mx-auto">
-              GaggleGO uses constraint-solving AI to build itineraries around what actually matters
+              Fly in formation with constraint-solving AI that plans around what actually matters
             </p>
           </div>
 
@@ -207,7 +207,7 @@ export default function Landing() {
               How It Works
             </Badge>
             <h2 className="text-2xl sm:text-3xl md:text-4xl font-display font-bold">
-              Three steps to sanity
+              Three steps to smooth sailing (or flying)
             </h2>
           </div>
 
@@ -216,7 +216,7 @@ export default function Landing() {
               <div className="w-12 h-12 sm:w-16 sm:h-16 rounded-full bg-accent/10 text-accent font-bold text-xl sm:text-2xl flex items-center justify-center mx-auto">
                 1
               </div>
-              <h3 className="font-semibold text-lg sm:text-xl">Tell us your constraints</h3>
+              <h3 className="font-semibold text-lg sm:text-xl">Set your flight plan</h3>
               <p className="text-sm sm:text-base text-muted-foreground">
                 Enter your destination, add families, set nap times and dietary needs
               </p>
@@ -226,9 +226,9 @@ export default function Landing() {
               <div className="w-12 h-12 sm:w-16 sm:h-16 rounded-full bg-accent/10 text-accent font-bold text-xl sm:text-2xl flex items-center justify-center mx-auto">
                 2
               </div>
-              <h3 className="font-semibold text-lg sm:text-xl">AI builds your itinerary</h3>
+              <h3 className="font-semibold text-lg sm:text-xl">Your co-pilot takes the wheel</h3>
               <p className="text-sm sm:text-base text-muted-foreground">
-                Our constraint solver creates a day plan that actually works for everyone
+                AI charts a day plan that keeps your whole flock happy
               </p>
             </Card>
 
@@ -236,9 +236,9 @@ export default function Landing() {
               <div className="w-12 h-12 sm:w-16 sm:h-16 rounded-full bg-accent/10 text-accent font-bold text-xl sm:text-2xl flex items-center justify-center mx-auto">
                 3
               </div>
-              <h3 className="font-semibold text-lg sm:text-xl">Enjoy your trip</h3>
+              <h3 className="font-semibold text-lg sm:text-xl">Soar with confidence</h3>
               <p className="text-sm sm:text-base text-muted-foreground">
-                Get direct links to tickets, menus, and maps. No more guesswork.
+                Get direct links to tickets, menus, and maps. Fly without guesswork.
               </p>
             </Card>
           </div>
@@ -254,7 +254,7 @@ export default function Landing() {
                 Stop winging it. Start flying smart.
               </h2>
               <p className="text-base sm:text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto">
-                Join families who've already discovered stress-free group travel
+                Join the flock of families already flying stress-free
               </p>
             </div>
             

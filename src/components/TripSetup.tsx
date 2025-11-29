@@ -293,10 +293,10 @@ export const TripSetup = ({ onComplete }: TripSetupProps) => {
               <div className="flex items-center justify-between">
                 <div className="space-y-1">
                   <Label htmlFor="gift-shop" className="text-base font-semibold">
-                    No Gift Shop Mode
+                    Minimize Gift Shops
                   </Label>
                   <p className="text-sm text-muted-foreground">
-                    Avoid commercial zones
+                    Route around retail areas when possible
                   </p>
                 </div>
                 <Switch

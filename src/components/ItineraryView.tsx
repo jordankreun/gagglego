@@ -65,7 +65,7 @@ const MOCK_ITEMS: ItineraryItem[] = [
     description: "Gentle walking trail with interactive exhibits. Paced for post-nap energy levels.",
     type: "activity",
     link: "https://example.com/discovery-trail",
-    constraints: ["Moderate pace", "Educational", "Gift shop bypass available"]
+    constraints: ["Moderate pace", "Educational", "Alternative exit available"]
   },
   {
     time: "4:00 PM",
@@ -78,10 +78,10 @@ const MOCK_ITEMS: ItineraryItem[] = [
   {
     time: "5:00 PM",
     title: "Final Activity & Wind Down",
-    description: "Low-key show or exhibit before heading out. Exit strategy planned to avoid gift shop route.",
+    description: "Low-key show or exhibit before heading out. Direct exit route planned.",
     type: "activity",
     link: "https://example.com/evening-show",
-    constraints: ["Low energy", "No gift shop route"]
+    constraints: ["Low energy", "Direct exit route"]
   }
 ];
 
@@ -133,12 +133,10 @@ export const ItineraryView = ({ location, date, items = MOCK_ITEMS, onBack }: It
             <p className="text-muted-foreground">{date}</p>
           </div>
 
-          <Card className="p-4 bg-accent/5 border-accent/20">
-            <div className="flex items-center gap-2">
-              <ShoppingBag className="w-4 h-4 text-accent" />
-              <p className="text-sm font-medium">Gift Shop Mode: OFF</p>
-            </div>
-          </Card>
+          <div className="flex items-center gap-2 text-xs text-muted-foreground">
+            <ShoppingBag className="w-3.5 h-3.5" />
+            <span>Gift shop routes minimized</span>
+          </div>
         </div>
 
         {/* Timeline */}

@@ -372,7 +372,7 @@ export const TripSetup = ({ onComplete }: TripSetupProps) => {
                   id="edit-dietary"
                   placeholder="Separate with commas"
                   value={editForm.dietary.join(", ")}
-                  onChange={(e) => updateEditForm("dietary", e.target.value.split(",").map(s => s.trim()).filter(Boolean))}
+                  onChange={(e) => updateEditForm("dietary", e.target.value.split(",").map(s => s.trim()).filter(s => s.length > 0))}
                 />
                 <p className="text-xs text-muted-foreground">
                   Examples: None, Halal, Kosher, Gluten-Free, Vegan, Plain/Simple

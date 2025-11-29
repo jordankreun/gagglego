@@ -7,6 +7,7 @@ import { useAuth } from '@/contexts/AuthContext';
 import { GaggleGoWordmark } from '@/components/GaggleGoWordmark';
 import { NavLink } from '@/components/NavLink';
 import { NotificationCenter } from '@/components/NotificationCenter';
+import { InstallButton } from '@/components/InstallButton';
 
 export const Navigation = () => {
   const {
@@ -43,8 +44,9 @@ export const Navigation = () => {
             )}
           </div>
 
-          {/* Notification Bell & User Menu */}
+          {/* Install, Notification Bell & User Menu */}
           <div className="flex items-center gap-2">
+            <InstallButton showBadge />
             {user && <NotificationCenter />}
             {user ? <DropdownMenu>
               <DropdownMenuTrigger asChild>

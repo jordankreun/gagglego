@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Badge } from "@/components/ui/badge";
+import { Checkbox } from "@/components/ui/checkbox";
 import { Plus, X } from "lucide-react";
 import {
   Select,
@@ -102,27 +103,49 @@ export const FamilyMemberEditor = ({ members, onChange }: FamilyMemberEditorProp
             </div>
 
             {member.type === "kid" && (
-              <div className="flex gap-2">
-                <div className="flex-1">
-                  <Label className="text-xs">Age</Label>
-                  <Input
-                    type="number"
-                    min="0"
-                    max="18"
-                    value={member.age || ""}
-                    onChange={(e) => updateMember(member.id, { age: parseInt(e.target.value) || undefined })}
-                    className="h-8 sm:h-9 text-sm"
-                    placeholder="Age"
-                  />
+              <div className="space-y-2">
+                <div className="flex gap-2">
+                  <div className="flex-1">
+                    <Label className="text-xs">Age</Label>
+                    <Input
+                      type="number"
+                      min="0"
+                      max="18"
+                      value={member.age || ""}
+                      onChange={(e) => updateMember(member.id, { age: parseInt(e.target.value) || undefined })}
+                      className="h-8 sm:h-9 text-sm"
+                      placeholder="Age"
+                    />
+                  </div>
+                  <div className="flex-1">
+                    <Label className="text-xs">Nap Time</Label>
+                    <Input
+                      type="time"
+                      value={convertTimeToInput(member.napTime)}
+                      onChange={(e) => updateMember(member.id, { napTime: convertInputToTime(e.target.value) })}
+                      className="h-8 sm:h-9 text-sm"
+                      disabled={!member.napTime}
+                    />
+                  </div>
                 </div>
-                <div className="flex-1">
-                  <Label className="text-xs">Nap Time</Label>
-                  <Input
-                    type="time"
-                    value={convertTimeToInput(member.napTime)}
-                    onChange={(e) => updateMember(member.id, { napTime: convertInputToTime(e.target.value) })}
-                    className="h-8 sm:h-9 text-sm"
+                <div className="flex items-center space-x-2">
+                  <Checkbox
+                    id={`no-nap-${member.id}`}
+                    checked={!member.napTime}
+                    onCheckedChange={(checked) => {
+                      if (checked) {
+                        updateMember(member.id, { napTime: undefined });
+                      } else {
+                        updateMember(member.id, { napTime: "1:00 PM" });
+                      }
+                    }}
                   />
+                  <label
+                    htmlFor={`no-nap-${member.id}`}
+                    className="text-xs text-muted-foreground cursor-pointer select-none"
+                  >
+                    No nap time needed
+                  </label>
                 </div>
               </div>
             )}

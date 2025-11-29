@@ -155,62 +155,54 @@ export default function Landing() {
             </p>
           </div>
 
-          <div className="grid md:grid-cols-2 gap-6 sm:gap-8 md:gap-12 items-center mb-12 sm:mb-16">
-            <div className="space-y-4 sm:space-y-6">
-              <div className="flex gap-4">
-                <div className="flex-shrink-0 w-10 h-10 sm:w-12 sm:h-12 rounded-xl bg-accent/10 flex items-center justify-center">
-                  <Clock className="w-5 h-5 sm:w-6 sm:h-6 text-accent" />
-                </div>
-                <div>
-                  <h3 className="font-semibold text-base sm:text-lg mb-1 sm:mb-2">Nap-Anchored Scheduling</h3>
-                  <p className="text-sm sm:text-base text-muted-foreground">
-                    Tell us when each kid naps. We hard-lock those times and build everything else around them.
-                  </p>
-                </div>
+          <div className="space-y-4 sm:space-y-6">
+            <div className="flex gap-4">
+              <div className="flex-shrink-0 w-10 h-10 sm:w-12 sm:h-12 rounded-xl bg-accent/10 flex items-center justify-center">
+                <Clock className="w-5 h-5 sm:w-6 sm:h-6 text-accent" />
               </div>
-
-              <div className="flex gap-4">
-                <div className="flex-shrink-0 w-10 h-10 sm:w-12 sm:h-12 rounded-xl bg-accent/10 flex items-center justify-center">
-                  <Utensils className="w-5 h-5 sm:w-6 sm:h-6 text-accent" />
-                </div>
-                <div>
-                  <h3 className="font-semibold text-base sm:text-lg mb-1 sm:mb-2">Dietary Intersection Filtering</h3>
-                  <p className="text-sm sm:text-base text-muted-foreground">
-                    Only suggests restaurants that work for ALL your families' dietary needs simultaneously.
-                  </p>
-                </div>
-              </div>
-
-              <div className="flex gap-4">
-                <div className="flex-shrink-0 w-10 h-10 sm:w-12 sm:h-12 rounded-xl bg-accent/10 flex items-center justify-center">
-                  <ShoppingBag className="w-5 h-5 sm:w-6 sm:h-6 text-accent" />
-                </div>
-                <div>
-                  <h3 className="font-semibold text-base sm:text-lg mb-1 sm:mb-2">Gift Shop Avoidance</h3>
-                  <p className="text-sm sm:text-base text-muted-foreground">
-                    Toggle to minimize routes through high-commercial zones. Your wallet will thank you.
-                  </p>
-                </div>
-              </div>
-
-              <div className="flex gap-4">
-                <div className="flex-shrink-0 w-10 h-10 sm:w-12 sm:h-12 rounded-xl bg-accent/10 flex items-center justify-center">
-                  <Users className="w-5 h-5 sm:w-6 sm:h-6 text-accent" />
-                </div>
-                <div>
-                  <h3 className="font-semibold text-base sm:text-lg mb-1 sm:mb-2">Multi-Family Coordination</h3>
-                  <p className="text-sm sm:text-base text-muted-foreground">
-                    Add unlimited families with their own needs. We optimize for the whole gaggle.
-                  </p>
-                </div>
+              <div>
+                <h3 className="font-semibold text-base sm:text-lg mb-1 sm:mb-2">Nap-Anchored Scheduling</h3>
+                <p className="text-sm sm:text-base text-muted-foreground">
+                  Tell us when each kid naps. We hard-lock those times and build everything else around them.
+                </p>
               </div>
             </div>
 
-            <Card className="p-6 sm:p-8 border-2 bg-gradient-to-br from-accent/5 to-primary/5">
-              <div className="aspect-[4/3] rounded-xl bg-gradient-to-br from-primary/20 to-accent/20 flex items-center justify-center overflow-hidden">
-                <WiseGooseAnimation />
+            <div className="flex gap-4">
+              <div className="flex-shrink-0 w-10 h-10 sm:w-12 sm:h-12 rounded-xl bg-accent/10 flex items-center justify-center">
+                <Utensils className="w-5 h-5 sm:w-6 sm:h-6 text-accent" />
               </div>
-            </Card>
+              <div>
+                <h3 className="font-semibold text-base sm:text-lg mb-1 sm:mb-2">Dietary Intersection Filtering</h3>
+                <p className="text-sm sm:text-base text-muted-foreground">
+                  Only suggests restaurants that work for ALL your families' dietary needs simultaneously.
+                </p>
+              </div>
+            </div>
+
+            <div className="flex gap-4">
+              <div className="flex-shrink-0 w-10 h-10 sm:w-12 sm:h-12 rounded-xl bg-accent/10 flex items-center justify-center">
+                <ShoppingBag className="w-5 h-5 sm:w-6 sm:h-6 text-accent" />
+              </div>
+              <div>
+                <h3 className="font-semibold text-base sm:text-lg mb-1 sm:mb-2">Gift Shop Avoidance</h3>
+                <p className="text-sm sm:text-base text-muted-foreground">
+                  Toggle to minimize routes through high-commercial zones. Your wallet will thank you.
+                </p>
+              </div>
+            </div>
+
+            <div className="flex gap-4">
+              <div className="flex-shrink-0 w-10 h-10 sm:w-12 sm:h-12 rounded-xl bg-accent/10 flex items-center justify-center">
+                <Users className="w-5 h-5 sm:w-6 sm:h-6 text-accent" />
+              </div>
+              <div>
+                <h3 className="font-semibold text-base sm:text-lg mb-1 sm:mb-2">Multi-Family Coordination</h3>
+                <p className="text-sm sm:text-base text-muted-foreground">
+                  Add unlimited families with their own needs. We optimize for the whole gaggle.
+                </p>
+              </div>
+            </div>
           </div>
         </div>
       </section>

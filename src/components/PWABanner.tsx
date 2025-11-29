@@ -3,7 +3,7 @@ import { Button } from '@/components/ui/button';
 import { Download, X } from 'lucide-react';
 import { usePWA } from '@/hooks/usePWA';
 import { Link } from 'react-router-dom';
-import { FlyingGooseIcon } from '@/components/icons/BrandIcons';
+import { GooseIcon } from '@/components/icons/BrandIcons';
 
 export const PWABanner = () => {
   const { isInstallable, isInstalled, promptInstall } = usePWA();
@@ -46,7 +46,7 @@ export const PWABanner = () => {
       <div className="container mx-auto px-4 py-3">
         <div className="flex items-center justify-between gap-3">
           <div className="flex items-center gap-3 flex-1 min-w-0">
-            <FlyingGooseIcon className="w-6 h-6 text-white shrink-0" />
+            <GooseIcon className="w-6 h-6 text-white shrink-0" />
             <div className="min-w-0">
               <p className="text-sm font-semibold text-white truncate">
                 Take your flock on the go! Install GaggleGO

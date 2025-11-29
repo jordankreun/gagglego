@@ -16,7 +16,7 @@ export const Hero = ({ onGetStarted }: { onGetStarted: () => void }) => {
             <img 
               src={gaggleGoLogo} 
               alt="GaggleGO" 
-              className="w-auto h-32 mx-auto drop-shadow-xl hover-scale"
+              className="w-auto h-32 mx-auto drop-shadow-xl cursor-pointer transition-all duration-500 hover:scale-110 hover:rotate-3 hover:drop-shadow-[0_8px_24px_rgba(232,123,26,0.5)] animate-in fade-in duration-1000"
             />
             <div>
               <p className="text-2xl md:text-3xl font-display text-muted-foreground">

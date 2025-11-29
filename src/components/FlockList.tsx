@@ -7,8 +7,9 @@ import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useToast } from "@/hooks/use-toast";
-import { Search, UserPlus, Check, X, Trash2, Users } from "lucide-react";
+import { Search, Check, X, Trash2 } from "lucide-react";
 import { AnimatedGoose } from "@/components/AnimatedGoose";
+import { BrandIcons } from "@/components/icons/BrandIcons";
 
 interface FlockConnection {
   id: string;
@@ -193,7 +194,7 @@ export const FlockList = () => {
       <Card className="p-6 border-2">
         <div className="space-y-4">
           <div className="flex items-center gap-2">
-            <UserPlus className="w-5 h-5 text-accent" />
+            <BrandIcons.Flock size={20} className="text-accent" />
             <h3 className="font-semibold text-lg">Add to Your Flock</h3>
           </div>
           <div className="flex gap-2">
@@ -250,7 +251,7 @@ export const FlockList = () => {
                     >
                       <div className="flex items-center gap-3">
                         <div className="w-10 h-10 rounded-full bg-primary/20 flex items-center justify-center">
-                          <Users className="w-5 h-5 text-primary" />
+                          <BrandIcons.Flock size={20} className="text-primary" />
                         </div>
                         <div>
                           <p className="font-semibold">
@@ -287,7 +288,7 @@ export const FlockList = () => {
                     >
                       <div className="flex items-center gap-2">
                         <div className="w-8 h-8 rounded-full bg-muted flex items-center justify-center">
-                          <Users className="w-4 h-4" />
+                          <BrandIcons.FlyingGoose size={16} />
                         </div>
                         <div>
                           <p className="text-sm font-medium">
@@ -318,7 +319,7 @@ export const FlockList = () => {
                   >
                     <div className="flex items-center gap-3">
                       <div className="w-10 h-10 rounded-full bg-accent/20 flex items-center justify-center">
-                        <Users className="w-5 h-5 text-accent" />
+                        <BrandIcons.HatchingEgg size={20} className="text-accent" />
                       </div>
                       <div>
                         <p className="font-semibold">

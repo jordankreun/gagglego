@@ -4,6 +4,7 @@ import { AnimatedGoose } from '@/components/AnimatedGoose';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Progress } from '@/components/ui/progress';
+import { BrandIcons } from '@/components/icons/BrandIcons';
 
 interface GooseStatusCardProps {
   title: string;
@@ -67,6 +68,15 @@ export const GooseStatusCard = ({
     return 'excited';
   };
 
+  const getProgressIcon = () => {
+    if (progress < 25) return BrandIcons.HatchingEgg;
+    if (progress < 50) return BrandIcons.Gosling;
+    if (progress < 75) return BrandIcons.Goose;
+    return BrandIcons.FlyingGoose;
+  };
+
+  const ProgressIcon = getProgressIcon();
+
   return (
     <Card className="w-full max-w-md mx-auto border-2 border-primary/20 shadow-lg">
       <CardHeader className="pb-4">
@@ -86,7 +96,8 @@ export const GooseStatusCard = ({
         </div>
       </CardHeader>
       <CardContent className="space-y-6">
-        <div className="flex justify-center">
+        <div className="flex justify-center items-center gap-4">
+          <ProgressIcon size={40} className="text-primary" />
           <AnimatedGoose 
             size="lg" 
             state={getGooseState()} 

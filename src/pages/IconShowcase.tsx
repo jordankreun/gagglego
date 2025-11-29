@@ -8,11 +8,22 @@ const IconShowcase = () => {
     { name: 'Chat', Component: BrandIcons.Chat, description: 'Messaging' },
     { name: 'Calendar', Component: BrandIcons.Calendar, description: 'Schedule' },
     { name: 'Goose', Component: BrandIcons.Goose, description: 'Brand mascot' },
+    { name: 'Gosling', Component: BrandIcons.Gosling, description: 'Baby goose' },
     { name: 'Group', Component: BrandIcons.Group, description: 'Family groups' },
     { name: 'Dining', Component: BrandIcons.Dining, description: 'Food & restaurants' },
     { name: 'Clock', Component: BrandIcons.Clock, description: 'Time & naps' },
     { name: 'Map View', Component: BrandIcons.MapView, description: 'Navigation' },
     { name: 'Heart', Component: BrandIcons.Heart, description: 'Favorites' },
+    { name: 'Flying Goose', Component: BrandIcons.FlyingGoose, description: 'In flight' },
+    { name: 'Nesting Goose', Component: BrandIcons.NestingGoose, description: 'Home base' },
+    { name: 'Sleeping Gosling', Component: BrandIcons.SleepingGosling, description: 'Nap time' },
+    { name: 'Eating Goose', Component: BrandIcons.EatingGoose, description: 'Meals' },
+    { name: 'Flock', Component: BrandIcons.Flock, description: 'Group formation' },
+    { name: 'Hatching Egg', Component: BrandIcons.HatchingEgg, description: 'New & pending' },
+    { name: 'Waddling Goose', Component: BrandIcons.WaddlingGoose, description: 'Walking' },
+    { name: 'Driving Goose', Component: BrandIcons.DrivingGoose, description: 'Driving' },
+    { name: 'Excited Gosling', Component: BrandIcons.ExcitedGosling, description: 'Activities' },
+    { name: 'Alert Goose', Component: BrandIcons.AlertGoose, description: 'Notifications' },
   ];
 
   return (
@@ -71,7 +82,7 @@ const IconShowcase = () => {
                 <p className="text-xs text-muted-foreground">48px</p>
               </div>
               <div className="text-center space-y-2">
-                <BrandIcons.Goose size={64} />
+                <BrandIcons.FlyingGoose size={64} />
                 <p className="text-xs text-muted-foreground">64px</p>
               </div>
             </div>

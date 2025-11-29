@@ -6,17 +6,13 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { DateRange } from "react-day-picker";
 import { 
-  Clock, 
   MapPin, 
   ExternalLink, 
-  Utensils, 
-  Baby,
-  Sparkles,
-  ShoppingBag,
   Share2,
   ThermometerSun,
   Navigation
 } from "lucide-react";
+import { BrandIcons } from "@/components/icons/BrandIcons";
 import { ItineraryChat } from "./ItineraryChat";
 import { TravelConnector } from "./TravelConnector";
 import { MealCard } from "./MealCard";
@@ -54,11 +50,11 @@ interface ItineraryViewProps {
 
 const getTypeIcon = (type: string) => {
   switch (type) {
-    case "meal": return <Utensils className="w-5 h-5" />;
-    case "nap": return <Baby className="w-5 h-5" />;
-    case "activity": return <Sparkles className="w-5 h-5" />;
-    case "travel": return <MapPin className="w-5 h-5" />;
-    default: return <Clock className="w-5 h-5" />;
+    case "meal": return <BrandIcons.EatingGoose size={20} />;
+    case "nap": return <BrandIcons.SleepingGosling size={20} />;
+    case "activity": return <BrandIcons.ExcitedGosling size={20} />;
+    case "travel": return <BrandIcons.FlyingGoose size={20} />;
+    default: return <BrandIcons.Clock size={20} />;
   }
 };
 

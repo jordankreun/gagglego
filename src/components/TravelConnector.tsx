@@ -1,4 +1,5 @@
-import { Car, Footprints, Clock } from "lucide-react";
+import { Clock } from "lucide-react";
+import { BrandIcons } from "@/components/icons/BrandIcons";
 
 interface TravelConnectorProps {
   travelTime: string;
@@ -11,11 +12,12 @@ export const TravelConnector = ({ travelTime, travelMode, returnsToNest, isCarNa
   const getIcon = () => {
     switch (travelMode) {
       case "drive":
-        return <Car className="w-3 h-3" />;
+        return <BrandIcons.DrivingGoose size={14} />;
       case "stroller":
-        return <Footprints className="w-3 h-3" />;
+      case "walk":
+        return <BrandIcons.WaddlingGoose size={14} />;
       default:
-        return <Footprints className="w-3 h-3" />;
+        return <BrandIcons.FlyingGoose size={14} />;
     }
   };
 

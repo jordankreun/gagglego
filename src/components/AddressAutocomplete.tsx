@@ -23,31 +23,39 @@ function AddressAutocompleteInner({ value, onChange, placeholder, className }: A
   useEffect(() => {
     if (!places || !inputRef.current) return;
 
-    const autocompleteInstance = new places.Autocomplete(inputRef.current, {
-      fields: ["formatted_address", "geometry"],
-      types: ["address"],
-    });
+    try {
+      const autocompleteInstance = new places.Autocomplete(inputRef.current, {
+        fields: ["formatted_address", "geometry", "name"],
+        types: ["establishment", "geocode"],
+      });
 
-    autocompleteInstance.addListener("place_changed", () => {
-      const place = autocompleteInstance.getPlace();
-      
-      if (place.formatted_address && place.geometry?.location) {
-        const address = place.formatted_address;
-        const lat = place.geometry.location.lat();
-        const lng = place.geometry.location.lng();
+      autocompleteInstance.addListener("place_changed", () => {
+        const place = autocompleteInstance.getPlace();
         
-        setInputValue(address);
-        onChange(address, { lat, lng });
-      }
-    });
+        if (place.formatted_address && place.geometry?.location) {
+          const address = place.formatted_address;
+          const lat = place.geometry.location.lat();
+          const lng = place.geometry.location.lng();
+          
+          setInputValue(address);
+          onChange(address, { lat, lng });
+        } else if (place.name) {
+          // Fallback to place name if formatted address not available
+          setInputValue(place.name);
+          onChange(place.name);
+        }
+      });
 
-    setAutocomplete(autocompleteInstance);
+      setAutocomplete(autocompleteInstance);
 
-    return () => {
-      if (autocompleteInstance) {
-        google.maps.event.clearInstanceListeners(autocompleteInstance);
-      }
-    };
+      return () => {
+        if (autocompleteInstance) {
+          google.maps.event.clearInstanceListeners(autocompleteInstance);
+        }
+      };
+    } catch (error) {
+      console.error('Error initializing Google Places Autocomplete:', error);
+    }
   }, [places, onChange]);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {

@@ -74,7 +74,7 @@ export const SaveButton = ({ tripId, itineraryItems, onSave }: SaveButtonProps) 
   };
 
   return (
-    <div className="fixed bottom-6 left-6 z-50 flex flex-col items-start gap-2">
+    <div className="fixed bottom-6 right-6 z-50 flex flex-col items-end gap-2">
       <Button
         onClick={handleSave}
         disabled={saveStatus === "saving" || !tripId}
@@ -92,7 +92,7 @@ export const SaveButton = ({ tripId, itineraryItems, onSave }: SaveButtonProps) 
       </Button>
       
       {lastSaved && (
-        <Badge variant="secondary" className="ml-2 text-xs">
+        <Badge variant="secondary" className="text-xs">
           Last saved: {getTimeAgo()}
         </Badge>
       )}

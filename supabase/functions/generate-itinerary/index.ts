@@ -154,6 +154,46 @@ Members: ${f.members?.map((m: any) => `${m.name} (${m.type}, age ${m.age || 'unk
 Dietary: ${f.dietary?.join(', ') || 'None'}
 `).join('\n')}
 
+OPTIMAL TIMING RESEARCH (CRITICAL):
+Research and apply location-specific best visiting times:
+
+ZOO/WILDLIFE PARKS:
+- Morning (9-11 AM): Animals most active, cooler temps
+- Avoid mid-day heat when animals hide/sleep
+- Big cats and primates: Active in early morning
+- Nocturnal houses: Anytime (controlled lighting)
+
+THEME PARKS (Disney, Universal, etc.):
+- Rope drop (opening): Shortest lines for popular rides
+- 11 AM - 3 PM: Peak crowds, schedule meals/shows
+- Evening (5-9 PM): Cooler, lines shorten, parades/fireworks
+- Popular rides: First thing AM or last hour before close
+
+MUSEUMS/INDOOR ATTRACTIONS:
+- Opening time: Least crowded
+- Weekday mornings: Quietest
+- Save for hot afternoon hours or rainy weather
+- Interactive exhibits: Earlier before kid energy drops
+
+BEACHES/OUTDOOR:
+- Mid-morning (9-11 AM): Before peak UV/heat
+- Late afternoon (4-6 PM): Golden hour, cooler
+- Avoid 12-3 PM: Peak sun exposure danger
+
+RESTAURANTS:
+- Lunch: 11:30 AM (beat rush) or 1:30 PM (after rush)
+- Dinner: 5 PM (early bird) or 7:30 PM (after rush)
+- Popular spots: Reservation essential
+
+AQUARIUMS:
+- Feeding times: Check schedule for active viewing
+- Morning: Clearer tanks before stirred up
+- Weekdays: Significantly less crowded
+
+BOTANICAL GARDENS/NATURE:
+- Early morning: Best photos, cooler, flowers freshest
+- Avoid mid-day heat for walking
+
 EXTERNAL CONNECTIVITY REQUIREMENT:
 Every activity and dining suggestion MUST include actionable external links:
 - Activities: Direct links to official websites, ticket pages, or booking systems
@@ -161,13 +201,22 @@ Every activity and dining suggestion MUST include actionable external links:
 Use search query format: [Location] + [Activity/Restaurant Name]
 
 OUTPUT FORMAT (JSON):
-Return a JSON array of 5-7 itinerary items with this structure:
+Return a JSON array with 10-15 itinerary items PER DAY including:
+- 4-6 activities/attractions per day
+- 2-3 meal breaks
+- Nap/rest periods as needed
+- Travel transitions between locations
+
+For a ${durationDays}-day trip, generate approximately ${durationDays * 12} total items.
+
+Each item should have this structure:
 {
   "time": "9:00 AM",
   "title": "Activity Name",
   "description": "Detailed description with practical tips for families",
   "type": "activity|meal|nap|travel",
   "link": "https://actual-link-to-activity-or-menu",
+  "timingReason": "Explain why this time slot is optimal for this specific activity based on research above",
   "constraints": ["Relevant tags like 'Stroller-friendly', 'GF available', 'Nap anchor', 'Low energy']",
   "travelTime": "15 min",
   "travelMode": "walk|drive|stroller",
@@ -180,10 +229,22 @@ Return a JSON array of 5-7 itinerary items with this structure:
 
 MULTI-DAY TRIP STRUCTURE:
 This is a ${durationDays}-day trip from ${new Date(startDate).toLocaleDateString()} to ${new Date(endDate).toLocaleDateString()}.
-Generate activities for ALL ${durationDays} days, with each item tagged with its day number (1-${durationDays}).
-- Day 1: Start fresh, higher energy activities
-${durationDays > 1 ? `- Days 2-${durationDays}: Balance energy levels, include rest periods` : ''}
-${durationDays > 2 ? `- Final day: Lighter schedule for travel/departure` : ''}
+
+DAILY ACTIVITY MINIMUM:
+- Morning block (9 AM - 12 PM): 2-3 activities at optimal times
+- Afternoon block (2 PM - 5 PM): 2-3 activities
+- Evening block (5 PM - 8 PM): 1-2 activities (if applicable)
+
+Generate a FULL itinerary for ALL ${durationDays} days with ${durationDays * 12} total items:
+- Day 1: Fresh energy - hit major attractions at their optimal visiting times
+${durationDays > 1 ? `- Days 2-${durationDays - 1}: Vary pace, mix high/low energy activities` : ''}
+${durationDays > 2 ? `- Final day: Lighter morning, allow travel buffer` : ''}
+
+Research ${location} specifically to identify:
+1. Must-see attractions and their best visiting windows
+2. Hidden gems that families often miss
+3. Logical geographic clustering to minimize travel
+4. Time-specific events (feeding times, shows, parades)
 
 Generate the complete ${durationDays}-day itinerary for ${location}.`;
 
@@ -202,7 +263,7 @@ Generate the complete ${durationDays}-day itinerary for ${location}.`;
           { role: 'user', content: `Create a detailed family-friendly itinerary for ${location} that satisfies all constraints.` }
         ],
         temperature: 0.7,
-        max_tokens: 2500,
+        max_tokens: 4000,
       }),
     });
 

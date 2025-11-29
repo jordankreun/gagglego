@@ -39,6 +39,13 @@ const Index = () => {
   const { toast } = useToast();
   const location = useLocation();
 
+  // Skip hero for authenticated users
+  useEffect(() => {
+    if (user && view === "hero" && !location.state?.loadTrip) {
+      setView("setup");
+    }
+  }, [user]);
+
   // Load trip from navigation state (when opening from My Trips)
   useEffect(() => {
     const loadTrip = location.state?.loadTrip;

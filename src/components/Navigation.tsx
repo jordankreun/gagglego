@@ -1,10 +1,12 @@
 import { Link } from 'react-router-dom';
-import { Bird, LogOut, User } from 'lucide-react';
+import { Bird, LogOut, User, Map } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { useAuth } from '@/contexts/AuthContext';
 import { GaggleGoWordmark } from '@/components/GaggleGoWordmark';
+import { NavLink } from '@/components/NavLink';
+
 export const Navigation = () => {
   const {
     user,
@@ -14,9 +16,31 @@ export const Navigation = () => {
       <div className="container mx-auto px-4 bg-primary-foreground">
         <div className="flex h-16 items-center justify-between">
           {/* Logo */}
-          <Link to="/plan" className="flex items-center">
-            <GaggleGoWordmark size="sm" animate={false} />
-          </Link>
+          <div className="flex items-center gap-8">
+            <Link to="/plan" className="flex items-center">
+              <GaggleGoWordmark size="sm" animate={false} />
+            </Link>
+
+            {/* Desktop Navigation Links */}
+            {user && (
+              <div className="hidden md:flex items-center gap-6">
+                <NavLink 
+                  to="/plan" 
+                  className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors"
+                  activeClassName="text-foreground"
+                >
+                  Plan Trip
+                </NavLink>
+                <NavLink 
+                  to="/trips" 
+                  className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors"
+                  activeClassName="text-foreground"
+                >
+                  My Migrations
+                </NavLink>
+              </div>
+            )}
+          </div>
 
           {/* User Menu */}
           {user ? <DropdownMenu>

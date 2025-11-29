@@ -11,6 +11,8 @@ import { useToast } from "@/hooks/use-toast";
 import { Loader2, Upload, Trash2, Clock, Users } from "lucide-react";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { GooseIcon, GoslingIcon } from "@/components/icons/BrandIcons";
+import { AnimatedGoose } from "@/components/AnimatedGoose";
+import { useNavigate } from "react-router-dom";
 
 interface Profile {
   display_name: string | null;
@@ -43,6 +45,7 @@ interface SavedFamily {
 const Profile = () => {
   const { user } = useAuth();
   const { toast } = useToast();
+  const navigate = useNavigate();
   const [profile, setProfile] = useState<Profile>({ display_name: null, avatar_url: null });
   const [displayName, setDisplayName] = useState("");
   const [presets, setPresets] = useState<FamilyPreset[]>([]);
@@ -369,11 +372,20 @@ const Profile = () => {
             </div>
 
             {savedFamilies.length === 0 ? (
-              <Alert>
-                <AlertDescription>
-                  No saved families yet. Save individual families from the trip setup page to reuse them across trips.
-                </AlertDescription>
-              </Alert>
+              <div className="text-center py-8 space-y-4">
+                <div className="flex justify-center">
+                  <div style={{ width: 80, height: 80 }}>
+                    <AnimatedGoose enableConstantAnimation={false} />
+                  </div>
+                </div>
+                <div className="space-y-1">
+                  <p className="font-semibold">No families saved yet</p>
+                  <p className="text-sm text-muted-foreground">Save individual families from trip setup to reuse them across trips</p>
+                </div>
+                <Button onClick={() => navigate('/plan')} variant="outline" size="sm">
+                  Start Planning
+                </Button>
+              </div>
             ) : (
               <div className="space-y-3">
                 {savedFamilies.map((family) => (
@@ -429,11 +441,20 @@ const Profile = () => {
             </div>
 
             {presets.length === 0 ? (
-              <Alert>
-                <AlertDescription>
-                  No saved family configurations yet. Create one from the trip setup page.
-                </AlertDescription>
-              </Alert>
+              <div className="text-center py-8 space-y-4">
+                <div className="flex justify-center">
+                  <div style={{ width: 80, height: 80 }}>
+                    <AnimatedGoose enableConstantAnimation={false} />
+                  </div>
+                </div>
+                <div className="space-y-1">
+                  <p className="font-semibold">No presets saved yet</p>
+                  <p className="text-sm text-muted-foreground">Save complete family configurations from trip setup to speed up future planning</p>
+                </div>
+                <Button onClick={() => navigate('/plan')} variant="outline" size="sm">
+                  Create Configuration
+                </Button>
+              </div>
             ) : (
               <div className="space-y-3">
                 {presets.map((preset) => (

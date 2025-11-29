@@ -37,12 +37,29 @@ export const ShareTripDialog = ({ open, onOpenChange, tripId }: ShareTripDialogP
   const [isInviting, setIsInviting] = useState(false);
   const [collaborators, setCollaborators] = useState<Collaborator[]>([]);
   const [loadingCollaborators, setLoadingCollaborators] = useState(true);
+  const [quickShareCode, setQuickShareCode] = useState("");
 
   useEffect(() => {
     if (open) {
       fetchCollaborators();
+      generateQuickShare();
     }
   }, [open, tripId]);
+
+  const generateQuickShare = async () => {
+    try {
+      const { data, error } = await supabase.functions.invoke('generate-invite-link', {
+        body: { tripId, role: 'viewer' }
+      });
+
+      if (error) throw error;
+      if (data.error) throw new Error(data.error);
+      
+      setQuickShareCode(data.inviteCode);
+    } catch (error) {
+      console.error('Error generating quick share:', error);
+    }
+  };
 
   const fetchCollaborators = async () => {
     setLoadingCollaborators(true);
@@ -101,6 +118,15 @@ export const ShareTripDialog = ({ open, onOpenChange, tripId }: ShareTripDialogP
 
   const copyLink = () => {
     const link = `${window.location.origin}/invite/${inviteCode}`;
+    navigator.clipboard.writeText(link);
+    toast({
+      title: "Link copied!",
+      description: "Share it with your flock",
+    });
+  };
+
+  const copyQuickShareLink = () => {
+    const link = `${window.location.origin}/invite/${quickShareCode}`;
     navigator.clipboard.writeText(link);
     toast({
       title: "Link copied!",
@@ -184,6 +210,22 @@ export const ShareTripDialog = ({ open, onOpenChange, tripId }: ShareTripDialogP
             Invite collaborators with view or edit access
           </DialogDescription>
         </DialogHeader>
+
+        {/* Quick Share Button */}
+        {quickShareCode && (
+          <div className="p-4 bg-accent/10 border-2 border-accent/30 rounded-lg space-y-3">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="font-semibold text-sm">Quick Share</p>
+                <p className="text-xs text-muted-foreground">One-click viewer link</p>
+              </div>
+              <Button onClick={copyQuickShareLink} variant="hero" size="sm">
+                <Copy className="w-4 h-4 mr-2" />
+                Copy Link
+              </Button>
+            </div>
+          </div>
+        )}
 
         <Tabs defaultValue="link" className="w-full">
           <TabsList className="grid w-full grid-cols-3">

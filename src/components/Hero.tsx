@@ -10,56 +10,42 @@ export const Hero = ({ onGetStarted }: { onGetStarted: () => void }) => {
       <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-background to-accent/5" />
 
       <div className="container mx-auto px-4 py-20 relative z-10">
-        <div className="max-w-4xl mx-auto text-center space-y-12 animate-in fade-in duration-1000">
+        <div className="max-w-3xl mx-auto text-center space-y-16 animate-in fade-in duration-1000">
           {/* Logo and tagline */}
           <div className="space-y-8">
             <img 
               src={gaggleGoLogo} 
               alt="GaggleGO" 
-              className="w-auto h-32 mx-auto drop-shadow-xl cursor-pointer transition-all duration-500 hover:scale-110 hover:rotate-3 hover:drop-shadow-[0_8px_24px_rgba(232,123,26,0.5)] animate-in fade-in duration-1000"
+              className="w-auto h-40 mx-auto drop-shadow-xl cursor-pointer transition-all duration-500 hover:scale-110 hover:rotate-3 hover:drop-shadow-[0_8px_24px_rgba(232,123,26,0.5)]"
             />
-            <div>
-              <h2 className="text-3xl md:text-4xl font-display font-bold text-accent">
-                Don't just wing it. Get the Gaggle Going.
-              </h2>
-            </div>
+            <h1 className="text-4xl md:text-5xl font-display font-bold text-accent">
+              Don't just wing it. Get the Gaggle Going.
+            </h1>
           </div>
-
-          {/* Description */}
-          <p className="text-xl md:text-2xl text-muted-foreground max-w-2xl mx-auto">
-            Multi-family trip planning made simple. Smart scheduling, nap-time anchors, and dietary filters—all in one place.
-          </p>
 
           {/* CTA */}
-          <div className="space-y-4">
-            <Button 
-              variant="accent" 
-              size="lg" 
-              onClick={onGetStarted}
-              className="text-lg px-12 py-7 h-auto shadow-2xl hover:scale-105 transition-transform"
-            >
-              Start Planning Your Trip
-            </Button>
-          </div>
+          <Button 
+            variant="accent" 
+            size="lg" 
+            onClick={onGetStarted}
+            className="text-xl px-14 py-8 h-auto shadow-2xl hover:scale-105 transition-transform"
+          >
+            Start Planning
+          </Button>
 
-          {/* Quick features */}
-          <div className="grid md:grid-cols-3 gap-8 pt-12 max-w-3xl mx-auto">
-            <div className="space-y-2">
-              <MapPinIcon size={32} className="text-accent mx-auto" />
-              <h3 className="font-bold text-lg">Location-First</h3>
-              <p className="text-sm text-muted-foreground">Pick your destination, we'll handle the rest</p>
+          {/* Simple feature tags */}
+          <div className="flex flex-wrap justify-center gap-3 pt-8">
+            <div className="flex items-center gap-2 bg-card/50 px-5 py-2.5 rounded-2xl border border-accent/20 backdrop-blur-sm">
+              <MapPinIcon size={18} className="text-accent" />
+              <span className="text-sm font-semibold">Location-First</span>
             </div>
-            
-            <div className="space-y-2">
-              <ClockIcon size={32} className="text-accent mx-auto" />
-              <h3 className="font-bold text-lg">Nap-Anchored</h3>
-              <p className="text-sm text-muted-foreground">Schedule around your family's needs</p>
+            <div className="flex items-center gap-2 bg-card/50 px-5 py-2.5 rounded-2xl border border-accent/20 backdrop-blur-sm">
+              <ClockIcon size={18} className="text-accent" />
+              <span className="text-sm font-semibold">Nap-Anchored</span>
             </div>
-            
-            <div className="space-y-2">
-              <GroupIcon size={32} className="text-accent mx-auto" />
-              <h3 className="font-bold text-lg">Smart Groups</h3>
-              <p className="text-sm text-muted-foreground">Coordinate multiple families with ease</p>
+            <div className="flex items-center gap-2 bg-card/50 px-5 py-2.5 rounded-2xl border border-accent/20 backdrop-blur-sm">
+              <GroupIcon size={18} className="text-accent" />
+              <span className="text-sm font-semibold">Multi-Family</span>
             </div>
           </div>
         </div>

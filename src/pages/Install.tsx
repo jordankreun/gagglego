@@ -3,11 +3,12 @@ import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { GaggleGoWordmark } from '@/components/GaggleGoWordmark';
 import { AnimatedGoose } from '@/components/AnimatedGoose';
-import { Download, Smartphone, Check, Sparkles, Zap, Globe, ArrowRight } from 'lucide-react';
+import { Smartphone, Check, ArrowRight } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { usePWA } from '@/hooks/usePWA';
 import { InstallButton } from '@/components/InstallButton';
 import { Badge } from '@/components/ui/badge';
+import { FlyingGooseIcon, ExcitedGoslingIcon, NestingGooseIcon, HatchingEggIcon } from '@/components/icons/BrandIcons';
 
 export default function Install() {
   const { isInstallable, isInstalled, promptInstall } = usePWA();
@@ -81,7 +82,7 @@ export default function Install() {
                 <div className="grid sm:grid-cols-2 gap-4">
                   <div className="flex gap-3 p-4 rounded-lg bg-muted/30 border">
                     <div className="shrink-0 w-10 h-10 rounded-lg bg-accent/10 flex items-center justify-center">
-                      <Globe className="w-5 h-5 text-accent" />
+                      <FlyingGooseIcon size={20} className="text-accent" />
                     </div>
                     <div>
                       <p className="font-semibold mb-1">Works Offline</p>
@@ -92,7 +93,7 @@ export default function Install() {
                   </div>
                   <div className="flex gap-3 p-4 rounded-lg bg-muted/30 border">
                     <div className="shrink-0 w-10 h-10 rounded-lg bg-accent/10 flex items-center justify-center">
-                      <Zap className="w-5 h-5 text-accent" />
+                      <ExcitedGoslingIcon size={20} className="text-accent" />
                     </div>
                     <div>
                       <p className="font-semibold mb-1">Lightning Fast</p>
@@ -103,7 +104,7 @@ export default function Install() {
                   </div>
                   <div className="flex gap-3 p-4 rounded-lg bg-muted/30 border">
                     <div className="shrink-0 w-10 h-10 rounded-lg bg-accent/10 flex items-center justify-center">
-                      <Smartphone className="w-5 h-5 text-accent" />
+                      <NestingGooseIcon size={20} className="text-accent" />
                     </div>
                     <div>
                       <p className="font-semibold mb-1">Native Experience</p>
@@ -114,7 +115,7 @@ export default function Install() {
                   </div>
                   <div className="flex gap-3 p-4 rounded-lg bg-muted/30 border">
                     <div className="shrink-0 w-10 h-10 rounded-lg bg-accent/10 flex items-center justify-center">
-                      <Sparkles className="w-5 h-5 text-accent" />
+                      <HatchingEggIcon size={20} className="text-accent" />
                     </div>
                     <div>
                       <p className="font-semibold mb-1">Always Updated</p>

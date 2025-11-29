@@ -21,6 +21,8 @@ const Auth = () => {
   const [password, setPassword] = useState('');
   const [displayName, setDisplayName] = useState('');
   const [loading, setLoading] = useState(false);
+  const [resetMode, setResetMode] = useState(false);
+  const [resetSent, setResetSent] = useState(false);
   const navigate = useNavigate();
   const { toast } = useToast();
 
@@ -179,6 +181,43 @@ const Auth = () => {
     }
   };
 
+  const handlePasswordReset = async (e: React.FormEvent) => {
+    e.preventDefault();
+    
+    if (!validateInputs()) {
+      return;
+    }
+
+    setLoading(true);
+    try {
+      const { error } = await supabase.auth.resetPasswordForEmail(email, {
+        redirectTo: `${window.location.origin}/auth`,
+      });
+
+      if (error) {
+        toast({
+          title: 'Password Reset Failed',
+          description: error.message,
+          variant: 'destructive',
+        });
+      } else {
+        setResetSent(true);
+        toast({
+          title: 'Check your email',
+          description: 'We sent you a password reset link.',
+        });
+      }
+    } catch (error) {
+      toast({
+        title: 'Error',
+        description: 'An unexpected error occurred. Please try again.',
+        variant: 'destructive',
+      });
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
     <div className="min-h-screen flex flex-col bg-gradient-to-br from-background via-primary/5 to-accent/5">
       {/* Header */}
@@ -199,21 +238,76 @@ const Auth = () => {
             </div>
             <div className="space-y-1 sm:space-y-2">
               <CardTitle className="text-2xl sm:text-3xl font-display font-bold">
-                {activeTab === 'signin' ? 'Welcome Back' : 'Join the Flock'}
+                {resetMode ? 'Reset Password' : activeTab === 'signin' ? 'Welcome Back' : 'Join the Flock'}
               </CardTitle>
               <CardDescription className="text-xs sm:text-sm">
-                {activeTab === 'signin' ? 'Sign in to plan your next adventure' : 'Start planning family trips together'}
+                {resetMode 
+                  ? 'Enter your email to receive a reset link' 
+                  : activeTab === 'signin' 
+                  ? 'Sign in to plan your next adventure' 
+                  : 'Start planning family trips together'
+                }
               </CardDescription>
             </div>
           </CardHeader>
 
           {/* Auth Forms */}
           <CardContent className="px-4 sm:px-6 md:px-8 pb-6 sm:pb-8">
-            <Tabs value={activeTab} onValueChange={(v) => setActiveTab(v as 'signin' | 'signup')} className="w-full">
-              <TabsList className="grid w-full grid-cols-2 mb-6">
-                <TabsTrigger value="signin" className="text-xs sm:text-sm">Sign In</TabsTrigger>
-                <TabsTrigger value="signup" className="text-xs sm:text-sm">Sign Up</TabsTrigger>
-              </TabsList>
+            {resetMode ? (
+              <form onSubmit={handlePasswordReset} className="space-y-4">
+                <div className="space-y-2">
+                  <Label htmlFor="reset-email" className="text-sm">Email</Label>
+                  <div className="relative">
+                    <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+                    <Input
+                      id="reset-email"
+                      type="email"
+                      placeholder="you@example.com"
+                      value={email}
+                      onChange={(e) => setEmail(e.target.value)}
+                      className="h-11 sm:h-12 pl-10"
+                      disabled={loading || resetSent}
+                      required
+                    />
+                  </div>
+                </div>
+
+                <Button 
+                  type="submit" 
+                  className="w-full h-11 sm:h-12" 
+                  disabled={loading || resetSent}
+                  variant="hero"
+                >
+                  {loading ? (
+                    <>
+                      <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                      Sending...
+                    </>
+                  ) : resetSent ? (
+                    'Email Sent ✓'
+                  ) : (
+                    'Send Reset Link'
+                  )}
+                </Button>
+
+                <Button 
+                  type="button" 
+                  variant="ghost" 
+                  className="w-full" 
+                  onClick={() => {
+                    setResetMode(false);
+                    setResetSent(false);
+                  }}
+                >
+                  Back to Sign In
+                </Button>
+              </form>
+            ) : (
+              <Tabs value={activeTab} onValueChange={(v) => setActiveTab(v as 'signin' | 'signup')} className="w-full">
+                <TabsList className="grid w-full grid-cols-2 mb-6">
+                  <TabsTrigger value="signin" className="text-xs sm:text-sm">Sign In</TabsTrigger>
+                  <TabsTrigger value="signup" className="text-xs sm:text-sm">Sign Up</TabsTrigger>
+                </TabsList>
 
               {/* Sign In Form */}
               <TabsContent value="signin" className="mt-0">
@@ -300,6 +394,15 @@ const Auth = () => {
                     ) : (
                       'Sign In'
                     )}
+                  </Button>
+
+                  <Button 
+                    type="button" 
+                    variant="link" 
+                    className="w-full text-sm text-muted-foreground mt-2" 
+                    onClick={() => setResetMode(true)}
+                  >
+                    Forgot password?
                   </Button>
                 </form>
                 </div>
@@ -409,7 +512,8 @@ const Auth = () => {
                 </form>
                 </div>
               </TabsContent>
-            </Tabs>
+              </Tabs>
+            )}
           </CardContent>
         </Card>
       </div>

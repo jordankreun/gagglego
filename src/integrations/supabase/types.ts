@@ -145,6 +145,7 @@ export type Database = {
         Row: {
           created_at: string | null
           date: string
+          end_date: string | null
           families: Json
           id: string
           is_public: boolean | null
@@ -154,12 +155,15 @@ export type Database = {
           progress: Json | null
           settings: Json | null
           share_code: string | null
+          start_date: string | null
+          trip_duration_days: number | null
           updated_at: string | null
           user_id: string
         }
         Insert: {
           created_at?: string | null
           date: string
+          end_date?: string | null
           families: Json
           id?: string
           is_public?: boolean | null
@@ -169,12 +173,15 @@ export type Database = {
           progress?: Json | null
           settings?: Json | null
           share_code?: string | null
+          start_date?: string | null
+          trip_duration_days?: number | null
           updated_at?: string | null
           user_id: string
         }
         Update: {
           created_at?: string | null
           date?: string
+          end_date?: string | null
           families?: Json
           id?: string
           is_public?: boolean | null
@@ -184,6 +191,8 @@ export type Database = {
           progress?: Json | null
           settings?: Json | null
           share_code?: string | null
+          start_date?: string | null
+          trip_duration_days?: number | null
           updated_at?: string | null
           user_id?: string
         }

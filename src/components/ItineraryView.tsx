@@ -254,6 +254,7 @@ export const ItineraryView = ({ location, date, items, onBack, tripId, onItemsUp
       <ItineraryChat 
         location={location}
         currentItinerary={currentItems}
+        tripId={tripId}
         onItineraryUpdate={handleItineraryUpdate}
       />
 

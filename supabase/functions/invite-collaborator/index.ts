@@ -46,46 +46,70 @@ serve(async (req) => {
       throw new Error('You do not have permission to invite collaborators to this trip');
     }
 
-    // Look up user by email
-    const { data: profiles, error: profileError } = await supabase
+    // Look up user by email in profiles table
+    const { data: profile, error: profileError } = await supabase
       .from('profiles')
+      .select('id, email')
+      .eq('email', email)
+      .single();
+
+    if (profileError || !profile) {
+      console.log('User not found with email:', email);
+      throw new Error('User not found. Make sure they have a GaggleGO account.');
+    }
+
+    console.log('Found user profile:', profile.id);
+
+    // Check if user is already a collaborator
+    const { data: existingCollab } = await supabase
+      .from('trip_collaborators')
       .select('id')
-      .ilike('display_name', email) // Assuming display_name might contain email
-      .limit(1);
+      .eq('trip_id', tripId)
+      .eq('user_id', profile.id)
+      .single();
 
-    if (profileError) {
-      console.error('Profile lookup error:', profileError);
-    }
-
-    // For now, we'll just log the invite since we don't have email column in profiles
-    // In production, you'd want to send an email notification or use a proper user lookup
-    console.log('Invite request:', { tripId, email, role, requestedBy: user.id });
-
-    // If we found a user, add them as collaborator
-    if (profiles && profiles.length > 0) {
-      const { error: collaboratorError } = await supabase
+    if (existingCollab) {
+      console.log('User already a collaborator, updating role...');
+      // Update existing role
+      const { error: updateError } = await supabase
         .from('trip_collaborators')
-        .insert({
-          trip_id: tripId,
-          user_id: profiles[0].id,
-          role: role
-        });
+        .update({ role })
+        .eq('id', existingCollab.id);
 
-      if (collaboratorError) {
-        // Check if already exists
-        if (collaboratorError.code === '23505') {
-          throw new Error('User is already a collaborator on this trip');
-        }
-        throw collaboratorError;
+      if (updateError) {
+        console.error('Error updating collaborator:', updateError);
+        throw updateError;
       }
+
+      return new Response(
+        JSON.stringify({ 
+          success: true,
+          message: 'Collaborator role updated successfully'
+        }),
+        { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      );
     }
+
+    // Add user as collaborator
+    const { error: collaboratorError } = await supabase
+      .from('trip_collaborators')
+      .insert({
+        trip_id: tripId,
+        user_id: profile.id,
+        role: role,
+      });
+
+    if (collaboratorError) {
+      console.error('Error adding collaborator:', collaboratorError);
+      throw collaboratorError;
+    }
+
+    console.log('Collaborator added successfully');
 
     return new Response(
       JSON.stringify({ 
         success: true,
-        message: profiles && profiles.length > 0 
-          ? 'Collaborator added successfully' 
-          : 'Invite logged (user lookup by email not fully implemented)'
+        message: 'Collaborator added successfully'
       }),
       { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
     );

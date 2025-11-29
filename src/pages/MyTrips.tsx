@@ -23,6 +23,8 @@ interface Trip {
   settings: any;
   share_code?: string;
   created_at: string;
+  user_id?: string;
+  role?: string; // For collaborative trips
 }
 
 export default function MyTrips() {
@@ -42,13 +44,38 @@ export default function MyTrips() {
 
   const fetchTrips = async () => {
     try {
-      const { data, error } = await supabase
+      // Fetch owned trips
+      const { data: ownedTrips, error: ownedError } = await supabase
         .from('trips')
         .select('*')
-        .order('start_date', { ascending: false });
+        .eq('user_id', user?.id);
 
-      if (error) throw error;
-      setTrips(data as any || []);
+      if (ownedError) throw ownedError;
+
+      // Fetch collaborative trips
+      const { data: collabData, error: collabError } = await supabase
+        .from('trip_collaborators')
+        .select(`
+          role,
+          trips (*)
+        `)
+        .eq('user_id', user?.id);
+
+      if (collabError) throw collabError;
+
+      // Combine and format trips
+      const owned = (ownedTrips || []).map(trip => ({ ...trip, role: 'owner' }));
+      const collaborative = (collabData || [])
+        .filter(c => c.trips)
+        .map(c => ({ ...(c.trips as any), role: c.role }));
+
+      const allTrips = [...owned, ...collaborative].sort((a, b) => {
+        const dateA = a.start_date || a.created_at;
+        const dateB = b.start_date || b.created_at;
+        return new Date(dateB).getTime() - new Date(dateA).getTime();
+      });
+
+      setTrips(allTrips);
     } catch (error) {
       console.error('Error fetching trips:', error);
       toast({
@@ -192,14 +219,19 @@ export default function MyTrips() {
                       ) : (
                         <div className="flex items-center gap-2 mb-2">
                           <h3 className="font-semibold text-xl">{trip.name}</h3>
-                          <Button
-                            variant="ghost"
-                            size="icon"
-                            onClick={() => startRename(trip)}
-                            className="h-8 w-8"
-                          >
-                            <Edit2 className="w-3 h-3" />
-                          </Button>
+                          {trip.role === 'owner' && (
+                            <Button
+                              variant="ghost"
+                              size="icon"
+                              onClick={() => startRename(trip)}
+                              className="h-8 w-8"
+                            >
+                              <Edit2 className="w-3 h-3" />
+                            </Button>
+                          )}
+                          <Badge variant={trip.role === 'owner' ? 'default' : 'secondary'} className="ml-auto">
+                            {trip.role === 'owner' ? 'Owner' : trip.role}
+                          </Badge>
                         </div>
                       )}
                       <div className="flex flex-wrap gap-3 text-sm text-muted-foreground mb-2">
@@ -225,13 +257,15 @@ export default function MyTrips() {
                       )}
                     </div>
                     
-                    <Button
-                      variant="ghost"
-                      size="icon"
-                      onClick={() => deleteTrip(trip.id)}
-                    >
-                      <Trash2 className="w-4 h-4 text-destructive" />
-                    </Button>
+                    {trip.role === 'owner' && (
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        onClick={() => deleteTrip(trip.id)}
+                      >
+                        <Trash2 className="w-4 h-4 text-destructive" />
+                      </Button>
+                    )}
                   </div>
 
                   {/* Progress */}

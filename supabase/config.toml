@@ -14,3 +14,9 @@ verify_jwt = true
 
 [functions.invite-collaborator]
 verify_jwt = true
+
+[functions.generate-invite-link]
+verify_jwt = true
+
+[functions.claim-invite]
+verify_jwt = true

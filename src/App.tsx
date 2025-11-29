@@ -13,6 +13,7 @@ import Auth from "./pages/Auth";
 import Profile from "./pages/Profile";
 import IconShowcase from "./pages/IconShowcase";
 import MyTrips from "./pages/MyTrips";
+import InviteClaim from "./pages/InviteClaim";
 import SharedTrip from "./pages/SharedTrip";
 import NotFound from "./pages/NotFound";
 import Install from "./pages/Install";
@@ -53,6 +54,7 @@ const App = () => (
             } />
             
             <Route path="/trip/:shareCode" element={<SharedTrip />} />
+            <Route path="/invite/:inviteCode" element={<InviteClaim />} />
             
             <Route path="/profile" element={
               <div className="min-h-screen flex flex-col">

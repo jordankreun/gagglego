@@ -45,52 +45,7 @@ interface FamilyPreset {
   createdAt: string;
 }
 
-const DEFAULT_FAMILIES: Family[] = [
-  { 
-    id: "1", 
-    name: "Kreuns", 
-    dietary: ["None"], 
-    members: [
-      { id: "1-1", name: "Parent 1", type: "adult" },
-      { id: "1-2", name: "Parent 2", type: "adult" },
-      { id: "1-3", name: "Child 1", type: "kid", age: 3, napTime: "1:00 PM" },
-      { id: "1-4", name: "Child 2", type: "kid", age: 5, napTime: "1:00 PM" },
-    ]
-  },
-  { 
-    id: "2", 
-    name: "Wafais", 
-    dietary: ["Halal"], 
-    members: [
-      { id: "2-1", name: "Parent 1", type: "adult" },
-      { id: "2-2", name: "Parent 2", type: "adult" },
-      { id: "2-3", name: "Child 1", type: "kid", age: 2, napTime: "1:00 PM" },
-      { id: "2-4", name: "Child 2", type: "kid", age: 4, napTime: "1:00 PM" },
-      { id: "2-5", name: "Child 3", type: "kid", age: 7, napTime: "1:00 PM" },
-    ]
-  },
-  { 
-    id: "3", 
-    name: "Sangvis", 
-    dietary: ["Plain/Simple"], 
-    members: [
-      { id: "3-1", name: "Parent 1", type: "adult" },
-      { id: "3-2", name: "Child 1", type: "kid", age: 4, napTime: "1:00 PM" },
-      { id: "3-3", name: "Child 2", type: "kid", age: 6, napTime: "1:00 PM" },
-    ]
-  },
-  { 
-    id: "4", 
-    name: "Rappaports", 
-    dietary: ["Gluten-Free", "Kosher"], 
-    members: [
-      { id: "4-1", name: "Parent 1", type: "adult" },
-      { id: "4-2", name: "Parent 2", type: "adult" },
-      { id: "4-3", name: "Child 1", type: "kid", age: 3, napTime: "1:00 PM" },
-      { id: "4-4", name: "Child 2", type: "kid", age: 8, napTime: "1:30 PM" },
-    ]
-  },
-];
+const DEFAULT_FAMILIES: Family[] = [];
 
 const PRESETS_STORAGE_KEY = "village-family-presets";
 

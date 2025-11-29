@@ -14,6 +14,9 @@ interface Trip {
   name: string;
   location: string;
   date: string;
+  start_date?: string;
+  end_date?: string;
+  trip_duration_days?: number;
   families: any;
   itinerary: any;
   progress: any;
@@ -42,7 +45,7 @@ export default function MyTrips() {
       const { data, error } = await supabase
         .from('trips')
         .select('*')
-        .order('created_at', { ascending: false });
+        .order('start_date', { ascending: false });
 
       if (error) throw error;
       setTrips(data as any || []);
@@ -199,20 +202,27 @@ export default function MyTrips() {
                           </Button>
                         </div>
                       )}
-                      <div className="flex flex-wrap gap-3 text-sm text-muted-foreground">
+                      <div className="flex flex-wrap gap-3 text-sm text-muted-foreground mb-2">
                         <div className="flex items-center gap-1">
                           <MapPin className="w-4 h-4" />
                           {trip.location}
                         </div>
                         <div className="flex items-center gap-1">
                           <Calendar className="w-4 h-4" />
-                          {trip.date}
+                          {trip.start_date && trip.end_date ? (
+                            `${new Date(trip.start_date).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })} - ${new Date(trip.end_date).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}`
+                          ) : trip.date}
                         </div>
                         <div className="flex items-center gap-1">
                           <Users className="w-4 h-4" />
                           {Array.isArray(trip.families) ? trip.families.length : 0} {Array.isArray(trip.families) && trip.families.length === 1 ? 'family' : 'families'}
                         </div>
                       </div>
+                      {trip.trip_duration_days && (
+                        <Badge variant="secondary" className="mb-2">
+                          {trip.trip_duration_days === 1 ? 'Day trip' : `${trip.trip_duration_days}-day trip`}
+                        </Badge>
+                      )}
                     </div>
                     
                     <Button

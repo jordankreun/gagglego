@@ -4,10 +4,11 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card } from "@/components/ui/card";
 import { Switch } from "@/components/ui/switch";
-import { MapPin, Plus, X, Clock, UtensilsCrossed, Pencil, Save, FolderOpen, Trash2, Loader2, Calendar as CalendarIcon } from "lucide-react";
+import { MapPin, Plus, X, Clock, UtensilsCrossed, Pencil, Save, FolderOpen, Trash2, Loader2, Calendar as CalendarIcon, Bookmark } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { DateRange } from "react-day-picker";
 import { DateRangePicker } from "@/components/DateRangePicker";
+import { GooseIcon, GoslingIcon } from "@/components/icons/BrandIcons";
 import {
   Dialog,
   DialogContent,
@@ -303,6 +304,42 @@ export const TripSetup = ({ onComplete }: TripSetupProps) => {
     }
   };
 
+  const saveIndividualFamily = async (family: Family) => {
+    if (!user) {
+      toast({
+        title: "Authentication required",
+        description: "Please sign in to save families.",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    try {
+      const { error } = await supabase
+        .from('saved_families')
+        .insert([{
+          user_id: user.id,
+          name: family.name,
+          dietary: family.dietary as any,
+          members: family.members as any,
+        }]);
+
+      if (error) throw error;
+
+      toast({
+        title: "Family saved!",
+        description: `"${family.name}" has been saved to your profile.`,
+      });
+    } catch (error: any) {
+      console.error('Failed to save family:', error);
+      toast({
+        title: "Error saving family",
+        description: error.message,
+        variant: "destructive",
+      });
+    }
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!location || families.length === 0 || !dateRange?.from) {
@@ -482,6 +519,15 @@ export const TripSetup = ({ onComplete }: TripSetupProps) => {
                             variant="ghost"
                             size="icon"
                             className="h-8 w-8 sm:h-10 sm:w-10"
+                            onClick={() => saveIndividualFamily(family)}
+                          >
+                            <Bookmark className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
+                          </Button>
+                          <Button
+                            type="button"
+                            variant="ghost"
+                            size="icon"
+                            className="h-8 w-8 sm:h-10 sm:w-10"
                             onClick={() => openEditDialog(family)}
                           >
                             <Pencil className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
@@ -502,8 +548,8 @@ export const TripSetup = ({ onComplete }: TripSetupProps) => {
                       <div className="space-y-1 sm:space-y-1.5 mb-2 sm:mb-3">
                         {family.members.map((member) => (
                           <div key={member.id} className="text-xs sm:text-sm flex items-center gap-1.5 sm:gap-2 flex-wrap">
-                            <Badge variant={member.type === "adult" ? "secondary" : "default"} className="text-xs flex-shrink-0">
-                              {member.type === "adult" ? "👤" : "🧒"}
+                            <Badge variant={member.type === "adult" ? "secondary" : "default"} className="text-xs flex-shrink-0 flex items-center justify-center p-1">
+                              {member.type === "adult" ? <GooseIcon size={14} /> : <GoslingIcon size={14} />}
                             </Badge>
                             <span className="truncate">{member.name}</span>
                             {member.type === "kid" && member.age && (
@@ -575,25 +621,34 @@ export const TripSetup = ({ onComplete }: TripSetupProps) => {
 
                 {/* Shared nest input */}
                 {nestConfig.mode === "shared" && (
-                  <Input
-                    placeholder="Hotel address or meeting point (optional)"
-                    value={nestConfig.sharedAddress || ""}
-                    onChange={(e) => setNestConfig({ ...nestConfig, sharedAddress: e.target.value })}
-                    className="h-11 sm:h-12"
-                  />
+                  <div className="space-y-2">
+                    <Label htmlFor="shared-address" className="text-sm font-medium flex items-center gap-2">
+                      <MapPin className="w-4 h-4 text-primary" />
+                      Nest Address
+                    </Label>
+                    <Input
+                      id="shared-address"
+                      placeholder="Hotel address or home base location"
+                      value={nestConfig.sharedAddress || ""}
+                      onChange={(e) => setNestConfig({ ...nestConfig, sharedAddress: e.target.value })}
+                      className="h-11 sm:h-12"
+                    />
+                  </div>
                 )}
 
                 {/* Per-family nest inputs */}
                 {nestConfig.mode === "separate" && families.length > 0 && (
                   <div className="space-y-3">
+                    <Label className="text-sm">Family Nest Addresses</Label>
                     {families.map((family) => (
                       <div key={family.id} className="space-y-2">
-                        <Label htmlFor={`nest-${family.id}`} className="text-sm font-medium">
-                          {family.name}'s Nest
+                        <Label htmlFor={`nest-${family.id}`} className="text-sm font-medium flex items-center gap-2">
+                          <MapPin className="w-4 h-4 text-primary" />
+                          {family.name}
                         </Label>
                         <Input
                           id={`nest-${family.id}`}
-                          placeholder={`${family.name}'s accommodation address`}
+                          placeholder={`Address for ${family.name}`}
                           value={nestConfig.perFamilyAddresses?.get(family.id) || ""}
                           onChange={(e) => {
                             const newMap = new Map(nestConfig.perFamilyAddresses);

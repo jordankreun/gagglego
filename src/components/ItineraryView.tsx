@@ -14,7 +14,8 @@ import {
   Sparkles,
   ShoppingBag,
   Share2,
-  ThermometerSun
+  ThermometerSun,
+  Navigation
 } from "lucide-react";
 import { ItineraryChat } from "./ItineraryChat";
 import { TravelConnector } from "./TravelConnector";
@@ -22,7 +23,6 @@ import { MealCard } from "./MealCard";
 import { ShareTripDialog } from "./ShareTripDialog";
 import { ExportTripButton } from "./ExportTripButton";
 import { WeatherCard } from "./WeatherCard";
-import { TripMap } from "./TripMap";
 import { useWeather } from "@/hooks/useWeather";
 import { useState, useEffect } from "react";
 import { supabase } from "@/integrations/supabase/client";
@@ -70,6 +70,14 @@ const getTypeColor = (type: string) => {
     case "travel": return "bg-muted-foreground/10 text-muted-foreground border-muted-foreground/20";
     default: return "bg-muted text-muted-foreground";
   }
+};
+
+const getDirectionsUrl = (destination: string, location: string) => {
+  const query = encodeURIComponent(`${destination}, ${location}`);
+  const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
+  return isIOS 
+    ? `maps://maps.apple.com/?daddr=${query}`
+    : `https://www.google.com/maps/dir/?api=1&destination=${query}`;
 };
 
 export const ItineraryView = ({ location, date, dateRange, items, onBack, tripId, onItemsUpdate }: ItineraryViewProps) => {
@@ -221,15 +229,6 @@ export const ItineraryView = ({ location, date, dateRange, items, onBack, tripId
               </div>
             </div>
           )}
-
-          {/* Interactive Map */}
-          <div className="space-y-2">
-            <h3 className="text-sm font-semibold flex items-center gap-2">
-              <MapPin className="w-4 h-4 text-primary" />
-              Route Map
-            </h3>
-            <TripMap activities={currentItems} location={location} />
-          </div>
         </div>
 
         {/* Multi-day tabs or single day view */}
@@ -316,13 +315,22 @@ export const ItineraryView = ({ location, date, dateRange, items, onBack, tripId
                                     )}
                                   </div>
                                   
-                                  {item.link && (
-                                    <Button variant="ghost" size="sm" asChild className="h-7 w-7 sm:h-8 sm:w-8 flex-shrink-0">
-                                      <a href={item.link} target="_blank" rel="noopener noreferrer">
-                                        <ExternalLink className="w-3 h-3 sm:w-4 sm:h-4" />
-                                      </a>
-                                    </Button>
-                                  )}
+                                  <div className="flex gap-1">
+                                    {item.link && (
+                                      <Button variant="ghost" size="sm" asChild className="h-7 w-7 sm:h-8 sm:w-8 flex-shrink-0">
+                                        <a href={item.link} target="_blank" rel="noopener noreferrer">
+                                          <ExternalLink className="w-3 h-3 sm:w-4 sm:h-4" />
+                                        </a>
+                                      </Button>
+                                    )}
+                                    {item.type === "activity" && (
+                                      <Button variant="ghost" size="sm" asChild className="h-7 w-7 sm:h-8 sm:w-8 flex-shrink-0">
+                                        <a href={getDirectionsUrl(item.title, location)} target="_blank" rel="noopener noreferrer">
+                                          <Navigation className="w-3 h-3 sm:w-4 sm:h-4" />
+                                        </a>
+                                      </Button>
+                                    )}
+                                  </div>
                                 </div>
                               </div>
                             </Card>
@@ -389,13 +397,22 @@ export const ItineraryView = ({ location, date, dateRange, items, onBack, tripId
                           )}
                         </div>
                         
-                        {item.link && (
-                          <Button variant="ghost" size="sm" asChild className="h-7 w-7 sm:h-8 sm:w-8 flex-shrink-0">
-                            <a href={item.link} target="_blank" rel="noopener noreferrer">
-                              <ExternalLink className="w-3 h-3 sm:w-4 sm:h-4" />
-                            </a>
-                          </Button>
-                        )}
+                        <div className="flex gap-1">
+                          {item.link && (
+                            <Button variant="ghost" size="sm" asChild className="h-7 w-7 sm:h-8 sm:w-8 flex-shrink-0">
+                              <a href={item.link} target="_blank" rel="noopener noreferrer">
+                                <ExternalLink className="w-3 h-3 sm:w-4 sm:h-4" />
+                              </a>
+                            </Button>
+                          )}
+                          {item.type === "activity" && (
+                            <Button variant="ghost" size="sm" asChild className="h-7 w-7 sm:h-8 sm:w-8 flex-shrink-0">
+                              <a href={getDirectionsUrl(item.title, location)} target="_blank" rel="noopener noreferrer">
+                                <Navigation className="w-3 h-3 sm:w-4 sm:h-4" />
+                              </a>
+                            </Button>
+                          )}
+                        </div>
                       </div>
                     </div>
                   </Card>

@@ -319,13 +319,7 @@ const Profile = () => {
           <p className="text-muted-foreground">Manage your account and flock</p>
         </div>
 
-        {/* Flock List */}
-        <div className="space-y-4">
-          <h2 className="text-2xl font-display font-bold">My Flock 🦆</h2>
-          <FlockList />
-        </div>
-
-        {/* Profile Info */}
+        {/* Profile Info - First */}
         <Card className="p-8 border-2">
           <div className="space-y-8">
             {/* Avatar */}
@@ -400,11 +394,23 @@ const Profile = () => {
           </div>
         </Card>
 
-        {/* Saved Individual Families */}
+        {/* Flock List - Second */}
+        <div className="space-y-4">
+          <div className="flex items-center gap-3">
+            <Users className="w-6 h-6 text-primary" />
+            <h2 className="text-2xl font-display font-bold">My Flock</h2>
+          </div>
+          <FlockList />
+        </div>
+
+        {/* Saved Individual Families - Third */}
         <Card className="p-6 border-2">
           <div className="space-y-4">
             <div className="flex items-center justify-between">
-              <h2 className="text-xl font-semibold">Saved Families</h2>
+              <div className="flex items-center gap-3">
+                <GooseIcon size={24} className="text-primary" />
+                <h2 className="text-xl font-semibold">Saved Families</h2>
+              </div>
               <Badge variant="secondary">{savedFamilies.length}</Badge>
             </div>
 
@@ -486,11 +492,14 @@ const Profile = () => {
           </div>
         </Card>
 
-        {/* Saved Presets */}
+        {/* Saved Presets - Fourth */}
         <Card className="p-6 border-2">
           <div className="space-y-4">
             <div className="flex items-center justify-between">
-              <h2 className="text-xl font-semibold">Saved Configurations</h2>
+              <div className="flex items-center gap-3">
+                <Clock className="w-5 h-5 text-primary" />
+                <h2 className="text-xl font-semibold">Saved Configurations</h2>
+              </div>
               <Badge variant="secondary">{presets.length}</Badge>
             </div>
 

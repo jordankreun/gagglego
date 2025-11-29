@@ -5,14 +5,21 @@ import { ItineraryView } from "@/components/ItineraryView";
 
 type ViewState = "hero" | "setup" | "itinerary";
 
+interface Member {
+  id: string;
+  name: string;
+  type: "adult" | "kid";
+  age?: number;
+  napTime?: string;
+}
+
 interface TripData {
   location: string;
   families: Array<{
     id: string;
     name: string;
-    napTime: string;
     dietary: string[];
-    members: number;
+    members: Member[];
   }>;
   noGiftShop: boolean;
 }

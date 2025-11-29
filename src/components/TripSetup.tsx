@@ -16,13 +16,21 @@ import {
 } from "@/components/ui/dialog";
 import { useToast } from "@/hooks/use-toast";
 import { LocationSuggestions } from "@/components/LocationSuggestions";
+import { FamilyMemberEditor } from "@/components/FamilyMemberEditor";
+
+interface Member {
+  id: string;
+  name: string;
+  type: "adult" | "kid";
+  age?: number; // Only for kids
+  napTime?: string; // Only for kids
+}
 
 interface Family {
   id: string;
   name: string;
-  napTime: string;
   dietary: string[];
-  members: number;
+  members: Member[];
 }
 
 interface TripSetupProps {
@@ -37,10 +45,50 @@ interface FamilyPreset {
 }
 
 const DEFAULT_FAMILIES: Family[] = [
-  { id: "1", name: "Kreuns", napTime: "1:00 PM", dietary: ["None"], members: 4 },
-  { id: "2", name: "Wafais", napTime: "1:00 PM", dietary: ["Halal"], members: 5 },
-  { id: "3", name: "Sangvis", napTime: "1:00 PM", dietary: ["Plain/Simple"], members: 3 },
-  { id: "4", name: "Rappaports", napTime: "1:00 PM", dietary: ["Gluten-Free", "Kosher"], members: 4 },
+  { 
+    id: "1", 
+    name: "Kreuns", 
+    dietary: ["None"], 
+    members: [
+      { id: "1-1", name: "Parent 1", type: "adult" },
+      { id: "1-2", name: "Parent 2", type: "adult" },
+      { id: "1-3", name: "Child 1", type: "kid", age: 3, napTime: "1:00 PM" },
+      { id: "1-4", name: "Child 2", type: "kid", age: 5, napTime: "1:00 PM" },
+    ]
+  },
+  { 
+    id: "2", 
+    name: "Wafais", 
+    dietary: ["Halal"], 
+    members: [
+      { id: "2-1", name: "Parent 1", type: "adult" },
+      { id: "2-2", name: "Parent 2", type: "adult" },
+      { id: "2-3", name: "Child 1", type: "kid", age: 2, napTime: "1:00 PM" },
+      { id: "2-4", name: "Child 2", type: "kid", age: 4, napTime: "1:00 PM" },
+      { id: "2-5", name: "Child 3", type: "kid", age: 7, napTime: "1:00 PM" },
+    ]
+  },
+  { 
+    id: "3", 
+    name: "Sangvis", 
+    dietary: ["Plain/Simple"], 
+    members: [
+      { id: "3-1", name: "Parent 1", type: "adult" },
+      { id: "3-2", name: "Child 1", type: "kid", age: 4, napTime: "1:00 PM" },
+      { id: "3-3", name: "Child 2", type: "kid", age: 6, napTime: "1:00 PM" },
+    ]
+  },
+  { 
+    id: "4", 
+    name: "Rappaports", 
+    dietary: ["Gluten-Free", "Kosher"], 
+    members: [
+      { id: "4-1", name: "Parent 1", type: "adult" },
+      { id: "4-2", name: "Parent 2", type: "adult" },
+      { id: "4-3", name: "Child 1", type: "kid", age: 3, napTime: "1:00 PM" },
+      { id: "4-4", name: "Child 2", type: "kid", age: 8, napTime: "1:30 PM" },
+    ]
+  },
 ];
 
 const PRESETS_STORAGE_KEY = "village-family-presets";
@@ -76,9 +124,8 @@ export const TripSetup = ({ onComplete }: TripSetupProps) => {
     const newFamily: Family = {
       id: Date.now().toString(),
       name: newFamilyName,
-      napTime: "1:00 PM",
       dietary: ["None"],
-      members: 2,
+      members: [],
     };
     
     setFamilies([...families, newFamily]);
@@ -231,44 +278,63 @@ export const TripSetup = ({ onComplete }: TripSetupProps) => {
                   {families.map((family) => (
                     <div
                       key={family.id}
-                      className="flex items-center justify-between p-4 bg-muted/50 rounded-xl border hover:border-primary/30 transition-colors"
+                      className="p-4 bg-muted/50 rounded-xl border hover:border-primary/30 transition-colors"
                     >
-                      <div className="flex-1 space-y-1">
-                        <div className="flex items-center gap-2">
-                          <h4 className="font-semibold">{family.name}</h4>
-                          <Badge variant="secondary" className="text-xs">
-                            {family.members}
-                          </Badge>
+                      <div className="flex items-start justify-between mb-3">
+                        <div className="flex-1">
+                          <h4 className="font-semibold text-lg">{family.name}</h4>
+                          <p className="text-sm text-muted-foreground">
+                            {family.members.length} member{family.members.length !== 1 ? 's' : ''}
+                          </p>
                         </div>
-                        <div className="flex flex-wrap gap-3 text-sm text-muted-foreground">
-                          <span className="flex items-center gap-1">
-                            <Clock className="w-3.5 h-3.5" />
-                            {family.napTime}
-                          </span>
-                          <span className="flex items-center gap-1">
-                            <UtensilsCrossed className="w-3.5 h-3.5" />
-                            {family.dietary.join(", ")}
-                          </span>
+                        <div className="flex gap-1">
+                          <Button
+                            type="button"
+                            variant="ghost"
+                            size="icon"
+                            onClick={() => openEditDialog(family)}
+                          >
+                            <Pencil className="w-4 h-4" />
+                          </Button>
+                          <Button
+                            type="button"
+                            variant="ghost"
+                            size="icon"
+                            onClick={() => removeFamily(family.id)}
+                          >
+                            <X className="w-4 h-4" />
+                          </Button>
                         </div>
                       </div>
-                      <div className="flex gap-1">
-                        <Button
-                          type="button"
-                          variant="ghost"
-                          size="icon"
-                          onClick={() => openEditDialog(family)}
-                        >
-                          <Pencil className="w-4 h-4" />
-                        </Button>
-                        <Button
-                          type="button"
-                          variant="ghost"
-                          size="icon"
-                          onClick={() => removeFamily(family.id)}
-                        >
-                          <X className="w-4 h-4" />
-                        </Button>
+                      
+                      {/* Members List */}
+                      <div className="space-y-1.5 mb-3">
+                        {family.members.map((member) => (
+                          <div key={member.id} className="text-sm flex items-center gap-2">
+                            <Badge variant={member.type === "adult" ? "secondary" : "default"} className="text-xs">
+                              {member.type === "adult" ? "👤" : "🧒"}
+                            </Badge>
+                            <span>{member.name}</span>
+                            {member.type === "kid" && member.age && (
+                              <span className="text-muted-foreground">({member.age}y)</span>
+                            )}
+                            {member.type === "kid" && member.napTime && (
+                              <span className="text-muted-foreground flex items-center gap-1">
+                                <Clock className="w-3 h-3" />
+                                {member.napTime}
+                              </span>
+                            )}
+                          </div>
+                        ))}
                       </div>
+                      
+                      {/* Dietary Info */}
+                      {family.dietary.length > 0 && family.dietary[0] !== "None" && (
+                        <div className="flex items-center gap-1 text-sm text-muted-foreground pt-2 border-t">
+                          <UtensilsCrossed className="w-3.5 h-3.5" />
+                          <span>{family.dietary.join(", ")}</span>
+                        </div>
+                      )}
                     </div>
                   ))}
                 </div>
@@ -323,9 +389,12 @@ export const TripSetup = ({ onComplete }: TripSetupProps) => {
 
       {/* Edit Family Dialog */}
       <Dialog open={!!editingFamily} onOpenChange={(open) => !open && setEditingFamily(null)}>
-        <DialogContent className="sm:max-w-[500px]">
+        <DialogContent className="sm:max-w-[600px] max-h-[80vh] overflow-y-auto">
           <DialogHeader>
             <DialogTitle>Edit Family Details</DialogTitle>
+            <DialogDescription>
+              Add family members, set nap times for kids, and configure dietary needs.
+            </DialogDescription>
           </DialogHeader>
           {editForm && (
             <div className="space-y-4 py-4">
@@ -339,35 +408,15 @@ export const TripSetup = ({ onComplete }: TripSetupProps) => {
               </div>
               
               <div className="space-y-2">
-                <Label htmlFor="edit-members">Number of Members</Label>
-                <Input
-                  id="edit-members"
-                  type="number"
-                  min="1"
-                  value={editForm.members}
-                  onChange={(e) => updateEditForm("members", parseInt(e.target.value))}
+                <Label>Family Members</Label>
+                <FamilyMemberEditor
+                  members={editForm.members}
+                  onChange={(members) => updateEditForm("members", members)}
                 />
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="edit-naptime">Nap Time</Label>
-                <Input
-                  id="edit-naptime"
-                  type="time"
-                  value={editForm.napTime}
-                  onChange={(e) => {
-                    const time = e.target.value;
-                    const [hours, minutes] = time.split(":");
-                    const hour = parseInt(hours);
-                    const ampm = hour >= 12 ? "PM" : "AM";
-                    const displayHour = hour > 12 ? hour - 12 : hour === 0 ? 12 : hour;
-                    updateEditForm("napTime", `${displayHour}:${minutes} ${ampm}`);
-                  }}
-                />
-              </div>
-
-              <div className="space-y-2">
-                <Label htmlFor="edit-dietary">Dietary Restrictions</Label>
+                <Label htmlFor="edit-dietary">Dietary Restrictions (Family-wide)</Label>
                 <Input
                   id="edit-dietary"
                   placeholder="Separate with commas"

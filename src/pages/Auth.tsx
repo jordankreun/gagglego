@@ -8,9 +8,9 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { useToast } from '@/hooks/use-toast';
 import { Mail, Lock, User, Loader2, ArrowLeft } from 'lucide-react';
-import gaggleGoLogo from '@/assets/gaggle-go-logo.png';
 import { z } from 'zod';
 import { Link } from 'react-router-dom';
+import { GaggleGoWordmark } from '@/components/GaggleGoWordmark';
 
 const emailSchema = z.string().email('Please enter a valid email address');
 const passwordSchema = z.string().min(6, 'Password must be at least 6 characters');
@@ -166,11 +166,9 @@ const Auth = () => {
         <Card className="w-full max-w-md shadow-2xl border-2 backdrop-blur-sm bg-background/95">
           {/* Logo & Title */}
           <CardHeader className="space-y-3 sm:space-y-4 text-center pt-6 sm:pt-8 pb-4 sm:pb-6 px-4 sm:px-6">
-            <img 
-              src={gaggleGoLogo} 
-              alt="GaggleGO" 
-              className="h-16 sm:h-20 w-auto mx-auto object-contain"
-            />
+            <div className="flex justify-center">
+              <GaggleGoWordmark size="md" animate={false} />
+            </div>
             <div className="space-y-1 sm:space-y-2">
               <CardTitle className="text-2xl sm:text-3xl font-display font-bold">
                 {activeTab === 'signin' ? 'Welcome Back' : 'Join the Flock'}

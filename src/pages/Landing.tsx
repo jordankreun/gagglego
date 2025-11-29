@@ -155,54 +155,46 @@ export default function Landing() {
             </p>
           </div>
 
-          <div className="space-y-4 sm:space-y-6">
-            <div className="flex gap-4">
-              <div className="flex-shrink-0 w-10 h-10 sm:w-12 sm:h-12 rounded-xl bg-accent/10 flex items-center justify-center">
+          <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
+            <Card className="p-5 sm:p-6 space-y-3 border-2 hover:border-primary/30 transition-colors">
+              <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-xl bg-accent/10 flex items-center justify-center">
                 <Clock className="w-5 h-5 sm:w-6 sm:h-6 text-accent" />
               </div>
-              <div>
-                <h3 className="font-semibold text-base sm:text-lg mb-1 sm:mb-2">Nap-Anchored Scheduling</h3>
-                <p className="text-sm sm:text-base text-muted-foreground">
-                  Tell us when each kid naps. We hard-lock those times and build everything else around them.
-                </p>
-              </div>
-            </div>
+              <h3 className="font-semibold text-base sm:text-lg">Nap-Anchored Scheduling</h3>
+              <p className="text-sm sm:text-base text-muted-foreground">
+                Tell us when each kid naps. We hard-lock those times and build everything else around them.
+              </p>
+            </Card>
 
-            <div className="flex gap-4">
-              <div className="flex-shrink-0 w-10 h-10 sm:w-12 sm:h-12 rounded-xl bg-accent/10 flex items-center justify-center">
+            <Card className="p-5 sm:p-6 space-y-3 border-2 hover:border-primary/30 transition-colors">
+              <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-xl bg-accent/10 flex items-center justify-center">
                 <Utensils className="w-5 h-5 sm:w-6 sm:h-6 text-accent" />
               </div>
-              <div>
-                <h3 className="font-semibold text-base sm:text-lg mb-1 sm:mb-2">Dietary Intersection Filtering</h3>
-                <p className="text-sm sm:text-base text-muted-foreground">
-                  Only suggests restaurants that work for ALL your families' dietary needs simultaneously.
-                </p>
-              </div>
-            </div>
+              <h3 className="font-semibold text-base sm:text-lg">Dietary Intersection Filtering</h3>
+              <p className="text-sm sm:text-base text-muted-foreground">
+                Only suggests restaurants that work for ALL your families' dietary needs simultaneously.
+              </p>
+            </Card>
 
-            <div className="flex gap-4">
-              <div className="flex-shrink-0 w-10 h-10 sm:w-12 sm:h-12 rounded-xl bg-accent/10 flex items-center justify-center">
+            <Card className="p-5 sm:p-6 space-y-3 border-2 hover:border-primary/30 transition-colors">
+              <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-xl bg-accent/10 flex items-center justify-center">
                 <ShoppingBag className="w-5 h-5 sm:w-6 sm:h-6 text-accent" />
               </div>
-              <div>
-                <h3 className="font-semibold text-base sm:text-lg mb-1 sm:mb-2">Gift Shop Avoidance</h3>
-                <p className="text-sm sm:text-base text-muted-foreground">
-                  Toggle to minimize routes through high-commercial zones. Your wallet will thank you.
-                </p>
-              </div>
-            </div>
+              <h3 className="font-semibold text-base sm:text-lg">Gift Shop Avoidance</h3>
+              <p className="text-sm sm:text-base text-muted-foreground">
+                Toggle to minimize routes through high-commercial zones. Your wallet will thank you.
+              </p>
+            </Card>
 
-            <div className="flex gap-4">
-              <div className="flex-shrink-0 w-10 h-10 sm:w-12 sm:h-12 rounded-xl bg-accent/10 flex items-center justify-center">
+            <Card className="p-5 sm:p-6 space-y-3 border-2 hover:border-primary/30 transition-colors">
+              <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-xl bg-accent/10 flex items-center justify-center">
                 <Users className="w-5 h-5 sm:w-6 sm:h-6 text-accent" />
               </div>
-              <div>
-                <h3 className="font-semibold text-base sm:text-lg mb-1 sm:mb-2">Multi-Family Coordination</h3>
-                <p className="text-sm sm:text-base text-muted-foreground">
-                  Add unlimited families with their own needs. We optimize for the whole gaggle.
-                </p>
-              </div>
-            </div>
+              <h3 className="font-semibold text-base sm:text-lg">Multi-Family Coordination</h3>
+              <p className="text-sm sm:text-base text-muted-foreground">
+                Add unlimited families with their own needs. We optimize for the whole gaggle.
+              </p>
+            </Card>
           </div>
         </div>
       </section>

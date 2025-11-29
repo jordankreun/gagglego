@@ -13,12 +13,17 @@ import {
   Calendar,
   Heart,
   ArrowRight,
-  Check
+  Check,
+  Download,
+  Smartphone,
+  Zap
 } from "lucide-react";
 import heroImage from "@/assets/hero-families.jpg";
 import { WiseGooseAnimation } from "@/components/WiseGooseAnimation";
 import { AnimatedGoose } from "@/components/AnimatedGoose";
 import { GaggleGoWordmark } from "@/components/GaggleGoWordmark";
+import { PWABanner } from "@/components/PWABanner";
+import { InstallButton } from "@/components/InstallButton";
 
 export default function Landing() {
   const { user, loading } = useAuth();
@@ -39,6 +44,8 @@ export default function Landing() {
   
   return (
     <div className="min-h-screen bg-background">
+      <PWABanner />
+      
       {/* Hero Section */}
       <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-background to-accent/5" />
@@ -267,6 +274,63 @@ export default function Landing() {
                 Get direct links to tickets, menus, and maps. Fly without guesswork.
               </p>
             </Card>
+          </div>
+        </div>
+      </section>
+
+      {/* PWA Install Section */}
+      <section className="py-12 sm:py-16 md:py-24 px-4 bg-gradient-to-br from-primary/5 via-accent/5 to-background">
+        <div className="container max-w-6xl mx-auto">
+          <div className="text-center space-y-3 sm:space-y-4 mb-8 sm:mb-12">
+            <Badge variant="default" className="text-xs sm:text-sm px-3 py-1">
+              <Smartphone className="w-3 h-3 mr-1" />
+              Install App
+            </Badge>
+            <h2 className="text-2xl sm:text-3xl md:text-4xl font-display font-bold">
+              Take GaggleGO Anywhere
+            </h2>
+            <p className="text-base sm:text-lg text-muted-foreground max-w-2xl mx-auto">
+              Install GaggleGO on your phone for instant access, offline functionality, and a native app experience
+            </p>
+          </div>
+
+          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 mb-8">
+            <Card className="p-5 sm:p-6 space-y-3 border-2 hover:border-accent/50 transition-colors bg-background/50 backdrop-blur">
+              <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-xl bg-accent/10 flex items-center justify-center">
+                <Download className="w-5 h-5 sm:w-6 sm:h-6 text-accent" />
+              </div>
+              <h3 className="font-semibold text-base sm:text-lg">Works Offline</h3>
+              <p className="text-sm sm:text-base text-muted-foreground">
+                Access your trip plans even without internet connection. Perfect for parks and remote locations.
+              </p>
+            </Card>
+
+            <Card className="p-5 sm:p-6 space-y-3 border-2 hover:border-accent/50 transition-colors bg-background/50 backdrop-blur">
+              <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-xl bg-accent/10 flex items-center justify-center">
+                <Zap className="w-5 h-5 sm:w-6 sm:h-6 text-accent" />
+              </div>
+              <h3 className="font-semibold text-base sm:text-lg">Lightning Fast</h3>
+              <p className="text-sm sm:text-base text-muted-foreground">
+                Launch instantly from your home screen. No browser tabs, no delays, just your itinerary.
+              </p>
+            </Card>
+
+            <Card className="p-5 sm:p-6 space-y-3 border-2 hover:border-accent/50 transition-colors bg-background/50 backdrop-blur sm:col-span-2 lg:col-span-1">
+              <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-xl bg-accent/10 flex items-center justify-center">
+                <Smartphone className="w-5 h-5 sm:w-6 sm:h-6 text-accent" />
+              </div>
+              <h3 className="font-semibold text-base sm:text-lg">Native Experience</h3>
+              <p className="text-sm sm:text-base text-muted-foreground">
+                Full-screen app with no browser UI. Feels like a real mobile app because it is.
+              </p>
+            </Card>
+          </div>
+
+          <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center items-center">
+            <InstallButton variant="hero" size="lg" />
+            <Button asChild variant="outline" size="lg">
+              <Link to="/install">Learn More About Installing</Link>
+            </Button>
           </div>
         </div>
       </section>

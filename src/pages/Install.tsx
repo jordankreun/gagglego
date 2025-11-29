@@ -3,116 +3,123 @@ import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { GaggleGoWordmark } from '@/components/GaggleGoWordmark';
 import { AnimatedGoose } from '@/components/AnimatedGoose';
-import { Download, Smartphone, Check } from 'lucide-react';
+import { Download, Smartphone, Check, Sparkles, Zap, Globe, ArrowRight } from 'lucide-react';
 import { Link } from 'react-router-dom';
-
-interface BeforeInstallPromptEvent extends Event {
-  prompt: () => Promise<void>;
-  userChoice: Promise<{ outcome: 'accepted' | 'dismissed' }>;
-}
+import { usePWA } from '@/hooks/usePWA';
+import { InstallButton } from '@/components/InstallButton';
+import { Badge } from '@/components/ui/badge';
 
 export default function Install() {
-  const [deferredPrompt, setDeferredPrompt] = useState<BeforeInstallPromptEvent | null>(null);
-  const [isInstalled, setIsInstalled] = useState(false);
+  const { isInstallable, isInstalled, promptInstall } = usePWA();
   const [isIOS, setIsIOS] = useState(false);
 
   useEffect(() => {
-    // Check if app is already installed
-    if (window.matchMedia('(display-mode: standalone)').matches) {
-      setIsInstalled(true);
-    }
-
     // Detect iOS
     const iOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
     setIsIOS(iOS);
-
-    // Listen for the beforeinstallprompt event
-    const handleBeforeInstallPrompt = (e: Event) => {
-      e.preventDefault();
-      setDeferredPrompt(e as BeforeInstallPromptEvent);
-    };
-
-    window.addEventListener('beforeinstallprompt', handleBeforeInstallPrompt);
-
-    return () => {
-      window.removeEventListener('beforeinstallprompt', handleBeforeInstallPrompt);
-    };
   }, []);
 
   const handleInstallClick = async () => {
-    if (!deferredPrompt) return;
-
-    // Show the install prompt
-    await deferredPrompt.prompt();
-
-    // Wait for the user's response
-    const { outcome } = await deferredPrompt.userChoice;
-    
-    if (outcome === 'accepted') {
-      setIsInstalled(true);
-    }
-
-    // Clear the deferredPrompt
-    setDeferredPrompt(null);
+    await promptInstall();
   };
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-primary/5 via-background to-accent/5 flex items-center justify-center p-4">
-      <div className="container max-w-2xl">
-        <Card className="p-8 sm:p-12 space-y-8">
+      <div className="container max-w-3xl">
+        <Card className="p-8 sm:p-12 space-y-8 border-2">
           {/* Header */}
           <div className="text-center space-y-4">
             <div className="flex justify-center">
-              <AnimatedGoose size="xl" state="excited" />
+              <AnimatedGoose size="xl" state={isInstalled ? "excited" : "idle"} enableConstantAnimation />
             </div>
             <GaggleGoWordmark size="lg" />
+            <h1 className="text-2xl sm:text-3xl md:text-4xl font-display font-bold">
+              {isInstalled ? "You're All Set! 🎉" : "Install GaggleGO"}
+            </h1>
             <p className="text-lg text-muted-foreground">
-              Install GaggleGO on your device for the best experience
+              {isInstalled 
+                ? "GaggleGO is installed and ready to use"
+                : "Get the best experience with our installable web app"
+              }
             </p>
           </div>
 
           {/* Installation Status */}
           {isInstalled ? (
-            <div className="bg-accent/10 border-2 border-accent rounded-lg p-6 text-center space-y-4">
-              <Check className="w-12 h-12 text-accent mx-auto" />
-              <h3 className="text-xl font-display font-medium">App Installed!</h3>
-              <p className="text-muted-foreground">
-                GaggleGO is now installed on your device. You can access it from your home screen.
-              </p>
-              <Button asChild variant="default" size="lg">
-                <Link to="/plan">Start Planning</Link>
-              </Button>
+            <div className="space-y-6">
+              <div className="bg-accent/10 border-2 border-accent rounded-lg p-6 text-center space-y-4">
+                <Check className="w-16 h-16 text-accent mx-auto" />
+                <div className="space-y-2">
+                  <h3 className="text-2xl font-display font-medium">Successfully Installed!</h3>
+                  <p className="text-muted-foreground">
+                    GaggleGO is now on your device. Launch it from your home screen for the best experience.
+                  </p>
+                </div>
+              </div>
+              
+              <div className="flex flex-col sm:flex-row gap-3 justify-center">
+                <Button asChild variant="hero" size="lg">
+                  <Link to="/plan">
+                    Start Planning Your Trip
+                    <ArrowRight className="ml-2 w-5 h-5" />
+                  </Link>
+                </Button>
+                <Button asChild variant="outline" size="lg">
+                  <Link to="/">Back to Home</Link>
+                </Button>
+              </div>
             </div>
           ) : (
             <>
               {/* Benefits */}
-              <div className="space-y-4">
-                <h3 className="text-xl font-display font-medium">Why Install?</h3>
-                <div className="grid gap-4">
-                  <div className="flex gap-3">
-                    <Check className="w-5 h-5 text-accent shrink-0 mt-0.5" />
+              <div className="space-y-6">
+                <div className="text-center">
+                  <Badge variant="secondary" className="text-xs sm:text-sm px-3 py-1 mb-4">
+                    Why Install?
+                  </Badge>
+                </div>
+                <div className="grid sm:grid-cols-2 gap-4">
+                  <div className="flex gap-3 p-4 rounded-lg bg-muted/30 border">
+                    <div className="shrink-0 w-10 h-10 rounded-lg bg-accent/10 flex items-center justify-center">
+                      <Globe className="w-5 h-5 text-accent" />
+                    </div>
                     <div>
-                      <p className="font-medium">Works Offline</p>
+                      <p className="font-semibold mb-1">Works Offline</p>
                       <p className="text-sm text-muted-foreground">
-                        Access your itineraries even without internet
+                        Access itineraries without internet
                       </p>
                     </div>
                   </div>
-                  <div className="flex gap-3">
-                    <Check className="w-5 h-5 text-accent shrink-0 mt-0.5" />
+                  <div className="flex gap-3 p-4 rounded-lg bg-muted/30 border">
+                    <div className="shrink-0 w-10 h-10 rounded-lg bg-accent/10 flex items-center justify-center">
+                      <Zap className="w-5 h-5 text-accent" />
+                    </div>
                     <div>
-                      <p className="font-medium">Faster Loading</p>
+                      <p className="font-semibold mb-1">Lightning Fast</p>
                       <p className="text-sm text-muted-foreground">
-                        Instant access from your home screen
+                        Instant loading from home screen
                       </p>
                     </div>
                   </div>
-                  <div className="flex gap-3">
-                    <Check className="w-5 h-5 text-accent shrink-0 mt-0.5" />
+                  <div className="flex gap-3 p-4 rounded-lg bg-muted/30 border">
+                    <div className="shrink-0 w-10 h-10 rounded-lg bg-accent/10 flex items-center justify-center">
+                      <Smartphone className="w-5 h-5 text-accent" />
+                    </div>
                     <div>
-                      <p className="font-medium">Full Screen Experience</p>
+                      <p className="font-semibold mb-1">Native Experience</p>
                       <p className="text-sm text-muted-foreground">
-                        No browser UI, just your app
+                        Full screen, no browser UI
+                      </p>
+                    </div>
+                  </div>
+                  <div className="flex gap-3 p-4 rounded-lg bg-muted/30 border">
+                    <div className="shrink-0 w-10 h-10 rounded-lg bg-accent/10 flex items-center justify-center">
+                      <Sparkles className="w-5 h-5 text-accent" />
+                    </div>
+                    <div>
+                      <p className="font-semibold mb-1">Always Updated</p>
+                      <p className="text-sm text-muted-foreground">
+                        Automatic updates in background
                       </p>
                     </div>
                   </div>
@@ -122,46 +129,73 @@ export default function Install() {
               {/* Install Instructions */}
               <div className="space-y-4">
                 {isIOS ? (
-                  <div className="bg-muted/50 rounded-lg p-6 space-y-3">
-                    <div className="flex items-center gap-2">
-                      <Smartphone className="w-5 h-5 text-primary" />
-                      <h4 className="font-medium">Install on iOS</h4>
+                  <div className="bg-primary/5 rounded-lg p-6 space-y-4 border-2 border-primary/20">
+                    <div className="flex items-center gap-3">
+                      <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center">
+                        <Smartphone className="w-5 h-5 text-primary" />
+                      </div>
+                      <h4 className="font-semibold text-lg">Install on iOS / Safari</h4>
                     </div>
-                    <ol className="space-y-2 text-sm text-muted-foreground">
-                      <li>1. Tap the Share button <span className="inline-block">⎋</span> in Safari</li>
-                      <li>2. Scroll down and tap "Add to Home Screen"</li>
-                      <li>3. Tap "Add" in the top right</li>
+                    <ol className="space-y-3 text-sm">
+                      <li className="flex gap-3">
+                        <Badge variant="outline" className="shrink-0 h-6 w-6 flex items-center justify-center p-0">1</Badge>
+                        <span>Tap the <strong>Share button</strong> (box with arrow) in Safari</span>
+                      </li>
+                      <li className="flex gap-3">
+                        <Badge variant="outline" className="shrink-0 h-6 w-6 flex items-center justify-center p-0">2</Badge>
+                        <span>Scroll down and tap <strong>"Add to Home Screen"</strong></span>
+                      </li>
+                      <li className="flex gap-3">
+                        <Badge variant="outline" className="shrink-0 h-6 w-6 flex items-center justify-center p-0">3</Badge>
+                        <span>Tap <strong>"Add"</strong> in the top right corner</span>
+                      </li>
+                      <li className="flex gap-3">
+                        <Badge variant="outline" className="shrink-0 h-6 w-6 flex items-center justify-center p-0">4</Badge>
+                        <span>Find the GaggleGO icon on your home screen!</span>
+                      </li>
                     </ol>
                   </div>
-                ) : deferredPrompt ? (
-                  <Button
-                    onClick={handleInstallClick}
-                    size="lg"
-                    className="w-full"
-                    variant="hero"
-                  >
-                    <Download className="w-5 h-5 mr-2" />
-                    Install GaggleGO
-                  </Button>
+                ) : isInstallable ? (
+                  <div className="space-y-4">
+                    <InstallButton variant="hero" size="lg" />
+                    <p className="text-center text-sm text-muted-foreground">
+                      Click the button above to install with one tap
+                    </p>
+                  </div>
                 ) : (
-                  <div className="bg-muted/50 rounded-lg p-6 space-y-3">
-                    <div className="flex items-center gap-2">
-                      <Smartphone className="w-5 h-5 text-primary" />
-                      <h4 className="font-medium">Install on Android</h4>
+                  <div className="bg-primary/5 rounded-lg p-6 space-y-4 border-2 border-primary/20">
+                    <div className="flex items-center gap-3">
+                      <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center">
+                        <Smartphone className="w-5 h-5 text-primary" />
+                      </div>
+                      <h4 className="font-semibold text-lg">Install on Android / Chrome</h4>
                     </div>
-                    <ol className="space-y-2 text-sm text-muted-foreground">
-                      <li>1. Tap the menu button (⋮) in your browser</li>
-                      <li>2. Tap "Install app" or "Add to Home screen"</li>
-                      <li>3. Follow the prompts to install</li>
+                    <ol className="space-y-3 text-sm">
+                      <li className="flex gap-3">
+                        <Badge variant="outline" className="shrink-0 h-6 w-6 flex items-center justify-center p-0">1</Badge>
+                        <span>Tap the <strong>menu button</strong> (⋮) in your browser</span>
+                      </li>
+                      <li className="flex gap-3">
+                        <Badge variant="outline" className="shrink-0 h-6 w-6 flex items-center justify-center p-0">2</Badge>
+                        <span>Tap <strong>"Install app"</strong> or <strong>"Add to Home screen"</strong></span>
+                      </li>
+                      <li className="flex gap-3">
+                        <Badge variant="outline" className="shrink-0 h-6 w-6 flex items-center justify-center p-0">3</Badge>
+                        <span>Tap <strong>"Install"</strong> when prompted</span>
+                      </li>
+                      <li className="flex gap-3">
+                        <Badge variant="outline" className="shrink-0 h-6 w-6 flex items-center justify-center p-0">4</Badge>
+                        <span>Launch GaggleGO from your home screen or app drawer!</span>
+                      </li>
                     </ol>
                   </div>
                 )}
               </div>
 
               {/* Continue Without Installing */}
-              <div className="text-center">
-                <Button asChild variant="ghost" size="sm">
-                  <Link to="/plan">Continue in browser</Link>
+              <div className="text-center pt-4">
+                <Button asChild variant="ghost">
+                  <Link to="/plan">Continue in browser instead</Link>
                 </Button>
               </div>
             </>

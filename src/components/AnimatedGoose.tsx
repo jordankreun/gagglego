@@ -19,6 +19,7 @@ const sizeClasses = {
 export const AnimatedGoose = ({ size = "md", state = "idle", className = "", enableConstantAnimation = false }: AnimatedGooseProps) => {
   const [blink, setBlink] = useState(false);
   const [isHovered, setIsHovered] = useState(false);
+  const [isPressed, setIsPressed] = useState(false);
 
   // Periodic blinking animation
   useEffect(() => {
@@ -29,6 +30,15 @@ export const AnimatedGoose = ({ size = "md", state = "idle", className = "", ena
 
     return () => clearInterval(blinkInterval);
   }, []);
+
+  // Handle touch events for mobile
+  const handleTouchStart = () => {
+    setIsPressed(true);
+  };
+
+  const handleTouchEnd = () => {
+    setTimeout(() => setIsPressed(false), 800);
+  };
 
   // Get animation config based on state
   const getAnimation = () => {
@@ -75,11 +85,14 @@ export const AnimatedGoose = ({ size = "md", state = "idle", className = "", ena
 
   return (
     <motion.div
-      className={`relative ${sizeClasses[size]} ${className} cursor-pointer`}
+      className={`relative ${sizeClasses[size]} ${className} cursor-pointer select-none`}
       animate={enableConstantAnimation ? getAnimation() : {}}
       whileHover={enableConstantAnimation ? {} : { scale: 1.05 }}
+      whileTap={{ scale: 0.95 }}
       onHoverStart={() => setIsHovered(true)}
       onHoverEnd={() => setIsHovered(false)}
+      onTouchStart={handleTouchStart}
+      onTouchEnd={handleTouchEnd}
     >
       <motion.img
         src={gooseMascot}
@@ -91,8 +104,8 @@ export const AnimatedGoose = ({ size = "md", state = "idle", className = "", ena
         transition={{ duration: 0.1 }}
       />
       
-      {/* Honk speech bubble on hover */}
-      {isHovered && (
+      {/* Honk speech bubble on hover or touch */}
+      {(isHovered || isPressed) && (
         <motion.div
           className="absolute -top-8 -right-8 bg-accent text-accent-foreground px-3 py-1.5 rounded-full text-sm font-bold whitespace-nowrap shadow-lg"
           initial={{ scale: 0, opacity: 0 }}

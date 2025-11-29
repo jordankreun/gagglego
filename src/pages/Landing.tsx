@@ -97,7 +97,7 @@ export default function Landing() {
               The Problem
             </Badge>
             <h2 className="text-2xl sm:text-3xl md:text-4xl font-display font-bold">
-              Family travel shouldn't feel like herding cats
+              Family travel shouldn't feel like wrangling a wild gaggle
             </h2>
             <p className="text-base sm:text-lg text-muted-foreground max-w-2xl mx-auto">
               Coordinating multiple families means juggling nap schedules, dietary needs, 

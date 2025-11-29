@@ -21,6 +21,7 @@ import { LocationSuggestions } from "@/components/LocationSuggestions";
 import { FamilyMemberEditor } from "@/components/FamilyMemberEditor";
 import { supabase } from "@/integrations/supabase/client";
 import { AnimatedGoose } from "@/components/AnimatedGoose";
+import { useAuth } from "@/contexts/AuthContext";
 
 interface Member {
   id: string;
@@ -68,17 +69,20 @@ interface TripSetupProps {
 
 interface FamilyPreset {
   id: string;
-  name: string;
+  preset_name: string;
   families: Family[];
-  createdAt: string;
+  location?: string;
+  no_gift_shop?: boolean;
+  nest_config?: NestConfig;
+  meal_preferences?: MealPreferences;
+  created_at: string;
 }
 
 const DEFAULT_FAMILIES: Family[] = [];
 
-const PRESETS_STORAGE_KEY = "village-family-presets";
-
 export const TripSetup = ({ onComplete }: TripSetupProps) => {
   const { toast } = useToast();
+  const { user } = useAuth();
   const [location, setLocation] = useState("");
   const [dateRange, setDateRange] = useState<DateRange | undefined>();
   const [families, setFamilies] = useState<Family[]>(DEFAULT_FAMILIES);
@@ -110,17 +114,52 @@ export const TripSetup = ({ onComplete }: TripSetupProps) => {
   const [showLoadPreset, setShowLoadPreset] = useState(false);
   const [presetName, setPresetName] = useState("");
   const [isGenerating, setIsGenerating] = useState(false);
+  const [loadingPresets, setLoadingPresets] = useState(false);
 
+  // Load presets from Supabase
   useEffect(() => {
-    const stored = localStorage.getItem(PRESETS_STORAGE_KEY);
-    if (stored) {
-      try {
-        setPresets(JSON.parse(stored));
-      } catch (e) {
-        console.error("Failed to load presets", e);
-      }
+    if (user) {
+      loadPresetsFromDatabase();
     }
-  }, []);
+  }, [user]);
+
+  const loadPresetsFromDatabase = async () => {
+    if (!user) return;
+    
+    setLoadingPresets(true);
+    try {
+      const { data, error } = await supabase
+        .from('family_preferences')
+        .select('*')
+        .eq('user_id', user.id)
+        .order('created_at', { ascending: false });
+
+      if (error) throw error;
+      
+      // Cast the data to the correct type
+      const typedPresets: FamilyPreset[] = (data || []).map(preset => ({
+        id: preset.id,
+        preset_name: preset.preset_name,
+        families: preset.families as unknown as Family[],
+        location: preset.location || undefined,
+        no_gift_shop: preset.no_gift_shop || undefined,
+        nest_config: preset.nest_config as unknown as NestConfig | undefined,
+        meal_preferences: preset.meal_preferences as unknown as MealPreferences | undefined,
+        created_at: preset.created_at,
+      }));
+      
+      setPresets(typedPresets);
+    } catch (error: any) {
+      console.error('Failed to load presets:', error);
+      toast({
+        title: "Error loading presets",
+        description: error.message,
+        variant: "destructive",
+      });
+    } finally {
+      setLoadingPresets(false);
+    }
+  };
 
   const addFamily = () => {
     if (!newFamilyName.trim()) return;
@@ -157,7 +196,16 @@ export const TripSetup = ({ onComplete }: TripSetupProps) => {
     setEditForm({ ...editForm, [field]: value });
   };
 
-  const savePreset = () => {
+  const savePreset = async () => {
+    if (!user) {
+      toast({
+        title: "Authentication required",
+        description: "Please sign in to save presets.",
+        variant: "destructive",
+      });
+      return;
+    }
+
     if (!presetName.trim()) {
       toast({
         title: "Preset name required",
@@ -167,43 +215,92 @@ export const TripSetup = ({ onComplete }: TripSetupProps) => {
       return;
     }
 
-    const newPreset: FamilyPreset = {
-      id: Date.now().toString(),
-      name: presetName.trim(),
-      families: [...families],
-      createdAt: new Date().toISOString(),
-    };
+    try {
+      const { data, error } = await supabase
+        .from('family_preferences')
+        .insert([{
+          user_id: user.id,
+          preset_name: presetName.trim(),
+          families: families as any,
+          location: location || null,
+          no_gift_shop: noGiftShop,
+          nest_config: nestConfig as any,
+          meal_preferences: mealPreferences as any,
+        }])
+        .select()
+        .single();
 
-    const updatedPresets = [...presets, newPreset];
-    setPresets(updatedPresets);
-    localStorage.setItem(PRESETS_STORAGE_KEY, JSON.stringify(updatedPresets));
-    
-    toast({
-      title: "Preset saved!",
-      description: `"${presetName}" has been saved successfully.`,
-    });
+      if (error) throw error;
 
-    setShowSavePreset(false);
-    setPresetName("");
+      const newPreset: FamilyPreset = {
+        id: data.id,
+        preset_name: data.preset_name,
+        families: data.families as unknown as Family[],
+        location: data.location || undefined,
+        no_gift_shop: data.no_gift_shop || undefined,
+        nest_config: data.nest_config as unknown as NestConfig | undefined,
+        meal_preferences: data.meal_preferences as unknown as MealPreferences | undefined,
+        created_at: data.created_at,
+      };
+
+      setPresets([newPreset, ...presets]);
+      
+      toast({
+        title: "Preset saved!",
+        description: `"${presetName}" has been saved successfully.`,
+      });
+
+      setShowSavePreset(false);
+      setPresetName("");
+    } catch (error: any) {
+      console.error('Failed to save preset:', error);
+      toast({
+        title: "Error saving preset",
+        description: error.message,
+        variant: "destructive",
+      });
+    }
   };
 
   const loadPreset = (preset: FamilyPreset) => {
     setFamilies([...preset.families]);
+    if (preset.location) setLocation(preset.location);
+    if (preset.no_gift_shop !== undefined) setNoGiftShop(preset.no_gift_shop);
+    if (preset.nest_config) setNestConfig(preset.nest_config);
+    if (preset.meal_preferences) setMealPreferences(preset.meal_preferences);
+    
     setShowLoadPreset(false);
     toast({
       title: "Preset loaded!",
-      description: `"${preset.name}" configuration has been loaded.`,
+      description: `"${preset.preset_name}" configuration has been loaded.`,
     });
   };
 
-  const deletePreset = (presetId: string) => {
-    const updatedPresets = presets.filter(p => p.id !== presetId);
-    setPresets(updatedPresets);
-    localStorage.setItem(PRESETS_STORAGE_KEY, JSON.stringify(updatedPresets));
-    toast({
-      title: "Preset deleted",
-      description: "The preset has been removed.",
-    });
+  const deletePreset = async (presetId: string) => {
+    if (!user) return;
+
+    try {
+      const { error } = await supabase
+        .from('family_preferences')
+        .delete()
+        .eq('id', presetId)
+        .eq('user_id', user.id);
+
+      if (error) throw error;
+
+      setPresets(presets.filter(p => p.id !== presetId));
+      toast({
+        title: "Preset deleted",
+        description: "The preset has been removed.",
+      });
+    } catch (error: any) {
+      console.error('Failed to delete preset:', error);
+      toast({
+        title: "Error deleting preset",
+        description: error.message,
+        variant: "destructive",
+      });
+    }
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -900,11 +997,11 @@ export const TripSetup = ({ onComplete }: TripSetupProps) => {
                   className="flex items-center justify-between p-4 bg-muted rounded-xl border border-border hover:border-secondary transition-all"
                 >
                   <div className="flex-1 space-y-1">
-                    <h4 className="font-semibold">{preset.name}</h4>
+                    <h4 className="font-semibold">{preset.preset_name}</h4>
                     <div className="flex items-center gap-2 text-sm text-muted-foreground">
                       <span>{preset.families.length} {preset.families.length === 1 ? "family" : "families"}</span>
                       <span>•</span>
-                      <span>{new Date(preset.createdAt).toLocaleDateString()}</span>
+                      <span>{new Date(preset.created_at).toLocaleDateString()}</span>
                     </div>
                     <div className="flex flex-wrap gap-1 mt-2">
                       {preset.families.map((f) => (

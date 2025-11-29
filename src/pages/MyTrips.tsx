@@ -8,6 +8,7 @@ import { MapPin, Calendar, Users, Trash2, ExternalLink, Edit2, Check, X } from "
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
+import { AnimatedGoose } from "@/components/AnimatedGoose";
 
 interface Trip {
   id: string;
@@ -176,9 +177,17 @@ export default function MyTrips() {
         </div>
 
         {trips.length === 0 ? (
-          <Card className="p-12 text-center">
-            <p className="text-muted-foreground mb-4">No trips yet! Time to start planning.</p>
-            <Button onClick={() => navigate('/plan')} variant="hero">
+          <Card className="p-12 text-center space-y-6">
+            <div className="flex justify-center">
+              <div style={{ width: 120, height: 120 }}>
+                <AnimatedGoose enableConstantAnimation={false} />
+              </div>
+            </div>
+            <div className="space-y-2">
+              <h3 className="text-2xl font-display font-bold">Ready to Fly?</h3>
+              <p className="text-muted-foreground">No migrations saved yet. Start planning your first family adventure!</p>
+            </div>
+            <Button onClick={() => navigate('/plan')} variant="hero" size="lg">
               Plan Your First Trip
             </Button>
           </Card>
@@ -229,8 +238,11 @@ export default function MyTrips() {
                               <Edit2 className="w-3 h-3" />
                             </Button>
                           )}
-                          <Badge variant={trip.role === 'owner' ? 'default' : 'secondary'} className="ml-auto">
-                            {trip.role === 'owner' ? 'Owner' : trip.role}
+                          <Badge 
+                            variant={trip.role === 'owner' ? 'default' : trip.role === 'editor' ? 'secondary' : 'outline'} 
+                            className={trip.role === 'owner' ? 'ml-auto bg-accent text-accent-foreground' : trip.role === 'editor' ? 'ml-auto bg-accent/50 text-accent-foreground' : 'ml-auto'}
+                          >
+                            {trip.role === 'owner' ? 'Owner' : trip.role === 'editor' ? 'Editor' : 'Viewer'}
                           </Badge>
                         </div>
                       )}

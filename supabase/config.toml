@@ -1,13 +1,13 @@
 project_id = "quclficddptueszrooaa"
 
 [functions.suggest-locations]
-verify_jwt = false
+verify_jwt = true
 
 [functions.generate-itinerary]
-verify_jwt = false
+verify_jwt = true
 
 [functions.itinerary-chat]
-verify_jwt = false
+verify_jwt = true
 
 [functions.generate-share-code]
 verify_jwt = true

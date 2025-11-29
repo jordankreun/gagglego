@@ -10,6 +10,8 @@ import {
   Sparkles,
   ShoppingBag
 } from "lucide-react";
+import { ItineraryChat } from "./ItineraryChat";
+import { useState } from "react";
 
 interface ItineraryItem {
   time: string;
@@ -116,7 +118,9 @@ const getTypeColor = (type: string) => {
 };
 
 export const ItineraryView = ({ location, date, items, onBack }: ItineraryViewProps) => {
-  const displayItems = items.length > 0 ? items : MOCK_ITEMS;
+  const [currentItems, setCurrentItems] = useState(items.length > 0 ? items : MOCK_ITEMS);
+  const displayItems = currentItems;
+
   return (
     <section className="min-h-screen py-6 sm:py-10 md:py-12 px-3 sm:px-4">
       <div className="container max-w-4xl mx-auto space-y-4 sm:space-y-6 md:space-y-8">
@@ -205,6 +209,13 @@ export const ItineraryView = ({ location, date, items, onBack }: ItineraryViewPr
           </p>
         </Card>
       </div>
+
+      {/* Goose Chat Assistant */}
+      <ItineraryChat 
+        location={location}
+        currentItinerary={currentItems}
+        onItineraryUpdate={setCurrentItems}
+      />
     </section>
   );
 };

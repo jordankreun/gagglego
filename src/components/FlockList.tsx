@@ -7,7 +7,8 @@ import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useToast } from "@/hooks/use-toast";
-import { Search, Check, X, Trash2 } from "lucide-react";
+import { UserPlus, Check, X, Trash2 } from "lucide-react";
+import { Skeleton } from "@/components/ui/skeleton";
 import { AnimatedGoose } from "@/components/AnimatedGoose";
 import { BrandIcons } from "@/components/icons/BrandIcons";
 import {
@@ -115,12 +116,32 @@ export const FlockList = () => {
       if (error) throw error;
 
       if (data.error) {
-        throw new Error(data.error);
+        // Handle specific error cases
+        if (data.error.includes("not found") || data.error.includes("No user")) {
+          toast({
+            title: "User not found",
+            description: "No GaggleGO account exists with that email. Ask your friend to sign up first!",
+            variant: "destructive",
+          });
+        } else if (data.error.includes("already exists") || data.error.includes("duplicate")) {
+          toast({
+            title: "Already connected",
+            description: "You already have a connection with this user.",
+            variant: "destructive",
+          });
+        } else {
+          toast({
+            title: "Failed to send request",
+            description: data.error,
+            variant: "destructive",
+          });
+        }
+        return;
       }
 
       toast({
         title: "Flock request sent!",
-        description: data.message,
+        description: data.message || "Your request has been sent.",
       });
       setSearchEmail("");
       fetchConnections();
@@ -193,9 +214,24 @@ export const FlockList = () => {
 
   if (loading) {
     return (
-      <Card className="p-8 text-center">
-        <p className="text-muted-foreground">Loading your flock...</p>
-      </Card>
+      <div className="space-y-6">
+        <Card className="p-6 border-2">
+          <div className="space-y-4">
+            <Skeleton className="h-6 w-48" />
+            <div className="flex gap-2">
+              <Skeleton className="h-11 flex-1" />
+              <Skeleton className="h-11 w-32" />
+            </div>
+          </div>
+        </Card>
+        <Card className="p-6 border-2">
+          <Skeleton className="h-10 w-full mb-4" />
+          <div className="space-y-3">
+            <Skeleton className="h-16 w-full" />
+            <Skeleton className="h-16 w-full" />
+          </div>
+        </Card>
+      </div>
     );
   }
 
@@ -204,9 +240,14 @@ export const FlockList = () => {
       {/* Add to Flock */}
       <Card className="p-6 border-2">
         <div className="space-y-4">
-          <div className="flex items-center gap-2">
-            <BrandIcons.Flock size={20} className="text-accent" />
-            <h3 className="font-semibold text-lg">Add to Your Flock</h3>
+          <div className="space-y-2">
+            <div className="flex items-center gap-2">
+              <BrandIcons.Flock size={20} className="text-accent" />
+              <h3 className="font-semibold text-lg">Add to Your Flock</h3>
+            </div>
+            <p className="text-sm text-muted-foreground">
+              Connect with friends and family to coordinate trips together. Enter the email of someone who has a GaggleGO account.
+            </p>
           </div>
           <div className="flex gap-2">
             <Input
@@ -217,7 +258,7 @@ export const FlockList = () => {
               onKeyPress={(e) => e.key === 'Enter' && sendFlockRequest()}
             />
             <Button onClick={sendFlockRequest} disabled={isSending} variant="hero">
-              <Search className="w-4 h-4 mr-2" />
+              <UserPlus className="w-4 h-4 mr-2" />
               {isSending ? "Sending..." : "Send Request"}
             </Button>
           </div>
@@ -237,7 +278,7 @@ export const FlockList = () => {
           </TabsList>
 
           <TabsContent value="flock" className="mt-6 space-y-3">
-            {acceptedConnections.length === 0 ? (
+            {acceptedConnections.length === 0 && pendingSent.length === 0 ? (
               <div className="text-center py-12 space-y-4">
                 <div className="flex justify-center">
                   <div style={{ width: 100, height: 100 }}>
@@ -246,8 +287,8 @@ export const FlockList = () => {
                 </div>
                 <div className="space-y-2">
                   <h4 className="font-display font-semibold text-xl">Your Flock is Empty</h4>
-                  <p className="text-sm text-muted-foreground">
-                    Add friends to coordinate trips together!
+                  <p className="text-sm text-muted-foreground max-w-md mx-auto">
+                    Connect with friends and family who use GaggleGO. You'll be able to share trip plans, coordinate activities, and plan together!
                   </p>
                 </div>
               </div>
@@ -303,16 +344,19 @@ export const FlockList = () => {
               </div>
             )}
 
-            {/* Pending Sent */}
-            {pendingSent.length > 0 && (
-              <div className="mt-6 pt-6 border-t space-y-3">
-                <h4 className="text-sm font-semibold text-muted-foreground">Pending Requests</h4>
+            {/* Pending Sent - Show at top for visibility */}
+            {pendingSent.length > 0 && acceptedConnections.length > 0 && (
+              <div className="mb-6 pb-6 border-b space-y-3">
+                <div className="flex items-center gap-2">
+                  <BrandIcons.FlyingGoose size={16} className="text-muted-foreground" />
+                  <h4 className="text-sm font-semibold text-muted-foreground">Pending Sent Requests</h4>
+                </div>
                 {pendingSent.map((connection) => {
                   const profile = connection.profiles as any;
                   return (
                     <div
                       key={connection.id}
-                      className="flex items-center justify-between p-3 bg-muted/30 rounded-lg"
+                      className="flex items-center justify-between p-3 bg-muted/30 rounded-lg border"
                     >
                       <div className="flex items-center gap-2">
                         <div className="w-8 h-8 rounded-full bg-muted flex items-center justify-center">
@@ -322,6 +366,9 @@ export const FlockList = () => {
                           <p className="text-sm font-medium">
                             {profile?.display_name || profile?.email || 'Unknown User'}
                           </p>
+                          {profile?.display_name && (
+                            <p className="text-xs text-muted-foreground">{profile?.email}</p>
+                          )}
                         </div>
                       </div>
                       <Badge variant="secondary" className="text-xs">Pending</Badge>
@@ -334,8 +381,16 @@ export const FlockList = () => {
 
           <TabsContent value="requests" className="mt-6 space-y-3">
             {pendingReceived.length === 0 ? (
-              <div className="text-center py-12 space-y-2">
-                <p className="text-muted-foreground">No pending requests</p>
+              <div className="text-center py-12 space-y-4">
+                <div className="flex justify-center">
+                  <BrandIcons.NestingGoose size={60} className="text-muted-foreground/40" />
+                </div>
+                <div className="space-y-1">
+                  <h4 className="font-semibold">No Pending Requests</h4>
+                  <p className="text-sm text-muted-foreground">
+                    When someone sends you a flock request, it will appear here.
+                  </p>
+                </div>
               </div>
             ) : (
               pendingReceived.map((connection) => {

@@ -65,12 +65,12 @@ export default function Landing() {
             
             {/* Headline */}
             <div className="space-y-3 sm:space-y-4">
-              <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-display font-bold text-foreground leading-tight">
+              <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-display font-extrabold text-foreground leading-tight">
                 Keep Your Flock Together,
                 <br />
                 <span className="text-accent">Navigate Like a Pro</span>
               </h1>
-              <p className="text-base sm:text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto px-4">
+              <p className="text-base sm:text-lg md:text-xl text-foreground/80 max-w-2xl mx-auto px-4 font-medium">
                 Stop juggling nap times, dietary restrictions, and gift shop detours. 
                 Let AI chart a flight plan that actually works for your gaggle.
               </p>

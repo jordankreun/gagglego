@@ -1,19 +1,21 @@
 import { Link } from 'react-router-dom';
-import { Bird, LogOut, User, Map } from 'lucide-react';
+import { LogOut, User, Menu } from 'lucide-react';
+import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
+import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { useAuth } from '@/contexts/AuthContext';
 import { GaggleGoWordmark } from '@/components/GaggleGoWordmark';
 import { NavLink } from '@/components/NavLink';
 import { NotificationCenter } from '@/components/NotificationCenter';
 import { InstallButton } from '@/components/InstallButton';
+import { FlyingGooseIcon, GooseIcon } from '@/components/icons/BrandIcons';
 
 export const Navigation = () => {
-  const {
-    user,
-    signOut
-  } = useAuth();
+  const { user, signOut } = useAuth();
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+
   return <nav className="sticky top-0 z-50 w-full border-b border-border/50 bg-background/80 backdrop-blur-xl">
       <div className="container mx-auto px-4 bg-primary-foreground">
         <div className="flex h-16 items-center justify-between">
@@ -44,10 +46,63 @@ export const Navigation = () => {
             )}
           </div>
 
-          {/* Install, Notification Bell & User Menu */}
+          {/* Install, Notification Bell, Mobile Menu & User Menu */}
           <div className="flex items-center gap-2">
             <InstallButton showBadge />
             {user && <NotificationCenter />}
+            
+            {/* Mobile Menu */}
+            {user && (
+              <Sheet open={mobileMenuOpen} onOpenChange={setMobileMenuOpen}>
+                <SheetTrigger asChild className="md:hidden">
+                  <Button variant="ghost" size="icon">
+                    <Menu className="h-5 w-5" />
+                  </Button>
+                </SheetTrigger>
+                <SheetContent side="right" className="w-64">
+                  <div className="flex flex-col gap-4 mt-8">
+                    <NavLink 
+                      to="/plan" 
+                      className="flex items-center gap-3 text-lg font-medium text-muted-foreground hover:text-foreground transition-colors p-3 rounded-lg hover:bg-muted"
+                      activeClassName="text-foreground bg-muted"
+                      onClick={() => setMobileMenuOpen(false)}
+                    >
+                      <FlyingGooseIcon size={20} />
+                      Plan Trip
+                    </NavLink>
+                    <NavLink 
+                      to="/trips" 
+                      className="flex items-center gap-3 text-lg font-medium text-muted-foreground hover:text-foreground transition-colors p-3 rounded-lg hover:bg-muted"
+                      activeClassName="text-foreground bg-muted"
+                      onClick={() => setMobileMenuOpen(false)}
+                    >
+                      <FlyingGooseIcon size={20} />
+                      My Migrations
+                    </NavLink>
+                    <NavLink 
+                      to="/profile" 
+                      className="flex items-center gap-3 text-lg font-medium text-muted-foreground hover:text-foreground transition-colors p-3 rounded-lg hover:bg-muted"
+                      activeClassName="text-foreground bg-muted"
+                      onClick={() => setMobileMenuOpen(false)}
+                    >
+                      <User className="h-5 w-5" />
+                      Profile
+                    </NavLink>
+                    <Button 
+                      variant="ghost" 
+                      className="justify-start gap-3 text-destructive hover:text-destructive hover:bg-destructive/10"
+                      onClick={() => {
+                        setMobileMenuOpen(false);
+                        signOut();
+                      }}
+                    >
+                      <LogOut className="h-5 w-5" />
+                      Sign Out
+                    </Button>
+                  </div>
+                </SheetContent>
+              </Sheet>
+            )}
             {user ? <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <Button variant="ghost" className="relative h-10 w-10 rounded-full">
@@ -69,19 +124,19 @@ export const Navigation = () => {
                 <DropdownMenuSeparator />
                 <DropdownMenuItem asChild>
                   <Link to="/plan" className="cursor-pointer">
-                    <Bird className="mr-2 h-4 w-4" />
+                    <FlyingGooseIcon size={16} className="mr-2" />
                     Plan Trip
                   </Link>
                 </DropdownMenuItem>
                 <DropdownMenuItem asChild>
                   <Link to="/trips" className="cursor-pointer">
-                    <Bird className="mr-2 h-4 w-4" />
+                    <FlyingGooseIcon size={16} className="mr-2" />
                     My Migrations
                   </Link>
                 </DropdownMenuItem>
                 <DropdownMenuItem asChild>
                   <Link to="/profile" className="cursor-pointer">
-                    <User className="mr-2 h-4 w-4" />
+                    <GooseIcon size={16} className="mr-2" />
                     Profile
                   </Link>
                 </DropdownMenuItem>

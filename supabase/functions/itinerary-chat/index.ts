@@ -71,7 +71,7 @@ Keep responses concise, warm, and goose-themed! Use emojis sparingly (🦆 is yo
         model: 'google/gemini-2.5-flash',
         messages,
         temperature: 0.8,
-        max_tokens: 2000,
+        max_tokens: 6000,
       }),
     });
 
@@ -109,19 +109,42 @@ Keep responses concise, warm, and goose-themed! Use emojis sparingly (🦆 is yo
       throw new Error('No content returned from AI');
     }
 
-    console.log('AI Response:', content);
+    console.log('AI Response length:', content.length);
+    console.log('AI Response preview:', content.substring(0, 200));
 
     // Try to parse JSON if present (for itinerary updates)
     let result: any = { response: content };
     
+    console.log('Attempting JSON parse...');
     try {
       const jsonMatch = content.match(/```json\n([\s\S]*?)\n```/);
       if (jsonMatch) {
         const parsed = JSON.parse(jsonMatch[1]);
         result = parsed;
+        console.log('Successfully parsed JSON response');
+      } else {
+        // Check for incomplete/broken JSON blocks and strip them
+        const brokenJsonMatch = content.match(/```json[\s\S]*/);
+        if (brokenJsonMatch) {
+          console.log('Detected broken JSON block, cleaning response');
+          // Strip the broken JSON, keep only the text before it
+          const cleanedContent = content.replace(/```json[\s\S]*/, '').trim();
+          result = { 
+            response: cleanedContent + "\n\n🦆 *Oops! I tried to update your itinerary but ran into a hiccup. Could you try that request again?*"
+          };
+        }
       }
     } catch (parseError) {
-      console.log('No JSON found in response, treating as plain text');
+      console.error('JSON parse error:', parseError);
+      // Strip any broken JSON from the response
+      const cleanedContent = content.replace(/```json[\s\S]*```?/g, '').trim();
+      result = { 
+        response: cleanedContent || "I had trouble processing that change. Could you try rephrasing your request?"
+      };
+    }
+
+    if (!result.updatedItinerary) {
+      console.log('No itinerary update parsed - response treated as text');
     }
 
     return new Response(

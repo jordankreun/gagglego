@@ -8,3 +8,6 @@ verify_jwt = false
 
 [functions.itinerary-chat]
 verify_jwt = false
+
+[functions.generate-share-code]
+verify_jwt = true

@@ -39,7 +39,7 @@ interface ItineraryViewProps {
   date: string;
   items: ItineraryItem[];
   onBack: () => void;
-  tripId?: string;
+  tripId?: string | null;
   onItemsUpdate?: (items: ItineraryItem[]) => void;
 }
 

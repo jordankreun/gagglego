@@ -56,11 +56,51 @@ export const ExportTripButton = ({ location, date, itinerary }: ExportTripButton
   };
 
   const exportAsPDF = () => {
-    // For now, just trigger print dialog
-    window.print();
+    // Create print-friendly content
+    const printContent = `
+      <html>
+        <head>
+          <title>${location} Itinerary</title>
+          <style>
+            body { font-family: Arial, sans-serif; padding: 20px; }
+            h1 { color: #2d3748; margin-bottom: 10px; }
+            .date { color: #718096; margin-bottom: 30px; }
+            .item { margin-bottom: 25px; page-break-inside: avoid; }
+            .time { font-weight: bold; color: #f97316; }
+            .title { font-size: 18px; font-weight: bold; margin: 5px 0; }
+            .description { color: #4a5568; line-height: 1.6; }
+            .type { display: inline-block; padding: 4px 8px; background: #e2e8f0; border-radius: 4px; font-size: 12px; margin-top: 5px; }
+          </style>
+        </head>
+        <body>
+          <h1>${location} Itinerary</h1>
+          <div class="date">${date}</div>
+          ${itinerary.map(item => `
+            <div class="item">
+              <div class="time">${item.time}</div>
+              <div class="title">${item.title}</div>
+              <div class="description">${item.description}</div>
+              <span class="type">${item.type}</span>
+            </div>
+          `).join('')}
+        </body>
+      </html>
+    `;
+    
+    const printWindow = window.open('', '_blank');
+    if (printWindow) {
+      printWindow.document.write(printContent);
+      printWindow.document.close();
+      printWindow.focus();
+      setTimeout(() => {
+        printWindow.print();
+        printWindow.close();
+      }, 250);
+    }
+    
     toast({
-      title: "Print dialog opened",
-      description: "Save as PDF from print options",
+      title: "PDF ready",
+      description: "Save as PDF from print dialog",
     });
   };
 

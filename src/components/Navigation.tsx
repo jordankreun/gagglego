@@ -11,7 +11,7 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { useAuth } from '@/contexts/AuthContext';
-import gooseMascot from '@/assets/goose-mascot.png';
+import gaggleGoLogo from '@/assets/gaggle-go-logo.png';
 
 export const Navigation = () => {
   const { user, signOut } = useAuth();
@@ -21,16 +21,12 @@ export const Navigation = () => {
       <div className="container mx-auto px-4">
         <div className="flex h-16 items-center justify-between">
           {/* Logo */}
-          <Link to="/" className="flex items-center gap-3 hover-scale group">
+          <Link to="/" className="flex items-center hover-scale group">
             <img 
-              src={gooseMascot} 
+              src={gaggleGoLogo} 
               alt="GaggleGO" 
-              className="w-10 h-10 transition-transform group-hover:rotate-12"
+              className="h-10 w-auto"
             />
-            <span className="text-2xl font-display font-bold">
-              <span className="text-primary">Gaggle</span>
-              <span className="text-accent">GO</span>
-            </span>
           </Link>
 
           {/* User Menu */}

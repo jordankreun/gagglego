@@ -1,7 +1,8 @@
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Link } from "react-router-dom";
+import { Link, Navigate } from "react-router-dom";
+import { useAuth } from "@/contexts/AuthContext";
 import { 
   MapPin, 
   Users, 
@@ -20,6 +21,22 @@ import { AnimatedGoose } from "@/components/AnimatedGoose";
 import { GaggleGoWordmark } from "@/components/GaggleGoWordmark";
 
 export default function Landing() {
+  const { user, loading } = useAuth();
+  
+  // Redirect logged-in users to their trips dashboard
+  if (!loading && user) {
+    return <Navigate to="/trips" replace />;
+  }
+  
+  // Show loading state while checking auth
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-background">
+        <AnimatedGoose size="lg" enableConstantAnimation />
+      </div>
+    );
+  }
+  
   return (
     <div className="min-h-screen bg-background">
       {/* Hero Section */}

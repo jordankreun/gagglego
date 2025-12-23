@@ -6,7 +6,6 @@ import { Badge } from "@/components/ui/badge";
 import { MapPin, Clock, ExternalLink } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
-import { useAuth } from "@/contexts/AuthContext";
 import gaggleGoLogo from "@/assets/gaggle-go-logo.png";
 
 interface Trip {
@@ -20,52 +19,25 @@ export default function SharedTrip() {
   const { shareCode } = useParams();
   const navigate = useNavigate();
   const { toast } = useToast();
-  const { user, loading: authLoading } = useAuth();
   const [trip, setTrip] = useState<Trip | null>(null);
   const [loading, setLoading] = useState(true);
-  const [tripId, setTripId] = useState<string | null>(null);
 
   useEffect(() => {
-    if (shareCode && !authLoading) {
+    if (shareCode) {
       fetchSharedTrip();
     }
-  }, [shareCode, authLoading]);
+  }, [shareCode]);
 
   const fetchSharedTrip = async () => {
     try {
-      const { data, error} = await supabase
+      const { data, error } = await supabase
         .from('trips')
-        .select('id, name, location, date, itinerary, user_id')
+        .select('id, name, location, date, itinerary')
         .eq('share_code', shareCode)
         .eq('is_public', true)
         .single();
 
       if (error) throw error;
-
-      setTripId(data.id);
-
-      // If user is logged in, check if they're a collaborator
-      if (user) {
-        // Check if user owns the trip
-        if (data.user_id === user.id) {
-          navigate(`/plan?tripId=${data.id}`);
-          return;
-        }
-
-        // Check if user is a collaborator
-        const { data: collabData } = await supabase
-          .from('trip_collaborators')
-          .select('id')
-          .eq('trip_id', data.id)
-          .eq('user_id', user.id)
-          .single();
-
-        if (collabData) {
-          // User is a collaborator, redirect to full experience
-          navigate(`/plan?tripId=${data.id}`);
-          return;
-        }
-      }
 
       setTrip(data as any);
     } catch (error) {

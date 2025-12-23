@@ -676,7 +676,14 @@ export const TripSetup = ({ onComplete }: TripSetupProps) => {
             <Card className="p-4 sm:p-5 md:p-6 border-2 hover:border-primary/30 transition-colors">
               <div className="space-y-4">
                 <div className="flex items-center justify-between">
-                  <Label className="text-sm sm:text-base font-semibold">🏠 The Nest (Home Base)</Label>
+                  <div className="space-y-1">
+                    <Label className="text-sm sm:text-base font-semibold">🏠 The Nest (Home Base)</Label>
+                    {!nestConfig.enabled && (
+                      <p className="text-xs text-muted-foreground">
+                        Nap requirements will be ignored
+                      </p>
+                    )}
+                  </div>
                   <Switch
                     id="nest-enabled"
                     checked={nestConfig.enabled}

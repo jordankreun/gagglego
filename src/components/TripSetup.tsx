@@ -42,6 +42,7 @@ interface Family {
 }
 
 interface NestConfig {
+  enabled: boolean;
   mode: "shared" | "separate";
   sharedAddress?: string;
   sharedCoordinates?: { lat: number; lng: number };
@@ -99,6 +100,7 @@ export const TripSetup = ({ onComplete }: TripSetupProps) => {
   const [editForm, setEditForm] = useState<Family | null>(null);
   
   const [nestConfig, setNestConfig] = useState<NestConfig>({
+    enabled: false,
     mode: "shared",
     sharedAddress: "",
     sharedCoordinates: undefined,
@@ -673,104 +675,115 @@ export const TripSetup = ({ onComplete }: TripSetupProps) => {
             {/* The Nest */}
             <Card className="p-4 sm:p-5 md:p-6 border-2 hover:border-primary/30 transition-colors">
               <div className="space-y-4">
-                <Label className="text-sm sm:text-base font-semibold">🏠 The Nest (Home Base)</Label>
-                
-                {/* Mode selector */}
-                <div className="flex gap-2">
-                  <Button
-                    type="button"
-                    variant={nestConfig.mode === "shared" ? "default" : "outline"}
-                    size="sm"
-                    onClick={() => setNestConfig({ ...nestConfig, mode: "shared" })}
-                    className="flex-1"
-                  >
-                    Shared Nest
-                  </Button>
-                  <Button
-                    type="button"
-                    variant={nestConfig.mode === "separate" ? "default" : "outline"}
-                    size="sm"
-                    onClick={() => setNestConfig({ ...nestConfig, mode: "separate" })}
-                    className="flex-1"
-                  >
-                    Separate Nests
-                  </Button>
-                </div>
-
-                {/* Shared nest input */}
-                {nestConfig.mode === "shared" && (
-                  <div className="space-y-2">
-                    <Label htmlFor="shared-address" className="text-sm font-medium flex items-center gap-2">
-                      <MapPin className="w-4 h-4 text-primary" />
-                      Nest Address
-                    </Label>
-                    <AddressAutocomplete
-                      value={nestConfig.sharedAddress || ""}
-                      onChange={(address, coords) => 
-                        setNestConfig({ 
-                          ...nestConfig, 
-                          sharedAddress: address,
-                          sharedCoordinates: coords 
-                        })
-                      }
-                      placeholder="Hotel address or home base location"
-                      className="h-11 sm:h-12"
-                    />
-                  </div>
-                )}
-
-                {/* Per-family nest inputs */}
-                {nestConfig.mode === "separate" && families.length > 0 && (
-                  <div className="space-y-3">
-                    <Label className="text-sm">Family Nest Addresses</Label>
-                    {families.map((family) => (
-                      <div key={family.id} className="space-y-2">
-                        <Label htmlFor={`nest-${family.id}`} className="text-sm font-medium flex items-center gap-2">
-                          <MapPin className="w-4 h-4 text-primary" />
-                          {family.name}
-                        </Label>
-                        <AddressAutocomplete
-                          value={nestConfig.perFamilyAddresses?.get(family.id) || ""}
-                          onChange={(address, coords) => {
-                            const newAddressMap = new Map(nestConfig.perFamilyAddresses);
-                            newAddressMap.set(family.id, address);
-                            
-                            const newCoordMap = new Map(nestConfig.perFamilyCoordinates);
-                            if (coords) {
-                              newCoordMap.set(family.id, coords);
-                            }
-                            
-                            setNestConfig({ 
-                              ...nestConfig, 
-                              perFamilyAddresses: newAddressMap,
-                              perFamilyCoordinates: newCoordMap
-                            });
-                          }}
-                          placeholder={`Address for ${family.name}`}
-                          className="h-10 sm:h-11"
-                        />
-                      </div>
-                    ))}
-                  </div>
-                )}
-
-                <div className="flex items-center justify-between pt-2 border-t">
-                  <div className="space-y-1">
-                    <Label htmlFor="car-naps" className="text-sm">
-                      Allow car naps during travel
-                    </Label>
-                    {nestConfig.allowCarNaps && (
-                      <p className="text-xs text-muted-foreground">
-                        🚗 Only for drives 2+ hours long
-                      </p>
-                    )}
-                  </div>
+                <div className="flex items-center justify-between">
+                  <Label className="text-sm sm:text-base font-semibold">🏠 The Nest (Home Base)</Label>
                   <Switch
-                    id="car-naps"
-                    checked={nestConfig.allowCarNaps}
-                    onCheckedChange={(checked) => setNestConfig({ ...nestConfig, allowCarNaps: checked })}
+                    id="nest-enabled"
+                    checked={nestConfig.enabled}
+                    onCheckedChange={(checked) => setNestConfig({ ...nestConfig, enabled: checked })}
                   />
                 </div>
+                
+                {nestConfig.enabled && (
+                  <>
+                    {/* Mode selector */}
+                    <div className="flex gap-2">
+                      <Button
+                        type="button"
+                        variant={nestConfig.mode === "shared" ? "default" : "outline"}
+                        size="sm"
+                        onClick={() => setNestConfig({ ...nestConfig, mode: "shared" })}
+                        className="flex-1"
+                      >
+                        Shared Nest
+                      </Button>
+                      <Button
+                        type="button"
+                        variant={nestConfig.mode === "separate" ? "default" : "outline"}
+                        size="sm"
+                        onClick={() => setNestConfig({ ...nestConfig, mode: "separate" })}
+                        className="flex-1"
+                      >
+                        Separate Nests
+                      </Button>
+                    </div>
+
+                    {/* Shared nest input */}
+                    {nestConfig.mode === "shared" && (
+                      <div className="space-y-2">
+                        <Label htmlFor="shared-address" className="text-sm font-medium flex items-center gap-2">
+                          <MapPin className="w-4 h-4 text-primary" />
+                          Nest Address
+                        </Label>
+                        <AddressAutocomplete
+                          value={nestConfig.sharedAddress || ""}
+                          onChange={(address, coords) => 
+                            setNestConfig({ 
+                              ...nestConfig, 
+                              sharedAddress: address,
+                              sharedCoordinates: coords 
+                            })
+                          }
+                          placeholder="Hotel address or home base location"
+                          className="h-11 sm:h-12"
+                        />
+                      </div>
+                    )}
+
+                    {/* Per-family nest inputs */}
+                    {nestConfig.mode === "separate" && families.length > 0 && (
+                      <div className="space-y-3">
+                        <Label className="text-sm">Family Nest Addresses</Label>
+                        {families.map((family) => (
+                          <div key={family.id} className="space-y-2">
+                            <Label htmlFor={`nest-${family.id}`} className="text-sm font-medium flex items-center gap-2">
+                              <MapPin className="w-4 h-4 text-primary" />
+                              {family.name}
+                            </Label>
+                            <AddressAutocomplete
+                              value={nestConfig.perFamilyAddresses?.get(family.id) || ""}
+                              onChange={(address, coords) => {
+                                const newAddressMap = new Map(nestConfig.perFamilyAddresses);
+                                newAddressMap.set(family.id, address);
+                                
+                                const newCoordMap = new Map(nestConfig.perFamilyCoordinates);
+                                if (coords) {
+                                  newCoordMap.set(family.id, coords);
+                                }
+                                
+                                setNestConfig({ 
+                                  ...nestConfig, 
+                                  perFamilyAddresses: newAddressMap,
+                                  perFamilyCoordinates: newCoordMap
+                                });
+                              }}
+                              placeholder={`Address for ${family.name}`}
+                              className="h-10 sm:h-11"
+                            />
+                          </div>
+                        ))}
+                      </div>
+                    )}
+
+                    <div className="flex items-center justify-between pt-2 border-t">
+                      <div className="space-y-1">
+                        <Label htmlFor="car-naps" className="text-sm">
+                          Allow car naps during travel
+                        </Label>
+                        {nestConfig.allowCarNaps && (
+                          <p className="text-xs text-muted-foreground">
+                            🚗 Only for drives 2+ hours long
+                          </p>
+                        )}
+                      </div>
+                      <Switch
+                        id="car-naps"
+                        checked={nestConfig.allowCarNaps}
+                        onCheckedChange={(checked) => setNestConfig({ ...nestConfig, allowCarNaps: checked })}
+                      />
+                    </div>
+                  </>
+                )}
               </div>
             </Card>
 

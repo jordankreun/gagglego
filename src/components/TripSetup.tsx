@@ -52,6 +52,7 @@ interface NestConfig {
 }
 
 interface MealPreferences {
+  enabled: boolean;
   breakfast: { enabled: boolean; time: string };
   lunch: { enabled: boolean; time: string };
   dinner: { enabled: boolean; time: string };
@@ -110,6 +111,7 @@ export const TripSetup = ({ onComplete }: TripSetupProps) => {
   });
   
   const [mealPreferences, setMealPreferences] = useState<MealPreferences>({
+    enabled: false,
     breakfast: { enabled: true, time: "08:00" },
     lunch: { enabled: true, time: "12:00" },
     dinner: { enabled: true, time: "18:00" },
@@ -797,185 +799,203 @@ export const TripSetup = ({ onComplete }: TripSetupProps) => {
             {/* Feeding the Flock */}
             <Card className="p-4 sm:p-5 md:p-6 border-2 hover:border-primary/30 transition-colors">
               <div className="space-y-4">
-                <Label className="text-sm sm:text-base font-semibold">🍽️ Feeding the Flock</Label>
+                <div className="flex items-center justify-between">
+                  <div className="space-y-1">
+                    <Label className="text-sm sm:text-base font-semibold">🍽️ Feeding the Flock</Label>
+                    {!mealPreferences.enabled && (
+                      <p className="text-xs text-muted-foreground">
+                        Meal planning will be skipped
+                      </p>
+                    )}
+                  </div>
+                  <Switch
+                    id="meals-enabled"
+                    checked={mealPreferences.enabled}
+                    onCheckedChange={(checked) => setMealPreferences({ ...mealPreferences, enabled: checked })}
+                  />
+                </div>
                 
-                {/* Meal toggles with times */}
-                <div className="space-y-3">
-                  {/* Breakfast */}
-                  <div className="flex items-center gap-3 p-3 rounded-lg border bg-muted/30">
-                    <Switch
-                      id="breakfast-toggle"
-                      checked={mealPreferences.breakfast.enabled}
-                      onCheckedChange={(checked) => 
-                        setMealPreferences({ 
-                          ...mealPreferences, 
-                          breakfast: { ...mealPreferences.breakfast, enabled: checked }
-                        })
-                      }
-                    />
-                    <div className="flex-1 flex items-center gap-3">
-                      <Label htmlFor="breakfast-toggle" className="text-sm font-medium flex-shrink-0">
-                        🌅 Breakfast
-                      </Label>
-                      {mealPreferences.breakfast.enabled && (
-                        <Input
-                          type="time"
-                          value={mealPreferences.breakfast.time}
-                          onChange={(e) => 
+                {mealPreferences.enabled && (
+                  <>
+                    {/* Meal toggles with times */}
+                    <div className="space-y-3">
+                      {/* Breakfast */}
+                      <div className="flex items-center gap-3 p-3 rounded-lg border bg-muted/30">
+                        <Switch
+                          id="breakfast-toggle"
+                          checked={mealPreferences.breakfast.enabled}
+                          onCheckedChange={(checked) => 
                             setMealPreferences({ 
                               ...mealPreferences, 
-                              breakfast: { ...mealPreferences.breakfast, time: e.target.value }
+                              breakfast: { ...mealPreferences.breakfast, enabled: checked }
                             })
                           }
-                          className="h-9 w-32"
                         />
-                      )}
-                    </div>
-                  </div>
+                        <div className="flex-1 flex items-center gap-3">
+                          <Label htmlFor="breakfast-toggle" className="text-sm font-medium flex-shrink-0">
+                            🌅 Breakfast
+                          </Label>
+                          {mealPreferences.breakfast.enabled && (
+                            <Input
+                              type="time"
+                              value={mealPreferences.breakfast.time}
+                              onChange={(e) => 
+                                setMealPreferences({ 
+                                  ...mealPreferences, 
+                                  breakfast: { ...mealPreferences.breakfast, time: e.target.value }
+                                })
+                              }
+                              className="h-9 w-32"
+                            />
+                          )}
+                        </div>
+                      </div>
 
-                  {/* Lunch */}
-                  <div className="flex items-center gap-3 p-3 rounded-lg border bg-muted/30">
-                    <Switch
-                      id="lunch-toggle"
-                      checked={mealPreferences.lunch.enabled}
-                      onCheckedChange={(checked) => 
-                        setMealPreferences({ 
-                          ...mealPreferences, 
-                          lunch: { ...mealPreferences.lunch, enabled: checked }
-                        })
-                      }
-                    />
-                    <div className="flex-1 flex items-center gap-3">
-                      <Label htmlFor="lunch-toggle" className="text-sm font-medium flex-shrink-0">
-                        ☀️ Lunch
-                      </Label>
-                      {mealPreferences.lunch.enabled && (
-                        <Input
-                          type="time"
-                          value={mealPreferences.lunch.time}
-                          onChange={(e) => 
+                      {/* Lunch */}
+                      <div className="flex items-center gap-3 p-3 rounded-lg border bg-muted/30">
+                        <Switch
+                          id="lunch-toggle"
+                          checked={mealPreferences.lunch.enabled}
+                          onCheckedChange={(checked) => 
                             setMealPreferences({ 
                               ...mealPreferences, 
-                              lunch: { ...mealPreferences.lunch, time: e.target.value }
+                              lunch: { ...mealPreferences.lunch, enabled: checked }
                             })
                           }
-                          className="h-9 w-32"
                         />
-                      )}
-                    </div>
-                  </div>
+                        <div className="flex-1 flex items-center gap-3">
+                          <Label htmlFor="lunch-toggle" className="text-sm font-medium flex-shrink-0">
+                            ☀️ Lunch
+                          </Label>
+                          {mealPreferences.lunch.enabled && (
+                            <Input
+                              type="time"
+                              value={mealPreferences.lunch.time}
+                              onChange={(e) => 
+                                setMealPreferences({ 
+                                  ...mealPreferences, 
+                                  lunch: { ...mealPreferences.lunch, time: e.target.value }
+                                })
+                              }
+                              className="h-9 w-32"
+                            />
+                          )}
+                        </div>
+                      </div>
 
-                  {/* Dinner */}
-                  <div className="flex items-center gap-3 p-3 rounded-lg border bg-muted/30">
-                    <Switch
-                      id="dinner-toggle"
-                      checked={mealPreferences.dinner.enabled}
-                      onCheckedChange={(checked) => 
-                        setMealPreferences({ 
-                          ...mealPreferences, 
-                          dinner: { ...mealPreferences.dinner, enabled: checked }
-                        })
-                      }
-                    />
-                    <div className="flex-1 flex items-center gap-3">
-                      <Label htmlFor="dinner-toggle" className="text-sm font-medium flex-shrink-0">
-                        🌙 Dinner
-                      </Label>
-                      {mealPreferences.dinner.enabled && (
-                        <Input
-                          type="time"
-                          value={mealPreferences.dinner.time}
-                          onChange={(e) => 
+                      {/* Dinner */}
+                      <div className="flex items-center gap-3 p-3 rounded-lg border bg-muted/30">
+                        <Switch
+                          id="dinner-toggle"
+                          checked={mealPreferences.dinner.enabled}
+                          onCheckedChange={(checked) => 
                             setMealPreferences({ 
                               ...mealPreferences, 
-                              dinner: { ...mealPreferences.dinner, time: e.target.value }
+                              dinner: { ...mealPreferences.dinner, enabled: checked }
                             })
                           }
-                          className="h-9 w-32"
                         />
-                      )}
+                        <div className="flex-1 flex items-center gap-3">
+                          <Label htmlFor="dinner-toggle" className="text-sm font-medium flex-shrink-0">
+                            🌙 Dinner
+                          </Label>
+                          {mealPreferences.dinner.enabled && (
+                            <Input
+                              type="time"
+                              value={mealPreferences.dinner.time}
+                              onChange={(e) => 
+                                setMealPreferences({ 
+                                  ...mealPreferences, 
+                                  dinner: { ...mealPreferences.dinner, time: e.target.value }
+                                })
+                              }
+                              className="h-9 w-32"
+                            />
+                          )}
+                        </div>
+                      </div>
+
+                      {/* Snacks */}
+                      <div className="flex items-center gap-3 p-3 rounded-lg border bg-muted/30">
+                        <Switch
+                          id="snacks-toggle"
+                          checked={mealPreferences.snacks.enabled}
+                          onCheckedChange={(checked) => 
+                            setMealPreferences({ 
+                              ...mealPreferences, 
+                              snacks: { enabled: checked }
+                            })
+                          }
+                        />
+                        <Label htmlFor="snacks-toggle" className="text-sm font-medium">
+                          🍎 Include snack recommendations
+                        </Label>
+                      </div>
                     </div>
-                  </div>
 
-                  {/* Snacks */}
-                  <div className="flex items-center gap-3 p-3 rounded-lg border bg-muted/30">
-                    <Switch
-                      id="snacks-toggle"
-                      checked={mealPreferences.snacks.enabled}
-                      onCheckedChange={(checked) => 
-                        setMealPreferences({ 
-                          ...mealPreferences, 
-                          snacks: { enabled: checked }
-                        })
-                      }
-                    />
-                    <Label htmlFor="snacks-toggle" className="text-sm font-medium">
-                      🍎 Include snack recommendations
-                    </Label>
-                  </div>
-                </div>
+                    {/* Budget level */}
+                    <div className="pt-2 border-t space-y-2">
+                      <Label className="text-xs text-muted-foreground">Budget Level</Label>
+                      <div className="flex gap-2">
+                        <Button
+                          type="button"
+                          variant={mealPreferences.budgetLevel === "budget" ? "default" : "outline"}
+                          size="sm"
+                          onClick={() => setMealPreferences({ ...mealPreferences, budgetLevel: "budget" })}
+                          className="flex-1"
+                        >
+                          $ Budget
+                        </Button>
+                        <Button
+                          type="button"
+                          variant={mealPreferences.budgetLevel === "moderate" ? "default" : "outline"}
+                          size="sm"
+                          onClick={() => setMealPreferences({ ...mealPreferences, budgetLevel: "moderate" })}
+                          className="flex-1"
+                        >
+                          $$ Moderate
+                        </Button>
+                        <Button
+                          type="button"
+                          variant={mealPreferences.budgetLevel === "splurge" ? "default" : "outline"}
+                          size="sm"
+                          onClick={() => setMealPreferences({ ...mealPreferences, budgetLevel: "splurge" })}
+                          className="flex-1"
+                        >
+                          $$$ Splurge
+                        </Button>
+                      </div>
+                    </div>
 
-                {/* Budget level */}
-                <div className="pt-2 border-t space-y-2">
-                  <Label className="text-xs text-muted-foreground">Budget Level</Label>
-                  <div className="flex gap-2">
-                    <Button
-                      type="button"
-                      variant={mealPreferences.budgetLevel === "budget" ? "default" : "outline"}
-                      size="sm"
-                      onClick={() => setMealPreferences({ ...mealPreferences, budgetLevel: "budget" })}
-                      className="flex-1"
-                    >
-                      $ Budget
-                    </Button>
-                    <Button
-                      type="button"
-                      variant={mealPreferences.budgetLevel === "moderate" ? "default" : "outline"}
-                      size="sm"
-                      onClick={() => setMealPreferences({ ...mealPreferences, budgetLevel: "moderate" })}
-                      className="flex-1"
-                    >
-                      $$ Moderate
-                    </Button>
-                    <Button
-                      type="button"
-                      variant={mealPreferences.budgetLevel === "splurge" ? "default" : "outline"}
-                      size="sm"
-                      onClick={() => setMealPreferences({ ...mealPreferences, budgetLevel: "splurge" })}
-                      className="flex-1"
-                    >
-                      $$$ Splurge
-                    </Button>
-                  </div>
-                </div>
-
-                {/* Additional preferences */}
-                <div className="space-y-2 pt-2 border-t">
-                  <div className="flex items-center gap-2">
-                    <Switch
-                      id="kid-menu"
-                      checked={mealPreferences.kidMenuRequired}
-                      onCheckedChange={(checked) => setMealPreferences({ ...mealPreferences, kidMenuRequired: checked })}
-                    />
-                    <Label htmlFor="kid-menu" className="text-sm">Kid menu required</Label>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <Switch
-                      id="highchairs"
-                      checked={mealPreferences.highchairRequired}
-                      onCheckedChange={(checked) => setMealPreferences({ ...mealPreferences, highchairRequired: checked })}
-                    />
-                    <Label htmlFor="highchairs" className="text-sm">Highchairs needed</Label>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <Switch
-                      id="quick-service"
-                      checked={mealPreferences.quickServiceOk}
-                      onCheckedChange={(checked) => setMealPreferences({ ...mealPreferences, quickServiceOk: checked })}
-                    />
-                    <Label htmlFor="quick-service" className="text-sm">Quick service OK</Label>
-                  </div>
-                </div>
+                    {/* Additional preferences */}
+                    <div className="space-y-2 pt-2 border-t">
+                      <div className="flex items-center gap-2">
+                        <Switch
+                          id="kid-menu"
+                          checked={mealPreferences.kidMenuRequired}
+                          onCheckedChange={(checked) => setMealPreferences({ ...mealPreferences, kidMenuRequired: checked })}
+                        />
+                        <Label htmlFor="kid-menu" className="text-sm">Kid menu required</Label>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <Switch
+                          id="highchairs"
+                          checked={mealPreferences.highchairRequired}
+                          onCheckedChange={(checked) => setMealPreferences({ ...mealPreferences, highchairRequired: checked })}
+                        />
+                        <Label htmlFor="highchairs" className="text-sm">Highchairs needed</Label>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <Switch
+                          id="quick-service"
+                          checked={mealPreferences.quickServiceOk}
+                          onCheckedChange={(checked) => setMealPreferences({ ...mealPreferences, quickServiceOk: checked })}
+                        />
+                        <Label htmlFor="quick-service" className="text-sm">Quick service OK</Label>
+                      </div>
+                    </div>
+                  </>
+                )}
               </div>
             </Card>
 

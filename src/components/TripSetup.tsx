@@ -519,10 +519,24 @@ export const TripSetup = ({ onComplete }: TripSetupProps) => {
             {/* Trip Dates */}
             <Card className="p-4 sm:p-5 md:p-6 border-2 hover:border-primary/30 transition-colors">
               <div className="space-y-3 sm:space-y-4">
-                <Label className="text-sm sm:text-base font-semibold flex items-center gap-2">
-                  <CalendarIcon className="w-4 h-4 sm:w-5 sm:h-5 text-primary" />
-                  Trip Dates
-                </Label>
+                <div className="flex items-center justify-between">
+                  <Label className="text-sm sm:text-base font-semibold flex items-center gap-2">
+                    <CalendarIcon className="w-4 h-4 sm:w-5 sm:h-5 text-primary" />
+                    Trip Dates
+                  </Label>
+                  <Button
+                    type="button"
+                    variant="outline"
+                    size="sm"
+                    onClick={() => {
+                      const today = new Date();
+                      today.setHours(0, 0, 0, 0);
+                      setDateRange({ from: today, to: today });
+                    }}
+                  >
+                    Today
+                  </Button>
+                </div>
                 <DateRangePicker
                   dateRange={dateRange}
                   onDateRangeChange={setDateRange}

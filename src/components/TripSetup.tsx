@@ -513,6 +513,14 @@ export const TripSetup = ({ onComplete }: TripSetupProps) => {
                 <div className="pt-4 border-t">
                   <LocationSuggestions 
                     onSelectLocation={setLocation}
+                    onSetAsNest={(address, coords) => {
+                      setNestConfig({
+                        ...nestConfig,
+                        enabled: true,
+                        sharedAddress: address,
+                        sharedCoordinates: coords,
+                      });
+                    }}
                     families={families}
                     tripDate={new Date().toLocaleDateString()}
                   />

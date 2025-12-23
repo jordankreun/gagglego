@@ -3,7 +3,8 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Label } from "@/components/ui/label";
-import { MapPin, Loader2, Navigation, Sparkles } from "lucide-react";
+import { Checkbox } from "@/components/ui/checkbox";
+import { MapPin, Loader2, Navigation, Sparkles, Home } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 import { GooseStatusCard } from "@/components/GooseStatusCard";
@@ -18,6 +19,7 @@ interface LocationSuggestion {
 
 interface LocationSuggestionsProps {
   onSelectLocation: (location: string) => void;
+  onSetAsNest?: (address: string, coords?: { lat: number; lng: number }) => void;
 }
 
 interface LocationSuggestionsExtendedProps extends LocationSuggestionsProps {
@@ -25,7 +27,7 @@ interface LocationSuggestionsExtendedProps extends LocationSuggestionsProps {
   tripDate?: string;
 }
 
-export const LocationSuggestions = ({ onSelectLocation, families, tripDate }: LocationSuggestionsExtendedProps) => {
+export const LocationSuggestions = ({ onSelectLocation, onSetAsNest, families, tripDate }: LocationSuggestionsExtendedProps) => {
   const { toast } = useToast();
   const [loading, setLoading] = useState(false);
   const [suggestions, setSuggestions] = useState<LocationSuggestion[]>([]);
@@ -33,6 +35,7 @@ export const LocationSuggestions = ({ onSelectLocation, families, tripDate }: Lo
   const [searchLocation, setSearchLocation] = useState("");
   const [searchCoords, setSearchCoords] = useState<{ lat: number; lng: number } | null>(null);
   const [activityType, setActivityType] = useState<string>("all");
+  const [setAsNest, setSetAsNest] = useState(false);
 
   const getLocationName = async (lat: number, lng: number): Promise<string | null> => {
     try {
@@ -243,6 +246,20 @@ export const LocationSuggestions = ({ onSelectLocation, families, tripDate }: Lo
           </div>
         </div>
 
+        {onSetAsNest && (
+          <div className="flex items-center gap-2 p-3 rounded-lg border bg-muted/30">
+            <Checkbox
+              id="set-as-nest"
+              checked={setAsNest}
+              onCheckedChange={(checked) => setSetAsNest(checked === true)}
+            />
+            <Label htmlFor="set-as-nest" className="text-sm flex items-center gap-2 cursor-pointer">
+              <Home className="w-4 h-4 text-primary" />
+              Also set this as my Nest (home base)
+            </Label>
+          </div>
+        )}
+
         <Button
           onClick={getSuggestions}
           disabled={loading || (!searchLocation && !userLocation)}
@@ -302,7 +319,12 @@ export const LocationSuggestions = ({ onSelectLocation, families, tripDate }: Lo
               <Card
                 key={index}
                 className="p-3 sm:p-4 hover:border-primary/50 hover:shadow-md transition-all cursor-pointer active:scale-[0.98] group"
-                onClick={() => onSelectLocation(suggestion.name)}
+                onClick={() => {
+                  onSelectLocation(suggestion.name);
+                  if (setAsNest && onSetAsNest) {
+                    onSetAsNest(searchLocation || userLocation?.city || suggestion.name, searchCoords || (userLocation ? { lat: userLocation.lat, lng: userLocation.lng } : undefined));
+                  }
+                }}
               >
                 <div className="space-y-1.5 sm:space-y-2">
                   <div className="flex items-start justify-between gap-2">

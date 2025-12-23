@@ -108,7 +108,7 @@ export const TripSetup = ({ onComplete }: TripSetupProps) => {
   });
   
   const [mealPreferences, setMealPreferences] = useState<MealPreferences>({
-    breakfast: { enabled: true, time: "8:00" },
+    breakfast: { enabled: true, time: "08:00" },
     lunch: { enabled: true, time: "12:00" },
     dinner: { enabled: true, time: "18:00" },
     snacks: { enabled: false },

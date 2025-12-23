@@ -51,16 +51,32 @@ export function DateRangePicker({
           </Button>
         </PopoverTrigger>
         <PopoverContent className="w-auto p-0" align="start">
-          <Calendar
-            initialFocus
-            mode="range"
-            defaultMonth={dateRange?.from}
-            selected={dateRange}
-            onSelect={onDateRangeChange}
-            numberOfMonths={2}
-            disabled={(date) => date < new Date(new Date().setHours(0, 0, 0, 0))}
-            className="pointer-events-auto"
-          />
+          <div className="flex flex-col">
+            <div className="p-2 border-b">
+              <Button
+                variant="outline"
+                size="sm"
+                className="w-full"
+                onClick={() => {
+                  const today = new Date();
+                  today.setHours(0, 0, 0, 0);
+                  onDateRangeChange({ from: today, to: dateRange?.to });
+                }}
+              >
+                Today
+              </Button>
+            </div>
+            <Calendar
+              initialFocus
+              mode="range"
+              defaultMonth={dateRange?.from}
+              selected={dateRange}
+              onSelect={onDateRangeChange}
+              numberOfMonths={2}
+              disabled={(date) => date < new Date(new Date().setHours(0, 0, 0, 0))}
+              className="pointer-events-auto"
+            />
+          </div>
         </PopoverContent>
       </Popover>
     </div>
